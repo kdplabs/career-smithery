@@ -7,16 +7,16 @@ import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
 import Plotly from 'plotly.js-dist-min'
 
 const props = defineProps<{
-  performance: 'Low' | 'Medium' | 'High'
-  potential: 'Low' | 'Medium' | 'High'
-  engagement: 'Low' | 'Medium' | 'High'
+  performance: 'Low' | 'Moderate' | 'High'
+  potential: 'Low' | 'Moderate' | 'High'
+  engagement: 'Low' | 'Moderate' | 'High'
 }>()
 
 const chartContainer = ref<HTMLElement | null>(null)
 
 // Map string values to numeric values (1-3 scale)
 const valueToNumeric = (value: string): number => {
-  const values = { 'Low': 1, 'Medium': 2, 'High': 3 }
+  const values = { 'Low': 1, 'Moderate': 2, 'High': 3 }
   return values[value as keyof typeof values]
 }
 
@@ -76,7 +76,7 @@ const createChart = () => {
       width: 1,
       dash: 'dot'
     },
-    name: 'Medium',
+    name: 'Moderate',
     hoverinfo: 'none',
     showlegend: false
   }
@@ -129,7 +129,7 @@ const createChart = () => {
         visible: true,
         range: [0, 3],
         tickvals: [1, 2, 3],
-        ticktext: ['Low', 'Medium', 'High'],
+        ticktext: ['Low', 'Moderate', 'High'],
         tickfont: {
           size: 10,
         },

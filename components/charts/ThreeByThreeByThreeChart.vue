@@ -7,16 +7,16 @@ import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
 import Plotly from 'plotly.js-dist-min'
 
 const props = defineProps<{
-  performance: 'Low' | 'Medium' | 'High'
-  potential: 'Low' | 'Medium' | 'High'
-  engagement: 'Low' | 'Medium' | 'High'
+  performance: 'Low' | 'Moderate' | 'High'
+  potential: 'Low' | 'Moderate' | 'High'
+  engagement: 'Low' | 'Moderate' | 'High'
 }>()
 
 const chartContainer = ref<HTMLElement | null>(null)
 
 // Map string values to numeric indices
 const valueToIndex = (value: string): number => {
-  const values = ['Low', 'Medium', 'High']
+  const values = ['Low', 'Moderate', 'High']
   return values.indexOf(value)
 }
 
@@ -41,9 +41,9 @@ const createPlot = () => {
         potentialValues.push(t)
         engagementValues.push(e)
         
-        const performanceLabel = p === 0 ? 'Low' : p === 1 ? 'Medium' : 'High'
-        const potentialLabel = t === 0 ? 'Low' : t === 1 ? 'Medium' : 'High'
-        const engagementLabel = e === 0 ? 'Low' : e === 1 ? 'Medium' : 'High'
+        const performanceLabel = p === 0 ? 'Low' : p === 1 ? 'Moderate' : 'High'
+        const potentialLabel = t === 0 ? 'Low' : t === 1 ? 'Moderate' : 'High'
+        const engagementLabel = e === 0 ? 'Low' : e === 1 ? 'Moderate' : 'High'
         
         text.push(`Performance: ${performanceLabel}<br>Potential: ${potentialLabel}<br>Engagement: ${engagementLabel}`)
       }

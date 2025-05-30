@@ -80,9 +80,9 @@
               </div>
 
               <!-- Previous Roles -->
-              <div v-if="assessmentSummary.previousRoles.length > 0">
+              <div v-if="assessmentSummary.profile.previousRoles.length > 0">
                 <p class="text-sm text-slate-500 font-sans mt-5 ml-6">Previous Roles</p>
-                <div v-for="(role, index) in assessmentSummary.previousRoles" :key="index" class="mt-3 flex items-start">
+                <div v-for="(role, index) in assessmentSummary.profile.previousRoles" :key="index" class="mt-3 flex items-start">
                   <div class="absolute left-0 mt-1.5 w-3 h-3 bg-slate-400 rounded-full border-2 border-white shadow z-10 ml-0.5"></div>
                   <div class="ml-6 w-full p-3 rounded-lg bg-slate-50 border border-slate-200">
                     <p class="text-md font-semibold text-slate-800 font-sans">{{ role.title }}</p>
@@ -97,11 +97,11 @@
           <div class="flex-grow pl-8">
             <h3 class="text-xl font-semibold text-slate-700 mb-6 font-sans">Potential Career Paths</h3>
             <div class="space-y-6">
-              <div v-if="assessmentSummary.potentialCareerPaths.length === 0" class="text-slate-500 font-sans pl-8">
+              <div v-if="assessmentSummary.profile.potentialPaths.length === 0" class="text-slate-500 font-sans pl-8">
                 No potential career paths defined yet.
               </div>
               <!-- Path Item -->
-              <div v-for="(path, index) in assessmentSummary.potentialCareerPaths" :key="index" class="flex items-start">
+              <div v-for="(path, index) in assessmentSummary.profile.potentialPaths" :key="index" class="flex items-start">
                 <!-- Connector Line (simplified branch) -->
                 <div class="w-8 pt-2">
                   <div class="w-full h-0.5 bg-slate-300"></div>
@@ -154,10 +154,13 @@
         </div>
         <div class="text-center mt-6 space-x-4 space-y-4">
           <span class="inline-block px-6 py-2 rounded-full bg-blue-200 text-blue-800 font-semibold text-lg">
-            Performance: {{ assessmentSummary.nineBoxPosition.performance }}
+            Performance: {{ assessmentSummary?.threeByThreePosition?.performance || 'Not Set' }}
           </span>
           <span class="inline-block px-6 py-2 rounded-full bg-blue-200 text-blue-800 font-semibold text-lg">
-            Potential: {{ assessmentSummary.nineBoxPosition.potential }}
+            Potential: {{ assessmentSummary?.threeByThreePosition?.potential || 'Not Set' }}
+          </span>
+          <span class="inline-block px-6 py-2 rounded-full bg-blue-200 text-blue-800 font-semibold text-lg">
+            Engagement: {{ assessmentSummary?.threeByThreePosition?.engagement || 'Not Set' }}
           </span>
         </div>
         
@@ -166,7 +169,7 @@
           <h3 class="text-xl font-bold text-blue-800 mb-3 font-sans">Your Nine Box Position: {{ getNineBoxPositionName() }}</h3>
           <p class="text-blue-800 mb-4 font-sans">{{ getNineBoxDescription() }}</p>
           
-         <ul class="mt-2 list-disc pl-5 space-y-2 text-blue-800 font-sans">
+          <ul class="mt-2 list-disc pl-5 space-y-2 text-blue-800 font-sans">
             <li v-for="(recommendation, index) in getNineBoxRecommendations()" :key="index">
               {{ recommendation }}
             </li>
@@ -211,26 +214,26 @@
         <client-only>
           <ThreeMetricsRadarChart
             v-if="chartType === 'radar'"
-            :performance="assessmentSummary.threeByThreePosition.performance"
-            :potential="assessmentSummary.threeByThreePosition.potential"
-            :engagement="assessmentSummary.threeByThreePosition.engagement"
+            :performance="assessmentSummary?.threeByThreePosition?.performance || 'Low'"
+            :potential="assessmentSummary?.threeByThreePosition?.potential || 'Low'"
+            :engagement="assessmentSummary?.threeByThreePosition?.engagement || 'Low'"
           />
           <ThreeMetricsBarChart
             v-else
-            :performance="assessmentSummary.threeByThreePosition.performance"
-            :potential="assessmentSummary.threeByThreePosition.potential"
-            :engagement="assessmentSummary.threeByThreePosition.engagement"
+            :performance="assessmentSummary?.threeByThreePosition?.performance || 'Low'"
+            :potential="assessmentSummary?.threeByThreePosition?.potential || 'Low'"
+            :engagement="assessmentSummary?.threeByThreePosition?.engagement || 'Low'"
           />
         </client-only>
         <div class="text-center mt-6 space-x-4 space-y-4">
           <span class="inline-block px-6 py-2 rounded-full bg-blue-200 text-blue-800 font-semibold text-lg">
-            Performance: {{ assessmentSummary.threeByThreePosition.performance }}
+            Performance: {{ assessmentSummary?.threeByThreePosition?.performance || 'Not Set' }}
           </span>
           <span class="inline-block px-6 py-2 rounded-full bg-blue-200 text-blue-800 font-semibold text-lg">
-            Potential: {{ assessmentSummary.threeByThreePosition.potential }}
+            Potential: {{ assessmentSummary?.threeByThreePosition?.potential || 'Not Set' }}
           </span>
           <span class="inline-block px-6 py-2 rounded-full bg-blue-200 text-blue-800 font-semibold text-lg">
-            Engagement: {{ assessmentSummary.threeByThreePosition.engagement }}
+            Engagement: {{ assessmentSummary?.threeByThreePosition?.engagement || 'Not Set' }}
           </span>
         </div>
         
@@ -241,15 +244,15 @@
           
           <div class="grid grid-cols-1 gap-1 mt-4">
             <div class="p-4 bg-white rounded-lg shadow-sm border border-blue-100">
-              <h4 class="text-lg font-semibold text-blue-700 mb-2 font-sans">Performance: {{ assessmentSummary.threeByThreePosition.performance }}</h4>
+              <h4 class="text-lg font-semibold text-blue-700 mb-2 font-sans">Performance: {{ assessmentSummary?.threeByThreePosition?.performance || 'Not Set' }}</h4>
               <p class="text-blue-800 text-sm font-sans">{{ getMetricDescription('performance') }}</p>
             </div>
             <div class="p-4 bg-white rounded-lg shadow-sm border border-blue-100">
-              <h4 class="text-lg font-semibold text-blue-700 mb-2 font-sans">Potential: {{ assessmentSummary.threeByThreePosition.potential }}</h4>
+              <h4 class="text-lg font-semibold text-blue-700 mb-2 font-sans">Potential: {{ assessmentSummary?.threeByThreePosition?.potential || 'Not Set' }}</h4>
               <p class="text-blue-800 text-sm font-sans">{{ getMetricDescription('potential') }}</p>
             </div>
             <div class="p-4 bg-white rounded-lg shadow-sm border border-blue-100">
-              <h4 class="text-lg font-semibold text-blue-700 mb-2 font-sans">Engagement: {{ assessmentSummary.threeByThreePosition.engagement }}</h4>
+              <h4 class="text-lg font-semibold text-blue-700 mb-2 font-sans">Engagement: {{ assessmentSummary?.threeByThreePosition?.engagement || 'Not Set' }}</h4>
               <p class="text-blue-800 text-sm font-sans">{{ getMetricDescription('engagement') }}</p>
             </div>
           </div>
@@ -364,17 +367,17 @@
       <div class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mb-4 border border-slate-100">
         <h2 class="text-3xl font-bold text-sky-700 mb-6 font-sans">Skills Profile</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          <div :class="['rounded-xl shadow p-8 flex flex-col items-center font-sans', assessmentSummary.skillsProfile.type === 'I-Shaped' ? 'border-2 border-blue-500' : 'bg-white border border-slate-100']">
+          <div :class="['rounded-xl shadow p-8 flex flex-col items-center font-sans', assessmentSummary?.skillsProfile?.type === 'I-Shaped' ? 'border-2 border-blue-500' : 'bg-white border border-slate-100']">
             <span class="text-6xl mb-4">𝐈</span>
             <div class="font-bold mb-2 text-blue-700">I-Shaped</div>
             <div class="text-sm text-slate-600 text-center mb-2">Deep expertise in one area (specialist)</div>
           </div>
-          <div :class="['rounded-xl shadow p-8 flex flex-col items-center font-sans', assessmentSummary.skillsProfile.type === 'T-Shaped' ? 'border-2 border-blue-500' : 'bg-white border border-slate-100']">
+          <div :class="['rounded-xl shadow p-8 flex flex-col items-center font-sans', assessmentSummary?.skillsProfile?.type === 'T-Shaped' ? 'border-2 border-blue-500' : 'bg-white border border-slate-100']">
             <span class="text-6xl mb-4">𝐓</span>
             <div class="font-bold mb-2 text-blue-700">T-Shaped</div>
             <div class="text-sm text-slate-600 text-center mb-2">Deep expertise in one area + broad knowledge in others</div>
           </div>
-          <div :class="['rounded-xl shadow p-8 flex flex-col items-center font-sans', assessmentSummary.skillsProfile.type === 'Pi-Shaped' ? 'border-2 border-blue-500' : 'bg-white border border-slate-100']">
+          <div :class="['rounded-xl shadow p-8 flex flex-col items-center font-sans', assessmentSummary?.skillsProfile?.type === 'Pi-Shaped' ? 'border-2 border-blue-500' : 'bg-white border border-slate-100']">
             <span class="text-6xl mb-4">𝚷</span>
             <div class="font-bold mb-2 text-blue-700">Pi-Shaped</div>
             <div class="text-sm text-slate-600 text-center mb-2">Expertise in two domains + broad knowledge</div>
@@ -523,23 +526,104 @@ const pendingShowInputForm = ref(false)
 
 onMounted(async () => {
   const savedData = localStorage.getItem('assessmentSummary')
+  console.log('Raw saved data:', savedData)
+  
   if (savedData) {
-    assessmentSummary.value = JSON.parse(savedData)
-    // Draw chevrons after data is loaded
-    await nextTick()
-    drawChevrons()
-    
-    // Load LinkedIn text from localStorage if it exists
-    const savedLinkedInText = localStorage.getItem('linkedinOrResumeText')
-    if (savedLinkedInText) {
-      linkedinOrResumeText.value = savedLinkedInText
-    }
-    
-    // If user is logged in, save the assessment data
-    if (user.value) {
-      await saveAssessmentData(linkedinOrResumeText.value)
+    try {
+      const parsedData = JSON.parse(savedData)
+      console.log('Parsed assessment data:', parsedData)
+      
+      // Initialize with default values if needed
+      const defaultData = {
+        profile: {
+          fullName: '',
+          email: '',
+          currentRole: '',
+          yearsOfExperience: '',
+          careerObjective: '',
+          previousRoles: [],
+          potentialPaths: []
+        },
+        careerStage: 'Exploration',
+        leadershipPotential: 'Managing Self',
+        learningDevelopment: {
+          learningOpportunities: '',
+          skillAcquisition: '',
+          skillApplication: '',
+          learningImpact: '',
+          futureDevelopment: ''
+        },
+        nineBoxGrid: {
+          performance: 'Low',
+          delivery: 'Low',
+          quality: 'Low',
+          growthPotential: 'Low',
+          learningAbility: 'Low',
+          satisfaction: 'Low',
+          motivation: 'Low'
+        },
+        skills: {
+          primaryExpertise: '',
+          customPrimarySkill: '',
+          expertiseLevel: '',
+          secondaryAreas: [],
+          hasOtherSecondary: false,
+          customSecondarySkills: [],
+          skillBreadth: '',
+          futureSkills: [],
+          hasOtherFuture: false,
+          customFutureSkills: []
+        }
+      }
+
+      // Merge parsed data with defaults
+      assessmentSummary.value = {
+        ...defaultData,
+        ...parsedData,
+        profile: {
+          ...defaultData.profile,
+          ...parsedData.profile
+        },
+        careerStage: parsedData.careerStage || defaultData.careerStage,
+        leadershipPotential: parsedData.leadershipPotential || defaultData.leadershipPotential,
+        learningDevelopment: {
+          ...defaultData.learningDevelopment,
+          ...parsedData.learningDevelopment
+        },
+        nineBoxGrid: {
+          ...defaultData.nineBoxGrid,
+          ...parsedData.nineBoxGrid
+        },
+        skills: {
+          ...defaultData.skills,
+          ...parsedData.skills
+        }
+      }
+
+      console.log('assessmentSummary');
+      console.log(assessmentSummary.value);
+
+      
+      // Draw chevrons after data is loaded
+      await nextTick()
+      drawChevrons()
+      
+      // Load LinkedIn text from localStorage if it exists
+      const savedLinkedInText = localStorage.getItem('linkedinOrResumeText')
+      if (savedLinkedInText) {
+        linkedinOrResumeText.value = savedLinkedInText
+      }
+      
+      // If user is logged in, save the assessment data
+      if (user.value) {
+        await saveAssessmentData(linkedinOrResumeText.value)
+      }
+    } catch (error) {
+      console.error('Error parsing assessment data:', error)
+      router.push('/assessment')
     }
   } else {
+    console.log('No assessment data found in localStorage')
     // If no data is found, redirect back to assessment
     router.push('/assessment')
   }
@@ -567,8 +651,8 @@ const nineBoxRows = [
 const isNineBoxSelected = (row, col) => {
   if (!assessmentSummary.value) return false
   
-  const performance = assessmentSummary.value.nineBoxPosition.performance
-  const potential = assessmentSummary.value.nineBoxPosition.potential
+  const performance = assessmentSummary.value.threeByThreePosition.performance
+  const potential = assessmentSummary.value.threeByThreePosition.potential
   
   // Based on the grid layout in the UI:
   // Performance increases from left to right (Low, Moderate, High)
@@ -775,8 +859,8 @@ watch(
 const getNineBoxPositionName = () => {
   if (!assessmentSummary.value) return ''
   
-  const performance = assessmentSummary.value.nineBoxPosition.performance
-  const potential = assessmentSummary.value.nineBoxPosition.potential
+  const performance = assessmentSummary.value.threeByThreePosition.performance
+  const potential = assessmentSummary.value.threeByThreePosition.potential
   
   const positionNames = {
     'High': {
@@ -802,8 +886,8 @@ const getNineBoxPositionName = () => {
 const getNineBoxDescription = () => {
   if (!assessmentSummary.value) return ''
   
-  const performance = assessmentSummary.value.nineBoxPosition.performance
-  const potential = assessmentSummary.value.nineBoxPosition.potential
+  const performance = assessmentSummary.value.threeByThreePosition.performance
+  const potential = assessmentSummary.value.threeByThreePosition.potential
   
   const descriptions = {
     'High': {
@@ -829,8 +913,8 @@ const getNineBoxDescription = () => {
 const getNineBoxRecommendations = () => {
   if (!assessmentSummary.value) return []
   
-  const performance = assessmentSummary.value.nineBoxPosition.performance
-  const potential = assessmentSummary.value.nineBoxPosition.potential
+  const performance = assessmentSummary.value.threeByThreePosition.performance
+  const potential = assessmentSummary.value.threeByThreePosition.potential
   
   const recommendations = {
     'High': {
@@ -902,9 +986,11 @@ const getNineBoxRecommendations = () => {
 const getThreeMetricsDescription = () => {
   if (!assessmentSummary.value) return ''
   
-  const performance = assessmentSummary.value.threeByThreePosition.performance
-  const potential = assessmentSummary.value.threeByThreePosition.potential
-  const engagement = assessmentSummary.value.threeByThreePosition.engagement
+  const performance = assessmentSummary.value.threeByThreePosition?.performance
+  const potential = assessmentSummary.value.threeByThreePosition?.potential
+  const engagement = assessmentSummary.value.threeByThreePosition?.engagement
+  
+  if (!performance || !potential || !engagement) return 'Metrics not fully set'
   
   if (performance === 'High' && potential === 'High' && engagement === 'High') {
     return 'You\'re excelling across all three dimensions. This indicates strong value and leadership potential.'
@@ -951,7 +1037,8 @@ const getThreeMetricsDescription = () => {
 const getMetricDescription = (metric) => {
   if (!assessmentSummary.value) return ''
   
-  const level = assessmentSummary.value.threeByThreePosition[metric]
+  const level = assessmentSummary.value.threeByThreePosition?.[metric]
+  if (!level) return 'Not set'
   
   const descriptions = {
     'performance': {
@@ -971,15 +1058,17 @@ const getMetricDescription = (metric) => {
     }
   }
   
-  return descriptions[metric]?.[level] || ''
+  return descriptions[metric]?.[level] || 'Not set'
 }
 
 const getThreeMetricsRecommendations = () => {
   if (!assessmentSummary.value) return []
   
-  const performance = assessmentSummary.value.threeByThreePosition.performance
-  const potential = assessmentSummary.value.threeByThreePosition.potential
-  const engagement = assessmentSummary.value.threeByThreePosition.engagement
+  const performance = assessmentSummary.value.threeByThreePosition?.performance
+  const potential = assessmentSummary.value.threeByThreePosition?.potential
+  const engagement = assessmentSummary.value.threeByThreePosition?.engagement
+  
+  if (!performance || !potential || !engagement) return ['Please complete all metrics to get recommendations.']
   
   const recommendations = []
   

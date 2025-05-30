@@ -741,18 +741,25 @@
 
             <!-- Navigation Buttons -->
             <div class="mt-12 flex justify-between">
-              <button
-                v-if="currentStep > 1"
-                @click="previousStep"
-                class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                Previous
-              </button>
-              <div v-else></div>
+              <div class="flex space-x-4">
+                <button
+                  v-if="currentStep > 1"
+                  @click="handlePreviousStep"
+                  class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Previous
+                </button>
+                <button
+                  @click="clearLocalData"
+                  class="inline-flex items-center px-6 py-3 border border-red-300 shadow-sm text-base font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  Clear Data
+                </button>
+              </div>
               
               <button
                 v-if="currentStep < totalSteps"
-                @click="nextStep"
+                @click="handleNextStep"
                 class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 Next
@@ -900,38 +907,98 @@ async function saveAssessmentData() {
   }
 }
 
-// Add a debounced save function
-const debouncedSave = useDebounceFn(saveAssessmentData, 1000)
+// Override the nextStep function to include saving
+const handleNextStep = async () => {
+  await saveAssessmentData()
+  nextStep()
+}
 
-// Add watchers for assessment data changes
-watch(
-  () => assessmentData.value,
-  (newValue) => {
-    if (user.value) {
-      debouncedSave()
-    } else {
-      // If user is not logged in, only save to localStorage
-      localStorage.setItem('assessmentSummary', JSON.stringify(newValue))
-    }
-  },
-  { deep: true }
-)
+// Override the previousStep function to include saving
+const handlePreviousStep = async () => {
+  await saveAssessmentData()
+  previousStep()
+}
 
 // Update the submitAssessment function
 const submitAssessment = async () => {
   try {
-    // Save to localStorage
-    localStorage.setItem('assessmentSummary', JSON.stringify(assessmentData.value))
-    
-    // If user is logged in, save to database
-    if (user.value) {
-      await saveAssessmentData()
-    }
-    
-    // Navigate to summary page
-    navigateTo('/summary')
+    // Get the processed data from useAssessment
+    const { submitAssessment: submitToSummary } = useAssessment()
+    // This will process the data and save it to localStorage
+    submitToSummary()
   } catch (error) {
     console.error('Error submitting assessment:', error)
+  }
+}
+
+// Add the clearLocalData function in the script section
+const clearLocalData = () => {
+  if (confirm('Are you sure you want to clear all assessment data? This action cannot be undone.')) {
+    // Clear localStorage items
+    localStorage.removeItem('assessmentData')
+    localStorage.removeItem('assessmentSummary')
+    localStorage.removeItem('linkedinOrResumeText')
+    
+    // Reset the assessment data to initial state
+    assessmentData.value = {
+      profile: {
+        fullName: '',
+        email: '',
+        currentRole: '',
+        yearsOfExperience: '',
+        careerObjective: '',
+        previousRoles: [],
+        potentialPaths: []
+      },
+      careerStage: {
+        ageRange: '',
+        careerFocus: '',
+        primaryGoal: '',
+        experienceLevel: '',
+        developmentApproach: ''
+      },
+      learningDevelopment: {
+        learningOpportunities: '',
+        skillAcquisition: '',
+        skillApplication: '',
+        learningImpact: '',
+        futureDevelopment: ''
+      },
+      leadershipPotential: {
+        currentRole: '',
+        leadershipExperience: '',
+        leadershipSkills: '',
+        leadershipAspirations: '',
+        readinessLevel: ''
+      },
+      nineBoxGrid: {
+        performance: '',
+        delivery: '',
+        quality: '',
+        growthPotential: '',
+        learningAbility: '',
+        satisfaction: '',
+        motivation: ''
+      },
+      skills: {
+        primaryExpertise: '',
+        customPrimarySkill: '',
+        expertiseLevel: '',
+        secondaryAreas: [],
+        hasOtherSecondary: false,
+        customSecondarySkills: [],
+        skillBreadth: '',
+        futureSkills: [],
+        hasOtherFuture: false,
+        customFutureSkills: []
+      }
+    }
+    
+    // Reset to first step
+    currentStep.value = 1
+    
+    // Show success message
+    alert('All assessment data has been cleared. You can start fresh now.')
   }
 }
 </script> 

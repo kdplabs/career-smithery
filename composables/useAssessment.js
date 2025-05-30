@@ -76,7 +76,8 @@ export const useAssessment = () => {
 
   const processAssessmentData = () => {
     const data = assessmentData.value
-    
+    console.log('Assessment data');
+    console.log(data);
     // Process Career Stage
     let careerStage = 'Exploration'
     if (data.careerStage.ageRange === '25-45') careerStage = 'Establishment'
@@ -97,16 +98,71 @@ export const useAssessment = () => {
     else if (data.leadershipPotential.currentRole === 'manager_of_managers') leadershipPotential = 'Managing Managers'
     else if (data.leadershipPotential.currentRole === 'manager') leadershipPotential = 'Managing Others'
 
-    // Process Nine Box Position
-    const performance = data.nineBoxGrid.performance
-    const potential = data.nineBoxGrid.growthPotential
-
     // Process 3x3x3 Position
+    const calculateEngagement = (satisfaction, motivation) => {
+      // Convert string values to numbers for calculation
+      const satisfactionMap = { 'Low': 1, 'Moderate': 2, 'High': 3 }
+      const motivationMap = { 'Low': 1, 'Moderate': 2, 'High': 3 }
+      
+      const satisfactionScore = satisfactionMap[satisfaction] || 1
+      const motivationScore = motivationMap[motivation] || 1
+      
+      // Calculate average score
+      const averageScore = (satisfactionScore + motivationScore) / 2
+      
+      // Convert back to string value
+      if (averageScore >= 2.5) return 'High'
+      if (averageScore >= 1.5) return 'Moderate'
+      return 'Low'
+    }
+
+    const calculatePerformance = (performance, delivery, quality) => {
+      // Convert string values to numbers for calculation
+      const scoreMap = { 'Low': 1, 'Moderate': 2, 'High': 3 }
+      
+      const performanceScore = scoreMap[performance] || 1
+      const deliveryScore = scoreMap[delivery] || 1
+      const qualityScore = scoreMap[quality] || 1
+      
+      // Calculate weighted average (giving more weight to quality and delivery)
+      const averageScore = (performanceScore + (deliveryScore * 1.2) + (qualityScore * 1.2)) / 3.4
+      
+      // Convert back to string value
+      if (averageScore >= 2.5) return 'High'
+      if (averageScore >= 1.5) return 'Moderate'
+      return 'Low'
+    }
+
+    const calculatePotential = (growthPotential, learningAbility) => {
+      // Convert string values to numbers for calculation
+      const scoreMap = { 'Low': 1, 'Moderate': 2, 'High': 3 }
+      
+      const growthScore = scoreMap[growthPotential] || 1
+      const learningScore = scoreMap[learningAbility] || 1
+      
+      // Calculate average score
+      const averageScore = (growthScore + learningScore) / 2
+      
+      // Convert back to string value
+      if (averageScore >= 2.5) return 'High'
+      if (averageScore >= 1.5) return 'Moderate'
+      return 'Low'
+    }
+
     const threeByThreePosition = {
-      performance: data.nineBoxGrid.performance,
-      potential: data.nineBoxGrid.growthPotential,
-      engagement: data.nineBoxGrid.satisfaction === 'High' ? 'High' : 
-                 data.nineBoxGrid.satisfaction === 'Moderate' ? 'Medium' : 'Low'
+      performance: calculatePerformance(
+        data.nineBoxGrid.performance || 'Low',
+        data.nineBoxGrid.delivery || 'Low',
+        data.nineBoxGrid.quality || 'Low'
+      ),
+      potential: calculatePotential(
+        data.nineBoxGrid.growthPotential || 'Low',
+        data.nineBoxGrid.learningAbility || 'Low'
+      ),
+      engagement: calculateEngagement(
+        data.nineBoxGrid.satisfaction || 'Low',
+        data.nineBoxGrid.motivation || 'Low'
+      )
     }
 
     // Process Skills Profile
@@ -126,23 +182,46 @@ export const useAssessment = () => {
       skillsProfile.type = 'T-Shaped'
     }
 
-    return {
-      profile: data.profile,
+    // Return the processed data with all necessary fields
+    const processedData = {
+      profile: {
+        ...data.profile,
+        previousRoles: data.profile.previousRoles || [],
+        potentialPaths: data.profile.potentialPaths || []
+      },
       careerStage,
       kirkpatrickLevel,
       leadershipPotential,
-      nineBoxPosition: { performance, potential },
+      nineBoxGrid: {
+        performance: data.nineBoxGrid.performance || 'Low',
+        delivery: data.nineBoxGrid.delivery || 'Low',
+        quality: data.nineBoxGrid.quality || 'Low',
+        growthPotential: data.nineBoxGrid.growthPotential || 'Low',
+        learningAbility: data.nineBoxGrid.learningAbility || 'Low',
+        satisfaction: data.nineBoxGrid.satisfaction || 'Low',
+        motivation: data.nineBoxGrid.motivation || 'Low'
+      },
       threeByThreePosition,
       skillsProfile,
-      previousRoles: data.profile.previousRoles,
-      potentialCareerPaths: data.profile.potentialPaths
+      skills: {
+        ...data.skills,
+        secondaryAreas: data.skills.secondaryAreas || [],
+        customSecondarySkills: data.skills.customSecondarySkills || [],
+        futureSkills: data.skills.futureSkills || [],
+        customFutureSkills: data.skills.customFutureSkills || []
+      },
+      learningDevelopment: data.learningDevelopment
     }
+
+    console.log('Processed Data:', processedData)
+    return processedData
   }
 
   const submitAssessment = () => {
     saveStepData()
     const processedData = processAssessmentData()
-    
+    console.log('processedData');
+    console.log(processedData); 
     // Store the processed data in localStorage for the summary page
     localStorage.setItem('assessmentSummary', JSON.stringify(processedData))
     

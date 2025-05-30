@@ -7,16 +7,16 @@ import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
 import Plotly from 'plotly.js-dist-min'
 
 const props = defineProps<{
-  performance: 'Low' | 'Medium' | 'High'
-  potential: 'Low' | 'Medium' | 'High'
-  engagement: 'Low' | 'Medium' | 'High'
+  performance: 'Low' | 'Moderate' | 'High'
+  potential: 'Low' | 'Moderate' | 'High'
+  engagement: 'Low' | 'Moderate' | 'High'
 }>()
 
 const chartContainer = ref<HTMLElement | null>(null)
 
 // Map string values to numeric values (1-3 scale)
 const valueToNumeric = (value: string): number => {
-  const values = { 'Low': 1, 'Medium': 2, 'High': 3 }
+  const values = { 'Low': 1, 'Moderate': 2, 'High': 3 }
   return values[value as keyof typeof values]
 }
 
@@ -24,7 +24,7 @@ const valueToNumeric = (value: string): number => {
 const getBarColor = (value: string): string => {
   const colors = {
     'Low': 'rgba(239, 68, 68, 0.7)', // Red
-    'Medium': 'rgba(249, 115, 22, 0.7)', // Orange
+    'Moderate': 'rgba(249, 115, 22, 0.7)', // Orange
     'High': 'rgba(16, 185, 129, 0.7)', // Green
   }
   return colors[value as keyof typeof colors]
@@ -34,7 +34,7 @@ const getBarColor = (value: string): string => {
 const getBorderColor = (value: string): string => {
   const colors = {
     'Low': 'rgb(220, 38, 38)', // Darker red
-    'Medium': 'rgb(234, 88, 12)', // Darker orange
+    'Moderate': 'rgb(234, 88, 12)', // Darker orange
     'High': 'rgb(5, 150, 105)', // Darker green
   }
   return colors[value as keyof typeof colors]
@@ -128,7 +128,7 @@ const createChart = () => {
     y: [2, 2, 2],
     mode: 'lines',
     type: 'scatter',
-    name: 'Medium',
+    name: 'Moderate',
     line: {
       color: 'rgba(156, 163, 175, 0.5)',
       width: 1,
@@ -173,7 +173,7 @@ const createChart = () => {
     yaxis: {
       title: 'Rating',
       tickvals: [1, 2, 3],
-      ticktext: ['Low', 'Medium', 'High'],
+      ticktext: ['Low', 'Moderate', 'High'],
       range: [0, 3.5],
       tickfont: {
         size: 12,
