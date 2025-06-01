@@ -80,23 +80,188 @@ export const useAssessment = () => {
     console.log(data);
     // Process Career Stage
     let careerStage = 'Exploration'
-    if (data.careerStage.ageRange === '25-45') careerStage = 'Establishment'
-    else if (data.careerStage.ageRange === '45-55') careerStage = 'Mid-Career'
-    else if (data.careerStage.ageRange === '55+') careerStage = 'Late Career'
+    
+    // First determine base stage from age
+    if (data.careerStage.ageRange === '25-45') {
+      careerStage = 'Establishment'
+    } else if (data.careerStage.ageRange === '45-55') {
+      careerStage = 'Mid-Career'
+    } else if (data.careerStage.ageRange === '55+') {
+      careerStage = 'Late Career'
+    }
+
+    // Then refine the stage based on other factors, but only within age-appropriate bounds
+    if (careerStage === 'Establishment') {
+      // For 25-45 age range, can only be Establishment or early Mid-Career
+      if (data.careerStage.experienceLevel === 'expert' && 
+          (data.careerStage.careerFocus === 'mentoring' || data.careerStage.primaryGoal === 'legacy')) {
+        careerStage = 'Mid-Career' // Early transition to Mid-Career
+      }
+    } else if (careerStage === 'Mid-Career') {
+      // For 45-55 age range, can be Mid-Career or early Late Career
+      if (data.careerStage.experienceLevel === 'expert' && 
+          data.careerStage.careerFocus === 'mentoring' && 
+          data.careerStage.primaryGoal === 'legacy') {
+        careerStage = 'Late Career' // Early transition to Late Career
+      }
+    } else if (careerStage === 'Late Career') {
+      // For 55+ age range, can only be Late Career
+      // No refinement needed as this is the final stage
+    } else {
+      // For other ages, can be Exploration or early Establishment
+      if (data.careerStage.experienceLevel === 'intermediate' && 
+          data.careerStage.careerFocus === 'specialization') {
+        careerStage = 'Establishment' // Early transition to Establishment
+      }
+    }
 
     // Process Kirkpatrick Level
+    const calculateKirkpatrickScore = (data) => {
+      let score = 0
+      
+      // Learning Opportunities (Level 1: Reaction) - 20% weight
+      const reactionScores = {
+        'very_positive': 4,
+        'positive': 3,
+        'neutral': 2,
+        'negative': 1
+      }
+      score += (reactionScores[data.learningDevelopment.learningOpportunities] || 1) * 0.2
+      
+      // Skill Acquisition (Level 2: Learning) - 20% weight
+      const learningScores = {
+        'excellent': 4,
+        'good': 3,
+        'moderate': 2,
+        'minimal': 1
+      }
+      score += (learningScores[data.learningDevelopment.skillAcquisition] || 1) * 0.2
+      
+      // Skill Application (Level 3: Behavior) - 30% weight
+      const behaviorScores = {
+        'excellent': 4,
+        'good': 3,
+        'moderate': 2,
+        'minimal': 1
+      }
+      score += (behaviorScores[data.learningDevelopment.skillApplication] || 1) * 0.3
+      
+      // Learning Impact (Level 4: Results) - 20% weight
+      const impactScores = {
+        'significant': 4,
+        'moderate': 3,
+        'minimal': 2,
+        'none': 1
+      }
+      score += (impactScores[data.learningDevelopment.learningImpact] || 1) * 0.2
+      
+      // Future Development Approach - 10% weight
+      const futureScores = {
+        'proactive': 4,
+        'planned': 3,
+        'reactive': 2,
+        'passive': 1
+      }
+      score += (futureScores[data.learningDevelopment.futureDevelopment] || 1) * 0.1
+      
+      return score
+    }
+    
+    // Calculate the Kirkpatrick score
+    const kirkpatrickScore = calculateKirkpatrickScore(data)
+    
+    // Determine Kirkpatrick level based on score
     let kirkpatrickLevel = 'Level 1: Reaction'
-    if (data.learningDevelopment.learningImpact === 'significant') kirkpatrickLevel = 'Level 4: Results'
-    else if (data.learningDevelopment.skillApplication === 'excellent') kirkpatrickLevel = 'Level 3: Behavior'
-    else if (data.learningDevelopment.skillAcquisition === 'excellent') kirkpatrickLevel = 'Level 2: Learning'
+    if (kirkpatrickScore >= 3.5) {
+      kirkpatrickLevel = 'Level 4: Results'
+    } else if (kirkpatrickScore >= 3.0) {
+      kirkpatrickLevel = 'Level 3: Behavior'
+    } else if (kirkpatrickScore >= 2.5) {
+      kirkpatrickLevel = 'Level 2: Learning'
+    } else {
+      kirkpatrickLevel = 'Level 1: Reaction'
+    }
 
     // Process Leadership Potential
     let leadershipPotential = 'Managing Self'
-    if (data.leadershipPotential.currentRole === 'enterprise') leadershipPotential = 'Enterprise Leader'
-    else if (data.leadershipPotential.currentRole === 'business') leadershipPotential = 'Business Leader'
-    else if (data.leadershipPotential.currentRole === 'functional') leadershipPotential = 'Functional Leader'
-    else if (data.leadershipPotential.currentRole === 'manager_of_managers') leadershipPotential = 'Managing Managers'
-    else if (data.leadershipPotential.currentRole === 'manager') leadershipPotential = 'Managing Others'
+    
+    // Create a scoring system for leadership potential
+    const calculateLeadershipScore = (data) => {
+      let score = 0
+      
+      // Current Role (40% weight)
+      const roleScores = {
+        'enterprise': 6,
+        'business': 5,
+        'functional': 4,
+        'manager_of_managers': 3,
+        'manager': 2,
+        'individual': 1
+      }
+      score += (roleScores[data.leadershipPotential.currentRole] || 1) * 0.4
+      
+      // Leadership Experience (20% weight)
+      const experienceScores = {
+        'large_teams': 6,
+        'multiple_teams': 5,
+        'small_teams': 4,
+        'project_teams': 3,
+        'no_teams': 1
+      }
+      score += (experienceScores[data.leadershipPotential.leadershipExperience] || 1) * 0.2
+      
+      // Leadership Skills (20% weight)
+      const skillScores = {
+        'excellent': 6,
+        'advanced': 5,
+        'competent': 4,
+        'developing': 3,
+        'basic': 2,
+        'none': 1
+      }
+      score += (skillScores[data.leadershipPotential.leadershipSkills] || 1) * 0.2
+      
+      // Leadership Aspirations (10% weight)
+      const aspirationScores = {
+        'enterprise': 6,
+        'business': 5,
+        'functional': 4,
+        'department': 3,
+        'team': 2,
+        'none': 1
+      }
+      score += (aspirationScores[data.leadershipPotential.leadershipAspirations] || 1) * 0.1
+      
+      // Readiness Level (10% weight)
+      const readinessScores = {
+        'very_ready': 6,
+        'ready': 5,
+        'somewhat_ready': 4,
+        'developing': 3,
+        'not_ready': 1
+      }
+      score += (readinessScores[data.leadershipPotential.readinessLevel] || 1) * 0.1
+      
+      return score
+    }
+    
+    // Calculate the leadership score
+    const leadershipScore = calculateLeadershipScore(data)
+    
+    // Determine leadership potential based on score
+    if (leadershipScore >= 5.0) {
+      leadershipPotential = 'Enterprise Leader'
+    } else if (leadershipScore >= 4.0) {
+      leadershipPotential = 'Business Leader'
+    } else if (leadershipScore >= 3.0) {
+      leadershipPotential = 'Functional Leader'
+    } else if (leadershipScore >= 2.5) {
+      leadershipPotential = 'Managing Managers'
+    } else if (leadershipScore >= 2.0) {
+      leadershipPotential = 'Managing Others'
+    } else {
+      leadershipPotential = 'Managing Self'
+    }
 
     // Process 3x3x3 Position
     const calculateEngagement = (satisfaction, motivation) => {
@@ -176,9 +341,9 @@ export const useAssessment = () => {
     }
 
     // Determine T/Pi shaped based on secondary skills
-    if ((data.skills.secondaryAreas || []).length > 2) {
+    if ((data.skills.secondaryAreas || []).length >= 2) {
       skillsProfile.type = 'Pi-Shaped'
-    } else if ((data.skills.secondaryAreas || []).length > 0) {
+    } else if ((data.skills.secondaryAreas || []).length === 1) {
       skillsProfile.type = 'T-Shaped'
     }
 

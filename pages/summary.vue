@@ -11,7 +11,12 @@
     <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- Profile Card -->
       <div class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mb-4 border border-slate-100">
-        <h2 class="text-3xl font-bold text-slate-800 mb-6 font-sans">Profile Information</h2>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-3xl font-bold text-slate-800 font-sans">Profile Information</h2>
+          <NuxtLink to="/assessment-guide#profile-info" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
+            <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
+          </NuxtLink>
+        </div>
         <div class="flex items-center gap-8 mb-6">
           <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile Picture" class="w-28 h-28 rounded-full object-cover border-4 border-blue-400 shadow" />
           <div class="grid grid-cols-2 gap-6 flex-1">
@@ -41,7 +46,12 @@
 
       <!-- Career Stage Card -->
       <div class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mb-4 border border-slate-100">
-        <h2 class="text-3xl font-bold text-slate-800 mb-6 font-sans">Career Stage</h2>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-3xl font-bold text-slate-800 font-sans">Career Stage</h2>
+          <NuxtLink to="/assessment-guide#career-stage" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
+            <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
+          </NuxtLink>
+        </div>
         <!-- Career Stage D3 Chevron Progression -->
         <client-only>
           <div ref="chevronContainer" class="w-full h-40"></div>
@@ -57,7 +67,12 @@
 
       <!-- Role History & Future Paths -->
       <div class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mb-4 border border-slate-100">
-        <h2 class="text-3xl font-bold text-slate-800 mb-6 font-sans">Role History & Future Paths</h2>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-3xl font-bold text-slate-800 font-sans">Role History & Future Paths</h2>
+          <NuxtLink to="/assessment-guide#role-history" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
+            <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
+          </NuxtLink>
+        </div>
         <div class="flex">
           <!-- Left Side: Previous Roles (30%) -->
           <div class="flex-shrink-0 w-4/12 pr-6 border-r border-slate-200 relative">
@@ -134,7 +149,12 @@
 
       <!-- Nine Box Chart -->
       <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
-        <h2 class="text-3xl font-bold text-slate-800 mb-6 font-sans">Nine Box Position</h2>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-3xl font-bold text-slate-800 font-sans">Nine Box Position</h2>
+          <NuxtLink to="/assessment-guide#nine-box" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
+            <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
+          </NuxtLink>
+        </div>
         <div class="w-full overflow-x-auto">
           <div class="grid grid-cols-3 grid-rows-3 gap-3 max-w-2xl mx-auto">
             <template v-for="(row, rowIdx) in nineBoxRows" :key="rowIdx">
@@ -179,7 +199,12 @@
 
       <!-- Three by Three by Three Chart -->
       <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
-        <h2 class="text-3xl font-bold text-slate-800 mb-6 font-sans">Performance, Potential & Engagement</h2>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-3xl font-bold text-slate-800 font-sans">Performance, Potential & Engagement</h2>
+          <NuxtLink to="/assessment-guide#three-metrics" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
+            <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
+          </NuxtLink>
+        </div>
         
         <!-- Chart type toggle buttons -->
         <div class="flex justify-center mb-6">
@@ -267,7 +292,12 @@
 
       <!-- Leadership Pipeline Summary -->
       <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
-        <h2 class="text-3xl font-bold text-slate-800 mb-6 font-sans">Leadership Journey</h2>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-3xl font-bold text-slate-800 font-sans">Leadership Journey</h2>
+          <NuxtLink to="/assessment-guide#leadership-journey" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
+            <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
+          </NuxtLink>
+        </div>
         <div class="space-y-6">
           <div class="grid grid-cols-1 gap-4">
             <div :class="[
@@ -323,7 +353,12 @@
 
       <!-- Kirkpatrick Model Summary -->
       <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
-        <h2 class="text-3xl font-bold text-slate-800 mb-6 font-sans">Development Journey</h2>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-3xl font-bold text-slate-800 font-sans">Development Journey</h2>
+          <NuxtLink to="/assessment-guide#development-journey" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
+            <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
+          </NuxtLink>
+        </div>
         <div class="space-y-6">
           <div class="grid grid-cols-1 gap-4">
             <div :class="[
@@ -365,7 +400,12 @@
 
       <!-- Skills Profile Chart -->
       <div class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mb-4 border border-slate-100">
-        <h2 class="text-3xl font-bold text-sky-700 mb-6 font-sans">Skills Profile</h2>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-3xl font-bold text-sky-700 font-sans">Skills Profile</h2>
+          <NuxtLink to="/assessment-guide#skills-profile" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
+            <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
+          </NuxtLink>
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div :class="['rounded-xl shadow p-8 flex flex-col items-center font-sans', assessmentSummary?.skillsProfile?.type === 'I-Shaped' ? 'border-2 border-blue-500' : 'bg-white border border-slate-100']">
             <span class="text-6xl mb-4">𝐈</span>
@@ -381,6 +421,111 @@
             <span class="text-6xl mb-4">𝚷</span>
             <div class="font-bold mb-2 text-blue-700">Pi-Shaped</div>
             <div class="text-sm text-slate-600 text-center mb-2">Expertise in two domains + broad knowledge</div>
+          </div>
+        </div>
+
+        <!-- Skills Description Section -->
+        <div class="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-100">
+          <h3 class="text-xl font-bold text-blue-800 mb-6 font-sans">Your Skills Profile Analysis</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Primary Skills -->
+            <div class="bg-white rounded-lg shadow-sm border border-blue-100 p-4">
+              <h4 class="text-lg font-semibold text-blue-700 mb-3 font-sans">Primary Expertise</h4>
+              <div class="space-y-3">
+                <div>
+                  <p class="text-sm text-slate-500 font-sans">Area</p>
+                  <p class="text-blue-800 font-sans font-medium">{{ assessmentSummary?.skillsProfile?.primarySkill || 'Not specified' }}</p>
+                </div>
+                <div>
+                  <p class="text-sm text-slate-500 font-sans">Expertise Level</p>
+                  <span :class="[
+                    'inline-block px-3 py-1 rounded-full text-sm font-medium',
+                    assessmentSummary?.skillsProfile?.primaryLevel === 'expert' ? 'bg-green-100 text-green-800' :
+                    assessmentSummary?.skillsProfile?.primaryLevel === 'advanced' ? 'bg-blue-100 text-blue-800' :
+                    assessmentSummary?.skillsProfile?.primaryLevel === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-slate-100 text-slate-800'
+                  ]">
+                    {{ assessmentSummary?.skillsProfile?.primaryLevel || 'Not specified' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Secondary Skills -->
+            <div class="bg-white rounded-lg shadow-sm border border-blue-100 p-4">
+              <h4 class="text-lg font-semibold text-blue-700 mb-3 font-sans">Secondary Skills</h4>
+              <div class="space-y-3">
+                <div>
+                  <p class="text-sm text-slate-500 font-sans">Skill Breadth</p>
+                  <span :class="[
+                    'inline-block px-3 py-1 rounded-full text-sm font-medium',
+                    assessmentSummary?.skillsProfile?.breadth === 'broad' ? 'bg-green-100 text-green-800' :
+                    assessmentSummary?.skillsProfile?.breadth === 'moderate' ? 'bg-blue-100 text-blue-800' :
+                    'bg-slate-100 text-slate-800'
+                  ]">
+                    {{ assessmentSummary?.skillsProfile?.breadth || 'Not specified' }}
+                  </span>
+                </div>
+                <div>
+                  <p class="text-sm text-slate-500 font-sans">Areas of Knowledge</p>
+                  <div v-if="assessmentSummary?.skillsProfile?.secondarySkills?.length > 0" class="flex flex-wrap gap-2 mt-2">
+                    <span v-for="skill in assessmentSummary.skillsProfile.secondarySkills" 
+                          :key="skill"
+                          class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm">
+                      {{ skill }}
+                    </span>
+                  </div>
+                  <p v-else class="text-slate-500 text-sm">No secondary skills specified</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Development Areas -->
+            <div class="bg-white rounded-lg shadow-sm border border-blue-100 p-4">
+              <h4 class="text-lg font-semibold text-blue-700 mb-3 font-sans">Development Areas</h4>
+              <div class="space-y-3">
+                <div>
+                  <p class="text-sm text-slate-500 font-sans">Skills to Develop</p>
+                  <div v-if="assessmentSummary?.skillsProfile?.developmentAreas?.length > 0" class="flex flex-wrap gap-2 mt-2">
+                    <span v-for="skill in assessmentSummary.skillsProfile.developmentAreas" 
+                          :key="skill"
+                          class="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-sm">
+                      {{ skill }}
+                    </span>
+                  </div>
+                  <p v-else class="text-slate-500 text-sm">No development areas specified</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Skills Profile Recommendations -->
+          <div class="mt-6 bg-white rounded-lg shadow-sm border border-blue-100 p-4">
+            <h4 class="text-lg font-semibold text-blue-700 mb-3 font-sans">Recommendations</h4>
+            <ul class="list-disc pl-5 space-y-2 text-blue-800 font-sans">
+              <li v-if="assessmentSummary?.skillsProfile?.type === 'I-Shaped'">
+                Consider developing complementary skills to transition towards a T-shaped profile
+              </li>
+              <li v-if="assessmentSummary?.skillsProfile?.type === 'T-Shaped'">
+                Focus on deepening expertise in your primary area while maintaining breadth
+              </li>
+              <li v-if="assessmentSummary?.skillsProfile?.type === 'Pi-Shaped'">
+                Leverage your dual expertise to take on cross-functional leadership roles
+              </li>
+              <li v-if="assessmentSummary?.skillsProfile?.primaryLevel === 'beginner'">
+                Prioritize building foundational knowledge in your primary area
+              </li>
+              <li v-if="assessmentSummary?.skillsProfile?.primaryLevel === 'intermediate'">
+                Seek opportunities to apply your skills in more complex scenarios
+              </li>
+              <li v-if="assessmentSummary?.skillsProfile?.primaryLevel === 'advanced'">
+                Consider mentoring others to further develop your expertise
+              </li>
+              <li v-if="assessmentSummary?.skillsProfile?.primaryLevel === 'expert'">
+                Focus on innovation and thought leadership in your domain
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -1147,39 +1292,48 @@ async function saveAssessmentData(linkedinText = null) {
 
   try {
     // Check if plan already exists
-    const { data: existingPlan } = await supabase
+    const { data: existingPlan, error: fetchError } = await supabase
       .from('user_plans')
       .select('id, assessment_data')
       .eq('user_id', user.value.id)
       .single()
 
-    if (!existingPlan) {
-      // Save the assessment data if no plan exists
-      const { error } = await supabase.from('user_plans').insert([
-        {
-          user_id: user.value.id,
-          assessment_data: {
-            ...assessmentSummary.value,
-            linkedinText: linkedinText
-          },
-          created_at: new Date().toISOString()
-        }
-      ])
-      if (error) throw error
-      console.log('Assessment data saved successfully')
-    } else if (linkedinText) {
-      // Update existing plan with LinkedIn text
-      const { error } = await supabase
+    if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+      throw fetchError
+    }
+
+    if (existingPlan) {
+      // Update existing plan
+      const { error: updateError } = await supabase
         .from('user_plans')
         .update({
           assessment_data: {
-            ...existingPlan.assessment_data,
-            linkedinText: linkedinText
+            ...assessmentSummary.value,
+            ...(linkedinText && { linkedinText })
           }
         })
         .eq('id', existingPlan.id)
-      if (error) throw error
-      console.log('LinkedIn text saved successfully')
+        .eq('user_id', user.value.id) // Extra safety check
+
+      if (updateError) throw updateError
+      console.log('Assessment data updated successfully')
+    } else {
+      // Create new plan
+      const { error: insertError } = await supabase
+        .from('user_plans')
+        .insert([
+          {
+            user_id: user.value.id,
+            assessment_data: {
+              ...assessmentSummary.value,
+              ...(linkedinText && { linkedinText })
+            },
+            created_at: new Date().toISOString()
+          }
+        ])
+
+      if (insertError) throw insertError
+      console.log('New assessment data created successfully')
     }
   } catch (err) {
     console.error('Error saving assessment data:', err)

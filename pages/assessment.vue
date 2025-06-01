@@ -789,10 +789,12 @@
 <script setup>
 import { useSupabaseClient } from '#imports'
 import { useAuth } from '#imports'
+import { useRouter } from 'vue-router'
 
 const { currentStep, totalSteps, assessmentData, nextStep, previousStep } = useAssessment()
 const supabase = useSupabaseClient()
 const { user } = useAuth()
+const router = useRouter()
 const isSaving = ref(false)
 
 const addPreviousRole = () => {
@@ -851,11 +853,17 @@ watch(() => assessmentData.value.skills.hasOtherSecondary, (newValue) => {
   if (newValue && !assessmentData.value.skills.customSecondarySkills) {
     assessmentData.value.skills.customSecondarySkills = ['']
   }
+  if (!newValue) {
+    assessmentData.value.skills.customSecondarySkills = []
+  }
 })
 
 watch(() => assessmentData.value.skills.hasOtherFuture, (newValue) => {
   if (newValue && !assessmentData.value.skills.customFutureSkills) {
     assessmentData.value.skills.customFutureSkills = ['']
+  }
+  if (!newValue) {
+    assessmentData.value.skills.customFutureSkills = []
   }
 })
 
@@ -863,32 +871,32 @@ async function saveAssessmentData() {
   if (!user.value) return
 
   try {
-    isSaving.value = true
-    
-    // Save to localStorage first
-    localStorage.setItem('assessmentSummary', JSON.stringify(assessmentData.value))
-    
     // Check if plan already exists
-    const { data: existingPlan } = await supabase
+    const { data: existingPlan, error: fetchError } = await supabase
       .from('user_plans')
-      .select('id')
+      .select('id, assessment_data')
       .eq('user_id', user.value.id)
       .single()
 
+    if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+      throw fetchError
+    }
+
     if (existingPlan) {
       // Update existing plan
-      const { error } = await supabase
+      const { error: updateError } = await supabase
         .from('user_plans')
         .update({
-          assessment_data: assessmentData.value,
-          updated_at: new Date().toISOString()
+          assessment_data: assessmentData.value
         })
         .eq('id', existingPlan.id)
-      
-      if (error) throw error
+        .eq('user_id', user.value.id) // Extra safety check
+
+      if (updateError) throw updateError
+      console.log('Assessment data updated successfully')
     } else {
       // Create new plan
-      const { error } = await supabase
+      const { error: insertError } = await supabase
         .from('user_plans')
         .insert([
           {
@@ -897,35 +905,68 @@ async function saveAssessmentData() {
             created_at: new Date().toISOString()
           }
         ])
-      
-      if (error) throw error
+
+      if (insertError) throw insertError
+      console.log('New assessment data created successfully')
     }
   } catch (err) {
     console.error('Error saving assessment data:', err)
-  } finally {
-    isSaving.value = false
+    throw err
   }
 }
 
 // Override the nextStep function to include saving
 const handleNextStep = async () => {
-  await saveAssessmentData()
-  nextStep()
+  try {
+    // Save to localStorage first
+    localStorage.setItem('assessmentData', JSON.stringify(assessmentData.value))
+    
+    // If user is logged in, save to database
+    if (user.value) {
+      await saveAssessmentData()
+    }
+    
+    nextStep()
+  } catch (error) {
+    console.error('Error saving assessment data:', error)
+  }
 }
 
 // Override the previousStep function to include saving
 const handlePreviousStep = async () => {
-  await saveAssessmentData()
-  previousStep()
+  try {
+    // Save to localStorage first
+    localStorage.setItem('assessmentData', JSON.stringify(assessmentData.value))
+    
+    // If user is logged in, save to database
+    if (user.value) {
+      await saveAssessmentData()
+    }
+    
+    previousStep()
+  } catch (error) {
+    console.error('Error saving assessment data:', error)
+  }
 }
 
 // Update the submitAssessment function
 const submitAssessment = async () => {
   try {
+    // Save to localStorage first
+    localStorage.setItem('assessmentData', JSON.stringify(assessmentData.value))
+    
+    // If user is logged in, save to database
+    if (user.value) {
+      await saveAssessmentData()
+    }
+    
     // Get the processed data from useAssessment
     const { submitAssessment: submitToSummary } = useAssessment()
     // This will process the data and save it to localStorage
     submitToSummary()
+    
+    // Navigate to summary page
+    router.push('/summary')
   } catch (error) {
     console.error('Error submitting assessment:', error)
   }
