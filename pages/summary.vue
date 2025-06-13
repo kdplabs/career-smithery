@@ -670,15 +670,52 @@ const userCredits = ref(0)
 const pendingShowInputForm = ref(false)
 
 onMounted(async () => {
-  const savedData = localStorage.getItem('assessmentSummary')
-  console.log('Raw saved data:', savedData)
+  let assessmentData = null;
   
-  if (savedData) {
+  // First try to get data from database if user is logged in
+  if (user.value) {
     try {
-      const parsedData = JSON.parse(savedData)
-      console.log('Parsed assessment data:', parsedData)
-      
-      // Initialize with default values if needed
+      const { data: dbPlan, error } = await supabase
+        .from('user_plans')
+        .select('assessment_data')
+        .eq('user_id', user.value.id)
+        .single()
+
+      if (!error && dbPlan?.assessment_data) {
+        console.log('Found data in database:', dbPlan.assessment_data)
+        // If this is raw data from the assessment page, process it
+        if (dbPlan.assessment_data._metadata?.isRawData) {
+          const { processAssessmentData } = useAssessment()
+          const rawData = { ...dbPlan.assessment_data }
+          delete rawData._metadata  // Remove metadata before processing
+          assessmentData = processAssessmentData(rawData)
+        } else {
+          // If it's already processed data, use it as is
+          assessmentData = dbPlan.assessment_data
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching data from database:', err)
+    }
+  }
+
+  // If no database data, try localStorage
+  if (!assessmentData) {
+    const savedData = localStorage.getItem('assessmentSummary')
+    console.log('Raw saved data from localStorage:', savedData)
+    
+    if (savedData) {
+      try {
+        assessmentData = JSON.parse(savedData)
+      } catch (err) {
+        console.error('Error parsing localStorage data:', err)
+      }
+    }
+  }
+
+  if (assessmentData) {
+    try {
+      // Initialize with default values
       const defaultData = {
         profile: {
           fullName: '',
@@ -721,34 +758,30 @@ onMounted(async () => {
         }
       }
 
-      // Merge parsed data with defaults
+      // Merge with defaults
       assessmentSummary.value = {
         ...defaultData,
-        ...parsedData,
+        ...assessmentData,
         profile: {
           ...defaultData.profile,
-          ...parsedData.profile
+          ...assessmentData.profile
         },
-        careerStage: parsedData.careerStage || defaultData.careerStage,
-        leadershipPotential: parsedData.leadershipPotential || defaultData.leadershipPotential,
         learningDevelopment: {
           ...defaultData.learningDevelopment,
-          ...parsedData.learningDevelopment
+          ...assessmentData.learningDevelopment
         },
         nineBoxGrid: {
           ...defaultData.nineBoxGrid,
-          ...parsedData.nineBoxGrid
+          ...assessmentData.nineBoxGrid
         },
         skills: {
           ...defaultData.skills,
-          ...parsedData.skills
+          ...assessmentData.skills
         }
       }
 
-      console.log('assessmentSummary');
-      console.log(assessmentSummary.value);
+      console.log('Final assessment summary:', assessmentSummary.value)
 
-      
       // Draw chevrons after data is loaded
       await nextTick()
       drawChevrons()
@@ -758,18 +791,12 @@ onMounted(async () => {
       if (savedLinkedInText) {
         linkedinOrResumeText.value = savedLinkedInText
       }
-      
-      // If user is logged in, save the assessment data
-      if (user.value) {
-        await saveAssessmentData(linkedinOrResumeText.value)
-      }
     } catch (error) {
-      console.error('Error parsing assessment data:', error)
+      console.error('Error processing assessment data:', error)
       router.push('/assessment')
     }
   } else {
-    console.log('No assessment data found in localStorage')
-    // If no data is found, redirect back to assessment
+    console.log('No assessment data found')
     router.push('/assessment')
   }
 })

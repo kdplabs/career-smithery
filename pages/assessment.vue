@@ -882,12 +882,21 @@ async function saveAssessmentData() {
       throw fetchError
     }
 
+    // Store raw answers while maintaining the expected structure
+    const dataToSave = {
+      ...assessmentData.value,  // Keep the original structure
+      _metadata: {  // Add metadata without disturbing the main structure
+        isRawData: true,
+        lastUpdated: new Date().toISOString()
+      }
+    }
+
     if (existingPlan) {
       // Update existing plan
       const { error: updateError } = await supabase
         .from('user_plans')
         .update({
-          assessment_data: assessmentData.value
+          assessment_data: dataToSave
         })
         .eq('id', existingPlan.id)
         .eq('user_id', user.value.id) // Extra safety check
@@ -901,7 +910,7 @@ async function saveAssessmentData() {
         .insert([
           {
             user_id: user.value.id,
-            assessment_data: assessmentData.value,
+            assessment_data: dataToSave,
             created_at: new Date().toISOString()
           }
         ])
