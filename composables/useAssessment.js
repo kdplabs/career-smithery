@@ -2,6 +2,8 @@ export const useAssessment = () => {
   const currentStep = useState('currentStep', () => 1)
   const totalSteps = useState('totalSteps', () => 6)
   const router = useRouter()
+  const supabase = useSupabaseClient()
+  const { user } = useAuth()
   
   const assessmentData = useState('assessmentData', () => ({
     profile: {
@@ -395,10 +397,54 @@ export const useAssessment = () => {
   }
 
   // Load saved data on component mount
-  onMounted(() => {
-    const savedData = localStorage.getItem('assessmentData')
+  onMounted(async () => {
+    let savedData = null
+
+    // First try to get data from database if user is logged in
+    if (user.value) {
+      try {
+        const { data: dbPlan, error } = await supabase
+          .from('user_plans')
+          .select('assessment_data')
+          .eq('user_id', user.value.id)
+          .single()
+
+        // Only use database data if we have it and it's raw data
+        if (!error && dbPlan && dbPlan.assessment_data && dbPlan.assessment_data._metadata?.isRawData) {
+          console.log('Found raw data in database:', dbPlan.assessment_data)
+          savedData = { ...dbPlan.assessment_data }
+          delete savedData._metadata // Remove metadata before using
+          // Also update localStorage to keep it in sync
+          localStorage.setItem('assessmentData', JSON.stringify(savedData))
+        } else if (error && error.code !== 'PGRST116') {
+          // Log any error that's not "no rows found"
+          console.error('Error fetching data from database:', error)
+        }
+      } catch (err) {
+        console.error('Error in database operation:', err)
+      }
+    }
+
+    // If no database data found, try localStorage
+    if (!savedData) {
+      console.log('No database data found, trying localStorage')
+      const localData = localStorage.getItem('assessmentData')
+      if (localData) {
+        try {
+          savedData = JSON.parse(localData)
+          console.log('Found data in localStorage')
+        } catch (err) {
+          console.error('Error parsing localStorage data:', err)
+        }
+      }
+    }
+
+    // Update the assessment data if we found any saved data
     if (savedData) {
-      assessmentData.value = JSON.parse(savedData)
+      console.log('Using saved data:', savedData)
+      assessmentData.value = savedData
+    } else {
+      console.log('No saved data found, using default values')
     }
   })
 

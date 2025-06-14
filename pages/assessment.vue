@@ -867,106 +867,177 @@ watch(() => assessmentData.value.skills.hasOtherFuture, (newValue) => {
   }
 })
 
-async function saveAssessmentData() {
-  if (!user.value) return
-
-  try {
-    // Check if plan already exists
-    const { data: existingPlan, error: fetchError } = await supabase
-      .from('user_plans')
-      .select('id, assessment_data')
-      .eq('user_id', user.value.id)
-      .single()
-
-    if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 is "no rows returned"
-      throw fetchError
-    }
-
-    // Store raw answers while maintaining the expected structure
-    const dataToSave = {
-      ...assessmentData.value,  // Keep the original structure
-      _metadata: {  // Add metadata without disturbing the main structure
-        isRawData: true,
-        lastUpdated: new Date().toISOString()
-      }
-    }
-
-    if (existingPlan) {
-      // Update existing plan
-      const { error: updateError } = await supabase
-        .from('user_plans')
-        .update({
-          assessment_data: dataToSave
-        })
-        .eq('id', existingPlan.id)
-        .eq('user_id', user.value.id) // Extra safety check
-
-      if (updateError) throw updateError
-      console.log('Assessment data updated successfully')
-    } else {
-      // Create new plan
-      const { error: insertError } = await supabase
-        .from('user_plans')
-        .insert([
-          {
-            user_id: user.value.id,
-            assessment_data: dataToSave,
-            created_at: new Date().toISOString()
-          }
-        ])
-
-      if (insertError) throw insertError
-      console.log('New assessment data created successfully')
-    }
-  } catch (err) {
-    console.error('Error saving assessment data:', err)
-    throw err
-  }
-}
-
 // Override the nextStep function to include saving
 const handleNextStep = async () => {
   try {
-    // Save to localStorage first
-    localStorage.setItem('assessmentData', JSON.stringify(assessmentData.value))
+    isSaving.value = true
     
-    // If user is logged in, save to database
+    // If user is logged in, save to database first
     if (user.value) {
-      await saveAssessmentData()
+      // Check if plan exists and update/create accordingly
+      const { data: existingPlan, error: fetchError } = await supabase
+        .from('user_plans')
+        .select('id')
+        .eq('user_id', user.value.id)
+        .single()
+
+      const dataToSave = {
+        ...assessmentData.value,
+        _metadata: {
+          isRawData: true,
+          lastUpdated: new Date().toISOString(),
+          lastStep: currentStep.value
+        }
+      }
+
+      if (existingPlan) {
+        // Update existing plan
+        const { error: updateError } = await supabase
+          .from('user_plans')
+          .update({ assessment_data: dataToSave })
+          .eq('id', existingPlan.id)
+          .eq('user_id', user.value.id)
+
+        if (updateError) throw updateError
+      } else {
+        // Create new plan
+        const { error: insertError } = await supabase
+          .from('user_plans')
+          .insert([{
+            user_id: user.value.id,
+            assessment_data: dataToSave,
+            created_at: new Date().toISOString()
+          }])
+
+        if (insertError) throw insertError
+      }
+
+      // Update localStorage to keep it in sync
+      localStorage.setItem('assessmentData', JSON.stringify(assessmentData.value))
+    } else {
+      // If not logged in, only save to localStorage
+      localStorage.setItem('assessmentData', JSON.stringify(assessmentData.value))
     }
     
     nextStep()
   } catch (error) {
     console.error('Error saving assessment data:', error)
+  } finally {
+    isSaving.value = false
   }
 }
 
 // Override the previousStep function to include saving
 const handlePreviousStep = async () => {
   try {
-    // Save to localStorage first
-    localStorage.setItem('assessmentData', JSON.stringify(assessmentData.value))
+    isSaving.value = true
     
-    // If user is logged in, save to database
+    // If user is logged in, save to database first
     if (user.value) {
-      await saveAssessmentData()
+      // Check if plan exists and update/create accordingly
+      const { data: existingPlan, error: fetchError } = await supabase
+        .from('user_plans')
+        .select('id')
+        .eq('user_id', user.value.id)
+        .single()
+
+      const dataToSave = {
+        ...assessmentData.value,
+        _metadata: {
+          isRawData: true,
+          lastUpdated: new Date().toISOString(),
+          lastStep: currentStep.value
+        }
+      }
+
+      if (existingPlan) {
+        // Update existing plan
+        const { error: updateError } = await supabase
+          .from('user_plans')
+          .update({ assessment_data: dataToSave })
+          .eq('id', existingPlan.id)
+          .eq('user_id', user.value.id)
+
+        if (updateError) throw updateError
+      } else {
+        // Create new plan
+        const { error: insertError } = await supabase
+          .from('user_plans')
+          .insert([{
+            user_id: user.value.id,
+            assessment_data: dataToSave,
+            created_at: new Date().toISOString()
+          }])
+
+        if (insertError) throw insertError
+      }
+
+      // Update localStorage to keep it in sync
+      localStorage.setItem('assessmentData', JSON.stringify(assessmentData.value))
+    } else {
+      // If not logged in, only save to localStorage
+      localStorage.setItem('assessmentData', JSON.stringify(assessmentData.value))
     }
     
     previousStep()
   } catch (error) {
     console.error('Error saving assessment data:', error)
+  } finally {
+    isSaving.value = false
   }
 }
 
 // Update the submitAssessment function
 const submitAssessment = async () => {
   try {
-    // Save to localStorage first
-    localStorage.setItem('assessmentData', JSON.stringify(assessmentData.value))
+    isSaving.value = true
     
-    // If user is logged in, save to database
+    // If user is logged in, save to database first
     if (user.value) {
-      await saveAssessmentData()
+      // Check if plan exists and update/create accordingly
+      const { data: existingPlan, error: fetchError } = await supabase
+        .from('user_plans')
+        .select('id')
+        .eq('user_id', user.value.id)
+        .single()
+
+      const dataToSave = {
+        ...assessmentData.value,
+        _metadata: {
+          isRawData: true,
+          lastUpdated: new Date().toISOString(),
+          lastStep: currentStep.value,
+          isCompleted: true
+        }
+      }
+
+      if (existingPlan) {
+        // Update existing plan
+        const { error: updateError } = await supabase
+          .from('user_plans')
+          .update({ assessment_data: dataToSave })
+          .eq('id', existingPlan.id)
+          .eq('user_id', user.value.id)
+
+        if (updateError) throw updateError
+      } else {
+        // Create new plan
+        const { error: insertError } = await supabase
+          .from('user_plans')
+          .insert([{
+            user_id: user.value.id,
+            assessment_data: dataToSave,
+            created_at: new Date().toISOString()
+          }])
+
+        if (insertError) throw insertError
+      }
+
+      // Update localStorage to keep it in sync
+      localStorage.setItem('assessmentData', JSON.stringify(assessmentData.value))
+    } else {
+      // If not logged in, only save to localStorage
+      localStorage.setItem('assessmentData', JSON.stringify(assessmentData.value))
     }
     
     // Get the processed data from useAssessment
@@ -978,8 +1049,68 @@ const submitAssessment = async () => {
     router.push('/summary')
   } catch (error) {
     console.error('Error submitting assessment:', error)
+  } finally {
+    isSaving.value = false
   }
 }
+
+// Add a watch on the assessment data to save changes
+watch(
+  () => assessmentData.value,
+  async (newData) => {
+    if (user.value && !isSaving.value) {
+      try {
+        isSaving.value = true
+        
+        // Check if plan exists and update/create accordingly
+        const { data: existingPlan, error: fetchError } = await supabase
+          .from('user_plans')
+          .select('id')
+          .eq('user_id', user.value.id)
+          .single()
+
+        const dataToSave = {
+          ...newData,
+          _metadata: {
+            isRawData: true,
+            lastUpdated: new Date().toISOString(),
+            lastStep: currentStep.value
+          }
+        }
+
+        if (existingPlan) {
+          // Update existing plan
+          const { error: updateError } = await supabase
+            .from('user_plans')
+            .update({ assessment_data: dataToSave })
+            .eq('id', existingPlan.id)
+            .eq('user_id', user.value.id)
+
+          if (updateError) throw updateError
+        } else {
+          // Create new plan
+          const { error: insertError } = await supabase
+            .from('user_plans')
+            .insert([{
+              user_id: user.value.id,
+              assessment_data: dataToSave,
+              created_at: new Date().toISOString()
+            }])
+
+          if (insertError) throw insertError
+        }
+
+        // Update localStorage to keep it in sync
+        localStorage.setItem('assessmentData', JSON.stringify(newData))
+      } catch (error) {
+        console.error('Error auto-saving assessment data:', error)
+      } finally {
+        isSaving.value = false
+      }
+    }
+  },
+  { deep: true }
+)
 
 // Add the clearLocalData function in the script section
 const clearLocalData = () => {

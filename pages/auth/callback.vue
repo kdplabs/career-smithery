@@ -124,18 +124,46 @@ watch(
         if (savedData) {
           console.log('Found assessment data to save')
           const assessmentData = JSON.parse(savedData)
-          // Save the assessment data
-          const { error: saveError } = await supabase.from('user_plans').insert([
-            {
-              user_id: newUser.id,
-              assessment_data: assessmentData,
-              created_at: new Date().toISOString()
-            }
-          ])
           
-          if (saveError) {
-            throw new Error('Failed to save assessment data: ' + saveError.message)
+          // First check if user already has a plan
+          const { data: existingPlan, error: fetchError } = await supabase
+            .from('user_plans')
+            .select('id')
+            .eq('user_id', newUser.id)
+            .single()
+
+          if (fetchError && fetchError.code !== 'PGRST116') {
+            throw new Error('Error checking existing plan: ' + fetchError.message)
           }
+
+          if (existingPlan) {
+            // Update existing plan
+            const { error: updateError } = await supabase
+              .from('user_plans')
+              .update({ assessment_data: assessmentData })
+              .eq('id', existingPlan.id)
+              .eq('user_id', newUser.id)
+
+            if (updateError) {
+              throw new Error('Failed to update assessment data: ' + updateError.message)
+            }
+          } else {
+            // Create new plan
+            const { error: insertError } = await supabase
+              .from('user_plans')
+              .insert([
+                {
+                  user_id: newUser.id,
+                  assessment_data: assessmentData,
+                  created_at: new Date().toISOString()
+                }
+              ])
+
+            if (insertError) {
+              throw new Error('Failed to save assessment data: ' + insertError.message)
+            }
+          }
+          
           console.log('Assessment data saved successfully')
 
           // Check if we have LinkedIn/resume text
