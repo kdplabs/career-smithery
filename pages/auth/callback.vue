@@ -120,7 +120,7 @@ watch(
         await ensurePayAsYouGoSubscription(newUser.id)
         
         // Check if we have assessment data to save
-        const savedData = localStorage.getItem('assessmentSummary')
+        const savedData = localStorage.getItem('assessmentData')
         if (savedData) {
           console.log('Found assessment data to save')
           const assessmentData = JSON.parse(savedData)
@@ -140,7 +140,15 @@ watch(
             // Update existing plan
             const { error: updateError } = await supabase
               .from('user_plans')
-              .update({ assessment_data: assessmentData })
+              .update({ 
+                assessment_data: {
+                  ...assessmentData,
+                  _metadata: {
+                    isRawData: true,
+                    lastUpdated: new Date().toISOString()
+                  }
+                }
+              })
               .eq('id', existingPlan.id)
               .eq('user_id', newUser.id)
 
@@ -154,7 +162,13 @@ watch(
               .insert([
                 {
                   user_id: newUser.id,
-                  assessment_data: assessmentData,
+                  assessment_data: {
+                    ...assessmentData,
+                    _metadata: {
+                      isRawData: true,
+                      lastUpdated: new Date().toISOString()
+                    }
+                  },
                   created_at: new Date().toISOString()
                 }
               ])
