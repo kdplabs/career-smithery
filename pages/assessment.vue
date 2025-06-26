@@ -1100,13 +1100,18 @@ watch(
           if (insertError) throw insertError
         }
 
-        // Update localStorage to keep it in sync
-        localStorage.setItem('assessmentData', JSON.stringify(newData))
+        // Only update localStorage if user is not logged in
+        if (!user.value) {
+          localStorage.setItem('assessmentData', JSON.stringify(newData))
+        }
       } catch (error) {
         console.error('Error auto-saving assessment data:', error)
       } finally {
         isSaving.value = false
       }
+    } else if (!user.value) {
+      // If not logged in, only save to localStorage
+      localStorage.setItem('assessmentData', JSON.stringify(newData))
     }
   },
   { deep: true }

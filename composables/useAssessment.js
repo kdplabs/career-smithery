@@ -400,7 +400,7 @@ export const useAssessment = () => {
   onMounted(async () => {
     let savedData = null
 
-    // First try to get data from database if user is logged in
+    // Always try to get fresh data from database if user is logged in
     if (user.value) {
       try {
         const { data: dbPlan, error } = await supabase
@@ -408,14 +408,20 @@ export const useAssessment = () => {
           .select('assessment_data')
           .eq('user_id', user.value.id)
           .single()
+          .throwOnError()
 
-        // Only use database data if we have it and it's raw data
-        if (!error && dbPlan && dbPlan.assessment_data && dbPlan.assessment_data._metadata?.isRawData) {
-          console.log('Found raw data in database:', dbPlan.assessment_data)
-          savedData = { ...dbPlan.assessment_data }
-          delete savedData._metadata // Remove metadata before using
-          // Also update localStorage to keep it in sync
-          localStorage.setItem('assessmentData', JSON.stringify(savedData))
+        if (!error && dbPlan && dbPlan.assessment_data) {
+          console.log('Found data in database:', dbPlan.assessment_data)
+          // Clear any existing local storage data since we're using database data
+          localStorage.removeItem('assessmentData')
+          localStorage.removeItem('assessmentSummary')
+          
+          if (dbPlan.assessment_data._metadata?.isRawData) {
+            savedData = { ...dbPlan.assessment_data }
+            delete savedData._metadata // Remove metadata before using
+          } else {
+            savedData = dbPlan.assessment_data
+          }
         } else if (error && error.code !== 'PGRST116') {
           // Log any error that's not "no rows found"
           console.error('Error fetching data from database:', error)
@@ -425,9 +431,9 @@ export const useAssessment = () => {
       }
     }
 
-    // If no database data found, try localStorage
-    if (!savedData) {
-      console.log('No database data found, trying localStorage')
+    // Only try localStorage if user is not logged in or if no database data was found
+    if (!user.value || !savedData) {
+      console.log('No database data found or user not logged in, trying localStorage')
       const localData = localStorage.getItem('assessmentData')
       if (localData) {
         try {
@@ -454,6 +460,7 @@ export const useAssessment = () => {
     assessmentData,
     nextStep,
     previousStep,
-    submitAssessment
+    submitAssessment,
+    processAssessmentData
   }
 } 
