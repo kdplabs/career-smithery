@@ -9,6 +9,13 @@
 
       <!-- Content -->
       <div class="p-6">
+        <!-- Buy Credits Button (top, for all users) -->
+        <div class="mb-6 flex justify-center">
+          <button @click="openStripe(STRIPE_LINKS.buyCredits)" class="px-6 py-3 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition-all flex items-center">
+            <Icon name="i-mdi-currency-usd" class="mr-2" /> Buy Credits
+          </button>
+        </div>
+
         <!-- Pricing Cards -->
         <div class="grid md:grid-cols-3 gap-6">
           <!-- Free Plan -->
@@ -32,7 +39,7 @@
               </li>
             </ul>
             <button
-              :disabled="currentPlan === 'free'"
+              :disabled="currentPlan === 'free' || currentPlan === 'basic' || currentPlan === 'super_hero'"
               class="mt-6 w-full py-3 px-4 rounded-lg bg-gray-300 text-gray-500 font-semibold cursor-not-allowed"
             >
               Current Plan
@@ -67,29 +74,15 @@
               </li>
             </ul>
             <button
-              v-if="currentPlan === 'free'"
-              @click="handleBasic"
+              :disabled="currentPlan === 'basic' || currentPlan === 'super_hero'"
+              @click="openStripe(STRIPE_LINKS.pro)"
               class="mt-6 w-full py-3 px-4 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors"
             >
-              Upgrade to Basic
-            </button>
-            <button
-              v-else-if="currentPlan === 'basic'"
-              @click="handleBuyCredits"
-              class="mt-6 w-full py-3 px-4 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors"
-            >
-              Buy More Credits
-            </button>
-            <button
-              v-else-if="currentPlan === 'super_hero'"
-              disabled
-              class="mt-6 w-full py-3 px-4 rounded-lg bg-gray-300 text-gray-500 font-semibold cursor-not-allowed"
-            >
-              Included in Super Hero
+              {{ currentPlan === 'basic' ? 'Current Plan' : 'Upgrade to Pro' }}
             </button>
             <button
               v-if="currentPlan === 'basic'"
-              @click="handleSuperHero"
+              @click="openStripe(STRIPE_LINKS.superHero)"
               class="mt-2 w-full py-3 px-4 rounded-lg bg-yellow-400 text-white font-semibold hover:bg-yellow-500 transition-colors"
             >
               Upgrade to Super Hero
@@ -128,25 +121,11 @@
               </li>
             </ul>
             <button
-              v-if="currentPlan === 'free'"
-              @click="handleSuperHero"
+              :disabled="currentPlan === 'super_hero'"
+              @click="openStripe(STRIPE_LINKS.superHero)"
               class="mt-6 w-full py-3 px-4 rounded-lg bg-yellow-400 text-white font-semibold hover:bg-yellow-500 transition-colors"
             >
-              Go Super Hero!
-            </button>
-            <button
-              v-else-if="currentPlan === 'basic'"
-              @click="handleSuperHero"
-              class="mt-6 w-full py-3 px-4 rounded-lg bg-yellow-400 text-white font-semibold hover:bg-yellow-500 transition-colors"
-            >
-              Upgrade to Super Hero
-            </button>
-            <button
-              v-else-if="currentPlan === 'super_hero'"
-              @click="handleBuyCredits"
-              class="mt-6 w-full py-3 px-4 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors"
-            >
-              Buy More Credits
+              {{ currentPlan === 'super_hero' ? 'Current Plan' : 'Go Super Hero!' }}
             </button>
           </div>
         </div>
@@ -225,6 +204,12 @@ import { ref, onMounted } from 'vue'
 const supabase = useSupabaseClient()
 const { user } = useAuth()
 
+const STRIPE_LINKS = {
+  buyCredits: 'https://buy.stripe.com/test_dRm7sL709cM4ekO8xNabK02',
+  pro: 'https://buy.stripe.com/test_6oU4gzckth2k1y229pabK00',
+  superHero: 'https://buy.stripe.com/test_28E9AT0BL6nG5Oi6pFabK01'
+}
+
 const props = defineProps({
   show: {
     type: Boolean,
@@ -275,116 +260,12 @@ onMounted(async () => {
   }
 })
 
-// Handle Basic plan purchase
-async function handleBasic() {
-  try {
-    // Get the basic plan
-    const { data: plan, error: planError } = await supabase
-      .from('subscription_plans')
-      .select('id')
-      .eq('name', 'basic')
-      .single()
-
-    if (planError) throw planError
-
-    // Create subscription
-    const { error: subError } = await supabase.from('user_subscriptions').insert([
-      {
-        user_id: user.value.id,
-        plan_id: plan.id,
-        is_active: true,
-        auto_renew: true,
-        start_date: new Date().toISOString()
-      }
-    ])
-
-    if (subError) throw subError
-
-    // Add initial tokens/credits
-    const { error: creditError } = await supabase.from('user_credits').insert([
-      {
-        user_id: user.value.id,
-        change: 25000,
-        reason: 'basic_subscription',
-        balance_after: 25000,
-        created_at: new Date().toISOString()
-      }
-    ])
-
-    if (creditError) throw creditError
-
-    emit('purchase-complete', { type: 'basic', credits: 25000 })
-    emit('close')
-  } catch (err) {
-    console.error('Error creating basic subscription:', err)
-    alert('Error creating subscription. Please try again.')
+function openStripe(link) {
+  let url = link
+  const email = user.value?.email
+  if (email) {
+    url += (url.includes('?') ? '&' : '?') + 'prefilled_email=' + encodeURIComponent(email)
   }
-}
-
-// Handle Super Hero plan purchase
-async function handleSuperHero() {
-  try {
-    // Get the super hero plan
-    const { data: plan, error: planError } = await supabase
-      .from('subscription_plans')
-      .select('id')
-      .eq('name', 'super_hero')
-      .single()
-
-    if (planError) throw planError
-
-    // Create subscription
-    const { error: subError } = await supabase.from('user_subscriptions').insert([
-      {
-        user_id: user.value.id,
-        plan_id: plan.id,
-        is_active: true,
-        auto_renew: true,
-        start_date: new Date().toISOString()
-      }
-    ])
-
-    if (subError) throw subError
-
-    // Add initial tokens/credits
-    const { error: creditError } = await supabase.from('user_credits').insert([
-      {
-        user_id: user.value.id,
-        change: 100000,
-        reason: 'super_hero_subscription',
-        balance_after: 100000,
-        created_at: new Date().toISOString()
-      }
-    ])
-
-    if (creditError) throw creditError
-
-    emit('purchase-complete', { type: 'super_hero', credits: 100000 })
-    emit('close')
-  } catch (err) {
-    console.error('Error creating super hero subscription:', err)
-    alert('Error creating subscription. Please try again.')
-  }
-}
-
-// Handle Buy More Credits
-async function handleBuyCredits() {
-  try {
-    // Add 10,000 credits for $2 (example)
-    const { error } = await supabase.from('user_credits').insert([
-      {
-        user_id: user.value.id,
-        change: 10000,
-        reason: 'buy_credits',
-        balance_after: null, // will be set by backend trigger if needed
-        created_at: new Date().toISOString()
-      }
-    ])
-    if (error) throw error
-    emit('purchase-complete', { type: 'buy_credits', credits: 10000 })
-    emit('close')
-  } catch (err) {
-    alert('Error buying credits. Please try again.')
-  }
+  window.open(url, '_blank')
 }
 </script> 
