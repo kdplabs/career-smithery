@@ -46,6 +46,41 @@ CREATE TABLE IF NOT EXISTS user_plans (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc', now())
 );
 
+--
+-- User Profile Table
+--
+CREATE TABLE IF NOT EXISTS public.user_profile (
+  id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL,
+  metadata JSONB,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc', now()),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc', now())
+);
+
+-- Function to upsert into user_profile on auth.users insert or update
+CREATE OR REPLACE FUNCTION public.handle_user_profile_upsert()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.user_profile (id, email, metadata, created_at, updated_at)
+  VALUES (NEW.id, NEW.email, NEW.raw_user_meta_data, timezone('utc', now()), timezone('utc', now()))
+  ON CONFLICT (id) DO UPDATE
+    SET email = EXCLUDED.email,
+        metadata = EXCLUDED.metadata,
+        updated_at = timezone('utc', now());
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger for INSERT on auth.users
+CREATE TRIGGER on_auth_user_created
+AFTER INSERT ON auth.users
+FOR EACH ROW EXECUTE FUNCTION public.handle_user_profile_upsert();
+
+-- Trigger for UPDATE on auth.users (email or metadata changes)
+CREATE TRIGGER on_auth_user_updated
+AFTER UPDATE OF email, raw_user_meta_data ON auth.users
+FOR EACH ROW EXECUTE FUNCTION public.handle_user_profile_upsert();
+
 -- Insert default plans
 INSERT INTO subscription_plans (name, display_name, price_cents, billing_period, credits_per_month)
 VALUES
@@ -67,4 +102,15 @@ ON CONFLICT (name) DO NOTHING;
 -- Pay as you go: buy credits as needed, no monthly allocation
 -- Annual: $5/month (billed annually), 500 credits/month
 -- Monthly: $7/month (billed monthly), 500 credits/month
--- 
+--
+
+--\n-- One-time script to backfill user_profile for existing users\n--\n
+INSERT INTO public.user_profile 
+(id, email, metadata, created_at, updated_at)
+SELECT
+  id,  email, raw_user_meta_data, timezone('utc', now()), timezone('utc', now())
+FROM auth.users
+ON CONFLICT (id) DO UPDATE
+  SET email = EXCLUDED.email,
+      metadata = EXCLUDED.metadata,
+      updated_at = timezone('utc', now());
