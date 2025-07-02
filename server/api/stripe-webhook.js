@@ -99,6 +99,7 @@ export default defineEventHandler(async (event) => {
       // Map product/price to your plan name (you may need a mapping table)
       // For demo, assume product.name matches your plan name
       const planName = product?.name?.toLowerCase()
+      console.info('[Stripe Webhook] Plan name:', planName)
       if (!planName) {
         console.warn('[Stripe Webhook] Could not determine plan name from product')
         break
@@ -145,7 +146,7 @@ export default defineEventHandler(async (event) => {
       }
       break
     }
-    case 'customer.subscription_deleted': {
+    case 'customer.subscription.deleted': {
       const subscription = stripeEvent.data.object
       const subscriptionId = subscription.id
       const userId = subscription.metadata?.user_id
