@@ -1,14 +1,18 @@
 // @ts-ignore: No type declarations for 'stripe'
 import Stripe from 'stripe'
 import { readRawBody } from 'h3'
-import { serverSupabaseClient } from '#supabase/server'
+import { createClient } from '@supabase/supabase-js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2022-11-15',
 })
 
 export default defineEventHandler(async (event) => {
-  const supabase = serverSupabaseClient(event)
+  // Use the official Supabase JS client for server-side
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  )
 
   console.info('[Stripe Webhook] Incoming request')
   if (event.node.req.method !== 'POST') {
