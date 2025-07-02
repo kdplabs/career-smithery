@@ -106,7 +106,7 @@ export default defineEventHandler(async (event) => {
 
       // Find the user in Supabase by email
       const { data: user, error: userError } = await supabase
-        .from('auth.users')
+        .from('user_profile')
         .select('id')
         .eq('email', customerEmail)
         .single()
