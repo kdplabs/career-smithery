@@ -152,24 +152,26 @@ export default defineEventHandler(async (event) => {
   const isCancelled = subscription.status === 'canceled' || subscription.cancel_at_period_end === true
   const availableCredit = isActive ? plan.credits_per_month : 0
 
-  // Upsert user_subscriptions
-  const { error: upsertError } = await supabase
+  // Update user_subscriptions (not upsert)
+  let updateData = {
+    plan_id: plan.id,
+    is_active: isActive,
+    auto_renew: !isCancelled,
+    end_date: isCancelled ? new Date().toISOString() : null,
+    start_date: new Date().toISOString(),
+    // You can add more fields as needed
+  }
+  if (eventType !== 'customer.subscription.deleted') {
+    updateData.available_credit = availableCredit
+  }
+
+  const { error: updateError } = await supabase
     .from('user_subscriptions')
-    .upsert([
-      {
-        user_id: userId,
-        plan_id: plan.id,
-        is_active: isActive,
-        auto_renew: !isCancelled,
-        available_credit: availableCredit,
-        end_date: isCancelled ? new Date().toISOString() : null,
-        start_date: new Date().toISOString(),
-        // You can add more fields as needed
-      }
-    ], { onConflict: ['user_id'] })
-  if (upsertError) {
+    .update(updateData)
+    .eq('user_id', userId)
+  if (updateError) {
     event.node.res.writeHead(500)
-    event.node.res.end('Failed to upsert user_subscriptions')
+    event.node.res.end('Failed to update user_subscriptions')
     return
   }
 
