@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   // Use the official Supabase JS client for server-side
   const supabase = createClient(
     process.env.SUPABASE_URL,
-    process.env.SUPABASE_KEY
+    process.env.SUPABASE_SERVICE_ROLE_KEY
   )
 
   console.info('[Stripe Webhook] Incoming request')
