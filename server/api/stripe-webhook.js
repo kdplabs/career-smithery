@@ -1,7 +1,6 @@
 // @ts-ignore: No type declarations for 'stripe'
 import Stripe from 'stripe'
-// @ts-ignore: No type declarations for 'raw-body'
-import getRawBody from 'raw-body'
+import { readRawBody } from 'h3'
 import { serverSupabaseClient } from '#supabase/server'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
@@ -23,7 +22,7 @@ export default defineEventHandler(async (event) => {
   const res = event.node.res
   let rawBody
   try {
-    rawBody = await getRawBody(req)
+    rawBody = await readRawBody(event)
     console.info('[Stripe Webhook] Raw body parsed')
   } catch (err) {
     console.error('[Stripe Webhook] Error reading raw body:', err)
