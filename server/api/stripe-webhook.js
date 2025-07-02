@@ -11,9 +11,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 export default defineEventHandler(async (event) => {
   const supabase = serverSupabaseClient(event)
 
-  console.log('[Stripe Webhook] Incoming request')
+  console.info('[Stripe Webhook] Incoming request')
   if (event.node.req.method !== 'POST') {
-    console.log('[Stripe Webhook] Method not allowed:', event.node.req.method)
+    console.info('[Stripe Webhook] Method not allowed:', event.node.req.method)
     event.node.res.writeHead(405)
     event.node.res.end('Method Not Allowed')
     return
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
   let rawBody
   try {
     rawBody = await getRawBody(req)
-    console.log('[Stripe Webhook] Raw body parsed')
+    console.info('[Stripe Webhook] Raw body parsed')
   } catch (err) {
     console.error('[Stripe Webhook] Error reading raw body:', err)
     res.writeHead(400)
@@ -34,13 +34,13 @@ export default defineEventHandler(async (event) => {
 
   const sig = req.headers['stripe-signature']
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
-  console.log('[Stripe Webhook] Signature:', sig)
-  console.log('[Stripe Webhook] Webhook Secret:', webhookSecret ? 'set' : 'not set')
+  console.info('[Stripe Webhook] Signature:', sig)
+  console.info('[Stripe Webhook] Webhook Secret:', webhookSecret ? 'set' : 'not set')
 
   let stripeEvent
   try {
     stripeEvent = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret)
-    console.log('[Stripe Webhook] Stripe event constructed:', stripeEvent.type)
+    console.info('[Stripe Webhook] Stripe event constructed:', stripeEvent.type)
   } catch (err) {
     console.error('[Stripe Webhook] Signature verification failed:', err)
     res.writeHead(400)
@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
   switch (stripeEvent.type) {
     case 'invoice.payment_succeeded': {
       const invoice = stripeEvent.data.object
-      console.log('[Stripe Webhook] invoice.payment_succeeded event:', JSON.stringify(invoice, null, 2))
+      console.info('[Stripe Webhook] invoice.payment_succeeded event:', JSON.stringify(invoice, null, 2))
 
       // Get customer email and subscription ID
       const customerEmail = invoice.customer_email
@@ -61,8 +61,8 @@ export default defineEventHandler(async (event) => {
         console.warn('[Stripe Webhook] Missing customer_email or subscription ID on invoice')
         break
       }
-      console.log('[Stripe Webhook] Customer email:', customerEmail)
-      console.log('[Stripe Webhook] Subscription ID:', subscriptionId)
+      console.info('[Stripe Webhook] Customer email:', customerEmail)
+      console.info('[Stripe Webhook] Subscription ID:', subscriptionId)
 
       // Get the first line item (assume 1 subscription per invoice)
       const line = invoice.lines?.data?.[0]
@@ -72,14 +72,14 @@ export default defineEventHandler(async (event) => {
       }
       const priceId = line.price?.id
       const productId = line.price?.product
-      console.log('[Stripe Webhook] Price ID:', priceId)
-      console.log('[Stripe Webhook] Product ID:', productId)
+      console.info('[Stripe Webhook] Price ID:', priceId)
+      console.info('[Stripe Webhook] Product ID:', productId)
 
       // Optionally fetch product details from Stripe
       let product
       try {
         product = await stripe.products.retrieve(productId)
-        console.log('[Stripe Webhook] Stripe product:', JSON.stringify(product, null, 2))
+        console.info('[Stripe Webhook] Stripe product:', JSON.stringify(product, null, 2))
       } catch (err) {
         console.warn('[Stripe Webhook] Could not fetch product from Stripe:', err)
       }
@@ -129,7 +129,7 @@ export default defineEventHandler(async (event) => {
       if (updateError) {
         console.error('[Stripe Webhook] Failed to update user_subscriptions:', updateError)
       } else {
-        console.log('[Stripe Webhook] Updated user_subscriptions for user', userId, 'to plan', planName)
+        console.info('[Stripe Webhook] Updated user_subscriptions for user', userId, 'to plan', planName)
       }
       break
     }
@@ -164,18 +164,18 @@ export default defineEventHandler(async (event) => {
       if (updateError) {
         console.error('[Stripe Webhook] Failed to update user_subscriptions to payg:', updateError)
       } else {
-        console.log('[Stripe Webhook] Set user', userId, 'to payg plan after cancellation')
+        console.info('[Stripe Webhook] Set user', userId, 'to payg plan after cancellation')
       }
       break
     }
     case 'checkout.session.completed': {
       const session = stripeEvent.data.object
-      console.log('[Stripe Webhook] checkout.session.completed:', JSON.stringify(session, null, 2))
+      console.info('[Stripe Webhook] checkout.session.completed:', JSON.stringify(session, null, 2))
       // (No DB update here, handled by invoice.payment_succeeded)
       break
     }
     default:
-      console.log('[Stripe Webhook] Unhandled event type:', stripeEvent.type)
+      console.info('[Stripe Webhook] Unhandled event type:', stripeEvent.type)
       break
   }
 
