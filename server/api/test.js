@@ -75,6 +75,53 @@ export default defineEventHandler(async (event) => {
     return
   }
 
+  // Find user in user_profile
+  const { data: user, error: userError } = await supabase
+    .from('user_profile')
+    .select('id')
+    .eq('email', customer.email)
+    .single()
+  if (userError || !user) {
+    event.node.res.writeHead(404)
+    event.node.res.end('User not found in user_profile')
+    return
+  }
+  const userId = user.id
+  console.info('User', userId)
+
+  if (eventType === 'customer.subscription.deleted') {
+    // Move user to pay as you go plan, set inactive, do not change available_credit
+    const { data: paygPlan, error: paygPlanError } = await supabase
+      .from('subscription_plans')
+      .select('id')
+      .eq('name', 'payg')
+      .single()
+    if (paygPlanError || !paygPlan) {
+      event.node.res.writeHead(404)
+      event.node.res.end('Pay as you go plan not found in subscription_plans')
+      return
+    }
+    const { error: updateError } = await supabase
+      .from('user_subscriptions')
+      .update({
+        plan_id: paygPlan.id,
+        is_active: false,
+        auto_renew: false,
+        end_date: new Date().toISOString(),
+        start_date: new Date().toISOString(),
+      })
+      .eq('user_id', userId)
+    if (updateError) {
+      event.node.res.writeHead(500)
+      event.node.res.end('Failed to update user_subscriptions for cancellation')
+      return
+    }
+    event.node.res.setHeader('Content-Type', 'application/json')
+    event.node.res.end(JSON.stringify({ success: true, result: 'User moved to pay as you go after cancellation' }))
+    return
+  }
+
+  // For payment succeeded, continue as before
   // 2. Fetch subscriptions for the customer
   let subscription
   try {
@@ -119,21 +166,6 @@ export default defineEventHandler(async (event) => {
     return
   }
 
-  // 4. Update the database
-  // Find user in user_profile
-  const { data: user, error: userError } = await supabase
-    .from('user_profile')
-    .select('id')
-    .eq('email', customer.email)
-    .single()
-  if (userError || !user) {
-    event.node.res.writeHead(404)
-    event.node.res.end('User not found in user_profile')
-    return
-  }
-  const userId = user.id
-  console.info('User', userId)
-
   // Find the plan in subscription_plans
   const { data: plan, error: planError } = await supabase
     .from('subscription_plans')
@@ -159,10 +191,8 @@ export default defineEventHandler(async (event) => {
     auto_renew: !isCancelled,
     end_date: isCancelled ? new Date().toISOString() : null,
     start_date: new Date().toISOString(),
+    available_credit: availableCredit,
     // You can add more fields as needed
-  }
-  if (eventType !== 'customer.subscription.deleted') {
-    updateData.available_credit = availableCredit
   }
 
   const { error: updateError } = await supabase
