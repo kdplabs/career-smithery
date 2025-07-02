@@ -106,7 +106,7 @@ export default defineEventHandler(async (event) => {
 
       // Find the user in Supabase by email
       const { data: user, error: userError } = await supabase
-        .from('users')
+        .from('auth.users')
         .select('id')
         .eq('email', customerEmail)
         .single()
@@ -137,7 +137,7 @@ export default defineEventHandler(async (event) => {
           available_credit: plan.credits_per_month,
         })
         .eq('user_id', userId)
-        .eq('id', subscriptionId)
+      //  .eq('id', subscriptionId)
       if (updateError) {
         console.error('[Stripe Webhook] Failed to update user_subscriptions:', updateError)
       } else {
