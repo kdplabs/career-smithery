@@ -1,8 +1,11 @@
 import Stripe from 'stripe'
+import { createClient } from '@supabase/supabase-js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2022-11-15',
 })
+
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
 
 // Example: import { createClient } from '@supabase/supabase-js'
 // const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
@@ -92,6 +95,7 @@ export default defineEventHandler(async (event) => {
 
   // 3. Fetch product for the first subscription item
   let product = null
+  let planName = 'payg'
   try {
     const firstItem = subscription.items.data[0]
     if (!firstItem) {
@@ -103,6 +107,11 @@ export default defineEventHandler(async (event) => {
     const productId = typeof firstItem.price.product === 'string' ? firstItem.price.product : firstItem.price.product.id
     const prod = await stripe.products.retrieve(productId)
     product = prod
+    planName = (product.name || '').toLowerCase()
+    // Map product name to plan name if needed
+    if (!['payg', 'pro', 'super hero'].includes(planName)) {
+      planName = 'payg'
+    }
     console.info('Product', product)
   } catch (err) {
     event.node.res.writeHead(500)
@@ -110,17 +119,57 @@ export default defineEventHandler(async (event) => {
     return
   }
 
-  // 4. Update the database (pseudo-code, replace with your actual DB logic)
-  // Example: update user_subscriptions table with subscription status and product info
-  // const { data, error } = await supabase
-  //   .from('user_subscriptions')
-  //   .update({
-  //     subscription_status: subscription.status,
-  //     is_cancelled: subscription.status === 'canceled' || subscription.cancel_at_period_end === true,
-  //     product_id: product.id,
-  //     updated_at: new Date().toISOString(),
-  //   })
-  //   .eq('user_email', customer.email)
+  // 4. Update the database
+  // Find user in user_profile
+  const { data: user, error: userError } = await supabase
+    .from('user_profile')
+    .select('id')
+    .eq('email', customer.email)
+    .single()
+  if (userError || !user) {
+    event.node.res.writeHead(404)
+    event.node.res.end('User not found in user_profile')
+    return
+  }
+  const userId = user.id
+
+  // Find the plan in subscription_plans
+  const { data: plan, error: planError } = await supabase
+    .from('subscription_plans')
+    .select('id, credits_per_month')
+    .eq('name', planName)
+    .single()
+  if (planError || !plan) {
+    event.node.res.writeHead(404)
+    event.node.res.end('Plan not found in subscription_plans')
+    return
+  }
+
+  // Determine subscription status
+  const isActive = subscription.status === 'active'
+  const isCancelled = subscription.status === 'canceled' || subscription.cancel_at_period_end === true
+  const availableCredit = isActive ? plan.credits_per_month : 0
+
+  // Upsert user_subscriptions
+  const { error: upsertError } = await supabase
+    .from('user_subscriptions')
+    .upsert([
+      {
+        user_id: userId,
+        plan_id: plan.id,
+        is_active: isActive,
+        auto_renew: !isCancelled,
+        available_credit: availableCredit,
+        end_date: isCancelled ? new Date().toISOString() : null,
+        start_date: new Date().toISOString(),
+        // You can add more fields as needed
+      }
+    ], { onConflict: ['user_id'] })
+  if (upsertError) {
+    event.node.res.writeHead(500)
+    event.node.res.end('Failed to upsert user_subscriptions')
+    return
+  }
 
   // Respond with a summary
   const result = {
@@ -128,7 +177,9 @@ export default defineEventHandler(async (event) => {
     email: customer.email,
     product,
     subscription_status: subscription.status,
-    is_cancelled: subscription.status === 'canceled' || subscription.cancel_at_period_end === true
+    is_cancelled: isCancelled,
+    available_credit: availableCredit,
+    plan: planName
   }
   console.info('Result', result)
 
