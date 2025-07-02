@@ -132,6 +132,7 @@ export default defineEventHandler(async (event) => {
     return
   }
   const userId = user.id
+  console.info('User', userId)
 
   // Find the plan in subscription_plans
   const { data: plan, error: planError } = await supabase
@@ -144,6 +145,7 @@ export default defineEventHandler(async (event) => {
     event.node.res.end('Plan not found in subscription_plans')
     return
   }
+  console.info('Plan', plan)
 
   // Determine subscription status
   const isActive = subscription.status === 'active'
