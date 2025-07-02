@@ -20,11 +20,13 @@ export default defineEventHandler(async (event) => {
   } catch (err) {
     event.node.res.writeHead(400)
     event.node.res.end('Invalid request body')
+    console.info('Invalid request body', err)
     return
   }
 
   // Stripe webhook event type
   const eventType = body.type
+  console.info('Event type', eventType)
   if (!['invoice.payment_succeeded', 'customer.subscription.deleted'].includes(eventType)) {
     event.node.res.writeHead(200)
     event.node.res.end('Event ignored')
