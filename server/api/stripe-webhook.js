@@ -55,7 +55,16 @@ export default defineEventHandler(async (event) => {
 
       // Get customer email and subscription ID
       const customerEmail = invoice.customer_email
-      const subscriptionId = invoice.subscription
+      let subscriptionId = invoice.subscription
+
+      // Fallback: try to get subscriptionId from line item if not present
+      if (!subscriptionId && invoice.lines?.data?.[0]) {
+        subscriptionId =
+          invoice.lines.data[0].subscription ||
+          invoice.lines.data[0].parent?.subscription_details?.subscription ||
+          invoice.lines.data[0].parent?.subscription ||
+          invoice.lines.data[0].id // fallback, but usually not the subscription id
+      }
       if (!customerEmail || !subscriptionId) {
         console.warn('[Stripe Webhook] Missing customer_email or subscription ID on invoice')
         break
