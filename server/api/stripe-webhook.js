@@ -78,8 +78,8 @@ export default defineEventHandler(async (event) => {
         console.warn('[Stripe Webhook] No line items found on invoice')
         break
       }
-      const priceId = line.price?.id
-      const productId = line.price?.product
+      const priceId = line.pricing?.price_details?.price
+      const productId = line.pricing?.price_details?.product
       console.info('[Stripe Webhook] Price ID:', priceId)
       console.info('[Stripe Webhook] Product ID:', productId)
 
