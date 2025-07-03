@@ -207,9 +207,27 @@ export default defineEventHandler(async (event) => {
 
   // For payment succeeded or subscription updated, update plan
   if (eventType === 'invoice.payment_succeeded' || eventType === 'customer.subscription.updated') {
-    // Get subscription ID from event
-    const subscriptionId = body.data.object.subscription || body.data.object.id
-    console.info('Subscription ID to fetch:', subscriptionId)
+    // Robustly extract subscription ID
+    let subscriptionId = body.data.object.subscription
+      || body.data.object.parent?.subscription_details?.subscription;
+    console.info('Initial subscriptionId from object or parent:', subscriptionId)
+    // Fallback: try to get from line items if still not found
+    if (!subscriptionId && body.data.object.lines?.data?.length) {
+      for (const line of body.data.object.lines.data) {
+        if (line.parent?.subscription_item_details?.subscription) {
+          subscriptionId = line.parent.subscription_item_details.subscription;
+          console.info('Found subscriptionId from line item:', subscriptionId)
+          break;
+        }
+      }
+    }
+    if (!subscriptionId) {
+      console.info('No subscriptionId found in event payload')
+      event.node.res.writeHead(400)
+      event.node.res.end('No subscriptionId found in event payload')
+      return
+    }
+    console.info('Final subscriptionId to fetch:', subscriptionId)
     // Fetch subscription from Stripe
     let subscription
     try {
