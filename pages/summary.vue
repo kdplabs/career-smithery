@@ -551,7 +551,7 @@
               :disabled="!linkedinOrResumeText.trim()"
               class="px-6 py-2 text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-slate-400 transition-all font-sans flex items-center"
             >
-              <Icon name="i-mdi-brain" class="mr-2" /> Generate Report (10 credits)
+              <Icon name="i-mdi-brain" class="mr-2" /> Generate Report
             </button>
           </div>
         </div>
@@ -640,6 +640,7 @@ import ThreeMetricsRadarChart from '~/components/charts/ThreeMetricsRadarChart.v
 import ThreeMetricsBarChart from '~/components/charts/ThreeMetricsBarChart.vue'
 import { useSupabaseClient } from '#imports'
 import PricingModal from '~/components/PricingModal.vue'
+import { useRouter, useRoute, navigateTo } from 'nuxt/app'
 
 const assessmentSummary = ref(null)
 const router = useRouter()
@@ -1702,79 +1703,36 @@ const submitForPersonalizedPlan = async () => {
     // Save LinkedIn/CV data first
     await saveAssessmentData(linkedinOrResumeText.value)
 
-    // Check credits before proceeding
-    const availableCredits = await checkUserCredits()
-    if (availableCredits < 10) {
-      isGeneratingPlan.value = false
-      showPricingModal.value = true
-      return
-    }
-
-    // Deduct credits
-    const { error: creditError } = await supabase.from('user_credits').insert([
-      {
-        user_id: user.value.id,
-        change: -10,
-        reason: 'report_generation',
-        balance_after: availableCredits - 10,
-        created_at: new Date().toISOString()
-      }
-    ])
-
-    if (creditError) throw creditError
-
-    // Update local credit count
-    userCredits.value = availableCredits - 10
-
-    // Get assessment data to include in prompt
-    const performanceLevel = assessmentSummary.value.threeByThreePosition.performance
-    const potentialLevel = assessmentSummary.value.threeByThreePosition.potential
-    const engagementLevel = assessmentSummary.value.threeByThreePosition.engagement
-    const nineBoxPosition = getNineBoxPositionName()
-    const careerStage = assessmentSummary.value.careerStage
-
-    // Generate the report using GPT
+    // Call new API endpoint for report generation
     const response = await fetch('/api/generate-report', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        linkedinText: linkedinOrResumeText.value,
-        assessmentData: {
-          performance: performanceLevel,
-          potential: potentialLevel,
-          engagement: engagementLevel,
-          nineBoxPosition,
-          careerStage,
-          profile: assessmentSummary.value.profile
-        }
+        user_id: user.value.id,
+        assessmentSummary: assessmentSummary.value,
+        linkedinText: linkedinOrResumeText.value
       })
     })
 
+    if (response.status === 402) {
+      isGeneratingPlan.value = false
+      showPricingModal.value = true
+      return
+    }
     if (!response.ok) {
       throw new Error('Failed to generate report')
     }
 
     const result = await response.json()
-    personalizedPlan.value = result.report
-
+    // Save the structured report in localStorage for the new page
+    localStorage.setItem('personalizedReport', JSON.stringify(result.report))
+    // Redirect to the new report page
+    navigateTo('/personalized-report')
   } catch (error) {
     console.error('Error generating plan:', error)
     planError.value = 'There was an error generating your plan. Please try again later.'
-    // Refund credits if report generation fails
-    if (userCredits.value < availableCredits) {
-      await supabase.from('user_credits').insert([
-        {
-          user_id: user.value.id,
-          change: 10,
-          reason: 'refund_failed_generation',
-          balance_after: availableCredits,
-          created_at: new Date().toISOString()
-        }
-      ])
-      userCredits.value = availableCredits
-    }
   } finally {
     isGeneratingPlan.value = false
   }
