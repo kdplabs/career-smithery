@@ -39,12 +39,17 @@ CREATE TABLE IF NOT EXISTS user_credits (
 );
 
 -- User Plans Table
-CREATE TABLE IF NOT EXISTS user_plans (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  assessment_data JSONB NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc', now())
-);
+create table public.user_plans (
+  id uuid not null default gen_random_uuid (),
+  user_id uuid not null,
+  assessment_data jsonb not null,
+  created_at timestamp with time zone null default timezone ('utc'::text, now()),
+  last_updated timestamp with time zone null default timezone ('utc'::text, now()),
+  personalized_report jsonb null,
+  constraint user_plans_pkey primary key (id),
+  constraint user_plans_user_id_key unique (user_id),
+  constraint user_plans_user_id_fkey foreign KEY (user_id) references auth.users (id) on delete CASCADE
+) TABLESPACE pg_default;
 
 --
 -- User Profile Table
@@ -114,3 +119,17 @@ ON CONFLICT (id) DO UPDATE
   SET email = EXCLUDED.email,
       metadata = EXCLUDED.metadata,
       updated_at = timezone('utc', now());
+
+
+CREATE TABLE IF NOT EXISTS user_tasks (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  category TEXT NOT NULL CHECK (category IN ('leadership', 'domain_knowledge', 'technical_skills', 'networking_marketing')),
+  quarter TEXT NOT NULL, -- e.g. '2024-Q3'
+  title TEXT NOT NULL,
+  description TEXT,
+  status TEXT NOT NULL DEFAULT 'todo', -- 'todo', 'in_progress', 'done', 'archived'
+  due_date DATE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc', now()),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc', now())
+);

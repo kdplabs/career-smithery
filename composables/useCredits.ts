@@ -13,12 +13,13 @@ export const useCredits = () => {
         .eq('user_id', user.value.id)
         .order('created_at', { ascending: false })
         .limit(1)
-        .single()
+        .maybeSingle<{ balance_after: number }>()
 
-      if (error) throw error
+      if (error && error.code !== 'PGRST116') throw error
       userCredits.value = credits?.balance_after || 0
     } catch (err) {
       console.error('Error fetching credits:', err)
+      userCredits.value = 0
     }
   }
 
