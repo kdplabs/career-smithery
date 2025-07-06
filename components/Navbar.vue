@@ -20,6 +20,13 @@
             >
               Assessment
             </NuxtLink>
+            <NuxtLink
+              v-if="user"
+              to="/tasks"
+              class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+            >
+              Tasks
+            </NuxtLink>
           </div>
         </div>
         <!-- Mobile menu button -->
@@ -73,6 +80,11 @@
             @click="mobileMenuOpen = false"
           >Assessment</NuxtLink>
           <template v-if="user">
+            <NuxtLink
+              to="/tasks"
+              class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+              @click="mobileMenuOpen = false"
+            >Tasks</NuxtLink>
             <NuxtLink 
               to="/credits" 
               class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 flex items-center justify-between"
