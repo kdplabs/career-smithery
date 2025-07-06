@@ -38,7 +38,9 @@ export default defineEventHandler(async (event) => {
     return
   }
 
-  const { user_id, category, tasks } = body
+  const { user_id, category, tasks, quarter, starting_quarter, customPrompt } = body
+  console.log("quarter"); 
+  console.log(quarter); 
   if (!user_id || !category || !tasks || !Array.isArray(tasks) || tasks.length === 0) {
     console.error('Missing required fields:', { user_id, category, tasks })
     event.node.res.writeHead(400)
@@ -67,24 +69,53 @@ export default defineEventHandler(async (event) => {
     return
   }
 
-  // 2. Get next 3 quarters
-  const quarters = getNextNQuarters(3)
+  // Helper to generate next N quarters from a starting quarter string (e.g., '2024-Q3')
+  function getNextNQuartersFrom(startQuarter, n = 3) {
+    const match = /^([0-9]{4})-Q([1-4])$/.exec(startQuarter)
+    if (!match) return getNextNQuarters(n) // fallback to current logic
+    let year = parseInt(match[1], 10)
+    let quarter = parseInt(match[2], 10)
+    const quarters = []
+    for (let i = 0; i < n; i++) {
+      let q = quarter + i
+      let y = year
+      if (q > 4) {
+        y += Math.floor((q - 1) / 4)
+        q = ((q - 1) % 4) + 1
+      }
+      quarters.push(`${y}-Q${q}`)
+    }
+    return quarters
+  }
+
+  // 2. Get next 3 quarters, starting from provided starting_quarter if present
+  let quarters
+  if (starting_quarter && /^\d{4}-Q[1-4]$/.test(starting_quarter)) {
+    quarters = getNextNQuartersFrom(starting_quarter, 3)
+  } else {
+    quarters = getNextNQuarters(3)
+  }
 
   // 3. Prepare a single prompt for Gemini to generate 3 specific tasks
   // Use the first task title as a theme/goal, but ask Gemini to generate 3 actionable, non-generic tasks for the category
   const mainTitle = tasks[0] || 'career development'
-  const prompt = `Generate a JSON array of at least 3 specific, actionable quarterly career development tasks for the category '${category}'.
+  let prompt = `Generate a JSON array of at least 3 specific, actionable quarterly career development tasks for the category '${category}'.
 Each task should:
 - Have a unique, non-generic title
 - Include a 1-2 sentence description
-- Reference a specific, popular course, opportunity, or resource relevant to the category (if possible)
+- Reference a specific, popular free courses, opportunity, or resource relevant to the category (if possible)
 - Include a due_date (ISO 8601 date-time string) and a quarter (e.g., '2024-Q3')
-- Tasks should be spread across the next 3 quarters, starting from the provided quarters: ${quarters.join(', ')}
+- Tasks should be spread across the next 3 quarters, starting from  ${quarter}
 - Output format: [ { title, description, due_date, quarter } ]
 - Do NOT return generic advice. Be concrete and reference real resources or opportunities where possible.
 - Example for technical_skills: { title: 'Complete "Deep Learning Specialization" on Coursera', description: 'Enroll and finish the Deep Learning Specialization by Andrew Ng to build foundational knowledge in neural networks.', due_date: '2024-09-30T23:59:59Z', quarter: '2024-Q3' }
 `;
 
+  // Add custom prompt if provided
+  if (customPrompt && customPrompt.trim()) {
+    prompt += `\n\nUser Input: ${customPrompt.trim()}`;
+  }
+console.log(prompt); 
   let geminiTasks = []
   try {
     const geminiRes = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent', {
@@ -123,6 +154,8 @@ Each task should:
       throw new Error('Gemini API error: ' + errText)
     }
     const geminiData = await geminiRes.json()
+    console.log('geminiData'); 
+    console.log(geminiData.candidates[0].content.parts[0].text)
     let raw = geminiData?.candidates?.[0]?.content?.parts?.[0] || geminiData;
     if (raw && typeof raw.text === 'string') {
       try {

@@ -41,6 +41,12 @@ export const useAuth = () => {
 
   const signOut = async () => {
     try {
+      // Clear personalized report and other sensitive data from localStorage
+      localStorage.removeItem('personalizedReport')
+      // Optionally clear other related items if needed
+      // localStorage.removeItem('assessmentData')
+      // localStorage.removeItem('assessmentSummary')
+      // localStorage.removeItem('linkedinOrResumeText')
       const { error } = await supabase.auth.signOut()
       if (error) throw error
       router.push('/')

@@ -1,6 +1,18 @@
 // NOTE: Ensure the 'user_plans' table exists in Supabase as per the schema provided in the project documentation.
 <template>
   <div class="max-w-7xl mx-auto p-6">
+    <!-- Floating CTA Button -->
+    <transition name="fade">
+      <button
+        v-if="showFloatingCTA"
+        @click="scrollToLinkedInInput"
+        class="fixed bottom-8 right-8 z-50 px-6 py-3 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all flex items-center"
+        style="box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);"
+      >
+        <Icon name="i-mdi-sparkles" class="mr-2" /> Generate Personalized Report
+      </button>
+    </transition>
+    
     <div v-if="!assessmentSummary" class="flex items-center justify-center min-h-screen">
       <div class="text-center">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -531,7 +543,7 @@
       </div>
 
       <!-- Personalized Report CTA -->
-      <div class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mt-6 mb-4 border border-slate-100">
+      <div ref="linkedinInputSection" class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mt-6 mb-4 border border-slate-100">
         <!-- For logged-in users, show the LinkedIn input form -->
         <div v-if="user && !isGeneratingPlan && !personalizedPlan">
           <h3 class="text-2xl font-bold text-slate-800 mb-4 font-sans">Generate Your Personalized Report</h3>
@@ -634,7 +646,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, nextTick, onUnmounted } from 'vue'
 import * as d3 from 'd3'
 import ThreeMetricsRadarChart from '~/components/charts/ThreeMetricsRadarChart.vue'
 import ThreeMetricsBarChart from '~/components/charts/ThreeMetricsBarChart.vue'
@@ -670,7 +682,39 @@ const userCredits = ref(0)
 // Add this ref for tracking pending input form display
 const pendingShowInputForm = ref(false)
 
+// Floating CTA variables
+const linkedinInputSection = ref(null)
+const showFloatingCTA = ref(false)
+
+function isElementInViewport(el) {
+  if (!el) return false
+  const rect = el.getBoundingClientRect()
+  return (
+    rect.top >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+  )
+}
+
+function checkFloatingCTAVisibility() {
+  if (!linkedinInputSection.value) return
+  // Show button if the LinkedIn input section is NOT in viewport
+  showFloatingCTA.value = !isElementInViewport(linkedinInputSection.value)
+}
+
+function scrollToLinkedInInput() {
+  if (linkedinInputSection.value) {
+    linkedinInputSection.value.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }
+}
+
 onMounted(async () => {
+  // Set up scroll listeners for floating CTA
+  window.addEventListener('scroll', checkFloatingCTAVisibility)
+  window.addEventListener('resize', checkFloatingCTAVisibility)
+  nextTick(() => {
+    checkFloatingCTAVisibility()
+  })
+  
   let assessmentData = null;
   
   // Standalone function to process assessment data (doesn't depend on global state)
@@ -1109,6 +1153,12 @@ onMounted(async () => {
     console.log('No assessment data found')
     router.push('/assessment')
   }
+})
+
+// Clean up event listeners
+onUnmounted(() => {
+  window.removeEventListener('scroll', checkFloatingCTAVisibility)
+  window.removeEventListener('resize', checkFloatingCTAVisibility)
 })
 
 // Nine Box Grid Data
