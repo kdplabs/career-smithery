@@ -30,7 +30,50 @@
           </NuxtLink>
         </div>
         <div class="flex items-center gap-8 mb-6">
-          <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile Picture" class="w-28 h-28 rounded-full object-cover border-4 border-blue-400 shadow" />
+          <!-- Profile Image Upload Area -->
+          <div class="relative group">
+            <div 
+              @click="triggerImageUpload"
+              @click.stop
+              class="w-28 h-28 rounded-full border-4 border-blue-400 shadow cursor-pointer relative overflow-hidden bg-blue-100 hover:bg-blue-200 transition-colors flex items-center justify-center"
+              title="Click to upload profile image"
+            >
+              <!-- Show uploaded image if available -->
+              <img 
+                v-if="profileImageUrl" 
+                :src="profileImageUrl" 
+                alt="Profile Picture" 
+                class="w-full h-full object-cover"
+              />
+              <!-- Show initial if no image -->
+              <div 
+                v-else 
+                class="text-blue-600 text-3xl font-bold"
+              >
+                {{ getInitial() }}
+              </div>
+              
+              <!-- Upload overlay on hover -->
+              <div class="absolute inset-0 bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                <Icon name="heroicons:camera" class="w-8 h-8 text-white" />
+              </div>
+            </div>
+            
+            <!-- Upload indicator -->
+            <div v-if="uploadingImage" class="absolute inset-0 bg-blue-500 bg-opacity-75 rounded-full flex items-center justify-center">
+              <Icon name="heroicons:arrow-path" class="w-6 h-6 text-white animate-spin" />
+            </div>
+          </div>
+          
+          <!-- Hidden file input -->
+          <input
+            ref="fileInput"
+            type="file"
+            accept="image/*"
+            @change="handleImageUpload"
+            class="hidden"
+          />
+          
           <div class="grid grid-cols-2 gap-6 flex-1">
             <div>
               <p class="text-sm text-slate-500 font-sans">Full Name</p>
@@ -53,6 +96,11 @@
         <div class="mt-4">
           <p class="text-sm text-slate-500 font-sans">Career Objective</p>
           <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.careerObjective }}</p>
+        </div>
+        
+        <!-- Image Upload Error Message -->
+        <div v-if="imageUploadError" class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <p class="text-sm text-red-600 font-sans">{{ imageUploadError }}</p>
         </div>
       </div>
 
@@ -544,8 +592,30 @@
 
       <!-- Personalized Report CTA -->
       <div ref="linkedinInputSection" class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mt-6 mb-4 border border-slate-100">
-        <!-- For logged-in users, show the LinkedIn input form -->
-        <div v-if="user && !isGeneratingPlan && !personalizedPlan">
+        <!-- Show "View Your Personalized Report" if user has existing report -->
+        <div v-if="hasExistingReport && user && !isGeneratingPlan">
+          <h2 class="text-3xl font-bold text-slate-800 mb-4 text-center font-sans">Your Personalized Report is Ready!</h2>
+          <p class="text-slate-600 text-center mb-6 max-w-2xl mx-auto">
+            You have already generated your personalized career action plan. Click below to view your report.
+          </p>
+          <div class="text-center flex flex-col sm:flex-row justify-center gap-4">
+            <button
+              @click="navigateTo('/personalized-report')"
+              class="px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-green-600 to-blue-600 rounded-xl shadow-lg hover:from-green-700 hover:to-blue-700 transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 font-sans flex items-center justify-center"
+            >
+              <Icon name="i-mdi-file-document-outline" class="mr-2" /> View Your Personalized Report
+            </button>
+            <button
+              @click="clearExistingReport()"
+              class="px-8 py-4 text-lg font-semibold text-blue-700 bg-white border border-blue-300 rounded-xl shadow hover:bg-blue-50 transition-all font-sans flex items-center justify-center"
+            >
+              <Icon name="i-mdi-refresh" class="mr-2" /> Generate New Report
+            </button>
+          </div>
+        </div>
+
+        <!-- For logged-in users without existing report, show the LinkedIn input form -->
+        <div v-else-if="user && !hasExistingReport && !isGeneratingPlan && !personalizedPlan">
           <h3 class="text-2xl font-bold text-slate-800 mb-4 font-sans">Generate Your Personalized Report</h3>
           <p class="text-slate-600 mb-1">Please paste your LinkedIn profile summary or resume text below.</p>
           <p class="text-xs text-slate-500 mb-4">This information, along with your assessment results, will be used to generate your personalized plan.</p>
@@ -686,6 +756,57 @@ const pendingShowInputForm = ref(false)
 const linkedinInputSection = ref(null)
 const showFloatingCTA = ref(false)
 
+// Profile image upload variables
+const profileImageUrl = ref('')
+const uploadingImage = ref(false)
+const fileInput = ref(null)
+const imageUploadError = ref('')
+const { uploadProfileImage } = useProfileImage()
+
+// Check if user has existing personalized report
+const hasExistingReport = ref(false)
+
+// Function to check for existing personalized report
+const checkForExistingReport = async () => {
+  // Always check database first if user is logged in
+  if (user.value) {
+    try {
+      const { data: userPlan, error } = await supabase
+        .from('user_plans')
+        .select('personalized_report')
+        .eq('user_id', user.value.id)
+        .single()
+
+      if (!error && userPlan?.personalized_report) {
+        // Database has a report - this is the source of truth
+        hasExistingReport.value = true
+        // Overwrite localStorage with database data
+        localStorage.setItem('personalizedReport', JSON.stringify(userPlan.personalized_report))
+        return
+      } else {
+        // No report in database - clear localStorage to stay in sync
+        localStorage.removeItem('personalizedReport')
+        hasExistingReport.value = false
+        return
+      }
+    } catch (err) {
+      console.error('Error checking for existing report:', err)
+      // On database error, fall back to localStorage but still prioritize database
+      hasExistingReport.value = false
+      localStorage.removeItem('personalizedReport')
+      return
+    }
+  }
+
+  // Only check localStorage if user is not logged in
+  const localReport = localStorage.getItem('personalizedReport')
+  if (localReport) {
+    hasExistingReport.value = true
+  } else {
+    hasExistingReport.value = false
+  }
+}
+
 function isElementInViewport(el) {
   if (!el) return false
   const rect = el.getBoundingClientRect()
@@ -697,8 +818,8 @@ function isElementInViewport(el) {
 
 function checkFloatingCTAVisibility() {
   if (!linkedinInputSection.value) return
-  // Show button if the LinkedIn input section is NOT in viewport
-  showFloatingCTA.value = !isElementInViewport(linkedinInputSection.value)
+  // Show button if the LinkedIn input section is NOT in viewport AND user doesn't have existing report
+  showFloatingCTA.value = !isElementInViewport(linkedinInputSection.value) && !hasExistingReport.value
 }
 
 function scrollToLinkedInInput() {
@@ -983,7 +1104,8 @@ onMounted(async () => {
       profile: {
         ...data.profile,
         previousRoles: data.profile.previousRoles || [],
-        potentialPaths: data.profile.potentialPaths || []
+        potentialPaths: data.profile.potentialPaths || [],
+        profileImageUrl: data.profile.profileImageUrl || ''
       },
       careerStage,
       kirkpatrickLevel,
@@ -1018,7 +1140,7 @@ onMounted(async () => {
     try {
       const { data: dbPlan, error } = await supabase
         .from('user_plans')
-        .select('assessment_data')
+        .select('assessment_data, personalized_report')
         .eq('user_id', user.value.id)
         .single()
         .throwOnError()
@@ -1028,6 +1150,13 @@ onMounted(async () => {
         // Clear any existing local storage data since we're using database data
         localStorage.removeItem('assessmentData')
         localStorage.removeItem('assessmentSummary')
+        
+        // Sync personalized report from database to localStorage if it exists
+        if (dbPlan.personalized_report) {
+          localStorage.setItem('personalizedReport', JSON.stringify(dbPlan.personalized_report))
+        } else {
+          localStorage.removeItem('personalizedReport')
+        }
         
         // If this is raw data from the assessment page, process it
         if (dbPlan.assessment_data._metadata?.isRawData) {
@@ -1078,7 +1207,8 @@ onMounted(async () => {
           yearsOfExperience: '',
           careerObjective: '',
           previousRoles: [],
-          potentialPaths: []
+          potentialPaths: [],
+          profileImageUrl: ''
         },
         careerStage: 'Exploration',
         leadershipPotential: 'Managing Self',
@@ -1135,6 +1265,14 @@ onMounted(async () => {
       }
 
       console.log('Final assessment summary:', assessmentSummary.value)
+
+      // Initialize profile image URL if it exists
+      if (assessmentSummary.value?.profile?.profileImageUrl) {
+        profileImageUrl.value = assessmentSummary.value.profile.profileImageUrl
+      }
+
+      // Check for existing personalized report
+      await checkForExistingReport()
 
       // Draw chevrons after data is loaded
       await nextTick()
@@ -1284,6 +1422,8 @@ watch(
     if (newUser && assessmentSummary.value) {
       // Save assessment data when user logs in
       await saveAssessmentData()
+      // Check for existing personalized report when user logs in
+      await checkForExistingReport()
     }
   }
 )
@@ -1673,15 +1813,15 @@ async function checkUserCredits() {
   }
 }
 
-// Modify the saveAssessmentData function to include LinkedIn/CV data
-async function saveAssessmentData(linkedinText = null) {
+// Modify the saveAssessmentData function to include LinkedIn/CV data and personalized reports
+async function saveAssessmentData(linkedinText = null, personalizedReport = null) {
   if (!user.value || !assessmentSummary.value) return
 
   try {
     // Check if plan already exists
     const { data: existingPlan, error: fetchError } = await supabase
       .from('user_plans')
-      .select('id, assessment_data')
+      .select('id, assessment_data, personalized_report')
       .eq('user_id', user.value.id)
       .single()
 
@@ -1689,16 +1829,24 @@ async function saveAssessmentData(linkedinText = null) {
       throw fetchError
     }
 
+    // Prepare update data
+    const updateData = {
+      assessment_data: {
+        ...assessmentSummary.value,
+        ...(linkedinText && { linkedinText })
+      }
+    }
+
+    // Add personalized report if provided
+    if (personalizedReport) {
+      updateData.personalized_report = personalizedReport
+    }
+
     if (existingPlan) {
       // Update existing plan
       const { error: updateError } = await supabase
         .from('user_plans')
-        .update({
-          assessment_data: {
-            ...assessmentSummary.value,
-            ...(linkedinText && { linkedinText })
-          }
-        })
+        .update(updateData)
         .eq('id', existingPlan.id)
         .eq('user_id', user.value.id) // Extra safety check
 
@@ -1711,16 +1859,19 @@ async function saveAssessmentData(linkedinText = null) {
         .insert([
           {
             user_id: user.value.id,
-            assessment_data: {
-              ...assessmentSummary.value,
-              ...(linkedinText && { linkedinText })
-            },
+            ...updateData,
             created_at: new Date().toISOString()
           }
         ])
 
       if (insertError) throw insertError
       console.log('New assessment data created successfully')
+    }
+
+    // After successful database save, sync localStorage if personalized report was saved
+    if (personalizedReport) {
+      localStorage.setItem('personalizedReport', JSON.stringify(personalizedReport))
+      hasExistingReport.value = true
     }
   } catch (err) {
     console.error('Error saving assessment data:', err)
@@ -1776,8 +1927,10 @@ const submitForPersonalizedPlan = async () => {
     }
 
     const result = await response.json()
-    // Save the structured report in localStorage for the new page
-    localStorage.setItem('personalizedReport', JSON.stringify(result.report))
+    
+    // Save to database first (database is source of truth)
+    await saveAssessmentData(linkedinOrResumeText.value, result.report)
+    
     // Redirect to the new report page
     navigateTo('/personalized-report')
   } catch (error) {
@@ -1804,5 +1957,80 @@ const handlePurchaseComplete = async (purchase) => {
   }
   // Clear LinkedIn text from localStorage after successful purchase
   localStorage.removeItem('linkedinOrResumeText')
+}
+
+// Function to clear existing report and allow new generation
+const clearExistingReport = async () => {
+  // Clear from database first (source of truth)
+  if (user.value) {
+    try {
+      const { error } = await supabase
+        .from('user_plans')
+        .update({ personalized_report: null })
+        .eq('user_id', user.value.id)
+
+      if (error) {
+        console.error('Error clearing report from database:', error)
+      }
+    } catch (err) {
+      console.error('Error clearing report from database:', err)
+    }
+  }
+
+  // Clear localStorage to stay in sync
+  localStorage.removeItem('personalizedReport')
+  hasExistingReport.value = false
+  personalizedPlan.value = null
+}
+
+// Profile image upload methods
+const getInitial = () => {
+  if (!assessmentSummary.value?.profile?.fullName) return '?'
+  return assessmentSummary.value.profile.fullName.charAt(0).toUpperCase()
+}
+
+const triggerImageUpload = () => {
+  if (uploadingImage.value) return
+  fileInput.value?.click()
+}
+
+const handleImageUpload = async (event) => {
+  const file = event.target.files?.[0]
+  if (!file) return
+  
+  uploadingImage.value = true
+  imageUploadError.value = ''
+  
+  try {
+    const response = await uploadProfileImage(file)
+    profileImageUrl.value = response.data.publicUrl
+    
+    // Update assessment summary with profile image URL
+    if (assessmentSummary.value) {
+      assessmentSummary.value.profile = {
+        ...assessmentSummary.value.profile,
+        profileImageUrl: response.data.publicUrl
+      }
+      
+      // Save to database if user is logged in
+      if (user.value) {
+        await saveAssessmentData()
+      }
+    }
+    
+    // Clear the file input
+    event.target.value = ''
+    
+  } catch (error) {
+    console.error('Failed to upload profile image:', error)
+    imageUploadError.value = error.message || 'Failed to upload image. Please try again.'
+    
+    // Clear error after 5 seconds
+    setTimeout(() => {
+      imageUploadError.value = ''
+    }, 5000)
+  } finally {
+    uploadingImage.value = false
+  }
 }
 </script> 
