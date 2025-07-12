@@ -133,3 +133,43 @@ CREATE TABLE IF NOT EXISTS user_tasks (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc', now()),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc', now())
 );
+
+-- Storage bucket and policies for profile images
+-- Create the profile-images bucket (run this in Supabase Dashboard or via SQL if bucket doesn't exist)
+-- INSERT INTO storage.buckets (id, name, public) VALUES ('profile-images', 'profile-images', true);
+
+-- RLS Policies for profile-images storage bucket
+-- Enable RLS on storage.objects
+ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+
+-- Policy to allow anyone to upload files to profile-images bucket
+CREATE POLICY "Allow anyone to upload profile images" ON storage.objects
+FOR INSERT WITH CHECK (bucket_id = 'profile-images');
+
+-- Policy to allow anyone to view profile images (for public access)
+CREATE POLICY "Allow anyone to view profile images" ON storage.objects
+FOR SELECT USING (bucket_id = 'profile-images');
+
+-- Policy to allow anyone to update profile images
+CREATE POLICY "Allow anyone to update profile images" ON storage.objects
+FOR UPDATE USING (bucket_id = 'profile-images');
+
+-- Policy to allow anyone to delete profile images
+CREATE POLICY "Allow anyone to delete profile images" ON storage.objects
+FOR DELETE USING (bucket_id = 'profile-images');
+
+-- Alternative: If you want to restrict operations to authenticated users only, 
+-- replace the policies above with these:
+/*
+CREATE POLICY "Allow authenticated users to upload profile images" ON storage.objects
+FOR INSERT WITH CHECK (bucket_id = 'profile-images' AND auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated users to view profile images" ON storage.objects
+FOR SELECT USING (bucket_id = 'profile-images' AND auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated users to update profile images" ON storage.objects
+FOR UPDATE USING (bucket_id = 'profile-images' AND auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated users to delete profile images" ON storage.objects
+FOR DELETE USING (bucket_id = 'profile-images' AND auth.role() = 'authenticated');
+*/
