@@ -20,184 +20,190 @@
       </div>
     </div>
     
-    <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Profile Card -->
-      <div class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mb-4 border border-slate-100">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-3xl font-bold text-slate-800 font-sans">Profile Information</h2>
-          <NuxtLink to="/assessment-guide#profile-info" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
-            <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
-          </NuxtLink>
-        </div>
-        <div class="flex items-center gap-8 mb-6">
-          <!-- Profile Image Upload Area -->
-          <div class="relative group">
-            <div 
-              @click="triggerImageUpload"
-              @click.stop
-              class="w-28 h-28 rounded-full border-4 border-blue-400 shadow cursor-pointer relative overflow-hidden bg-blue-100 hover:bg-blue-200 transition-colors flex items-center justify-center"
-              title="Click to upload profile image"
-            >
-              <!-- Show uploaded image if available -->
-              <img 
-                v-if="profileImageUrl" 
-                :src="profileImageUrl" 
-                alt="Profile Picture" 
-                class="w-full h-full object-cover"
-              />
-              <!-- Show initial if no image -->
+    <div v-else class="space-y-6">
+      <!-- First Row: 30:70 Split -->
+      <div class="grid grid-cols-1 lg:grid-cols-10 gap-6">
+        <!-- Profile Card (30%) -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-3 border border-slate-100">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-slate-800 font-sans">Profile Information</h2>
+            <NuxtLink to="/assessment-guide#profile-info" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
+              <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
+            </NuxtLink>
+          </div>
+          <div class="flex flex-col items-center gap-6 mb-6">
+            <!-- Profile Image Upload Area -->
+            <div class="relative group">
               <div 
-                v-else 
-                class="text-blue-600 text-3xl font-bold"
+                @click="triggerImageUpload"
+                @click.stop
+                class="w-28 h-28 rounded-full border-4 border-blue-400 shadow cursor-pointer relative overflow-hidden bg-blue-100 hover:bg-blue-200 transition-colors flex items-center justify-center"
+                title="Click to upload profile image"
               >
-                {{ getInitial() }}
+                <!-- Show uploaded image if available -->
+                <img 
+                  v-if="profileImageUrl" 
+                  :src="profileImageUrl" 
+                  alt="Profile Picture" 
+                  class="w-full h-full object-cover"
+                />
+                <!-- Show initial if no image -->
+                <div 
+                  v-else 
+                  class="text-blue-600 text-3xl font-bold"
+                >
+                  {{ getInitial() }}
+                </div>
+                
+                <!-- Upload overlay on hover -->
+                <div class="absolute inset-0 bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                  <Icon name="heroicons:camera" class="w-8 h-8 text-white" />
+                </div>
               </div>
               
-              <!-- Upload overlay on hover -->
-              <div class="absolute inset-0 bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-                <Icon name="heroicons:camera" class="w-8 h-8 text-white" />
+              <!-- Upload indicator -->
+              <div v-if="uploadingImage" class="absolute inset-0 bg-blue-500 bg-opacity-75 rounded-full flex items-center justify-center">
+                <Icon name="heroicons:arrow-path" class="w-6 h-6 text-white animate-spin" />
               </div>
             </div>
             
-            <!-- Upload indicator -->
-            <div v-if="uploadingImage" class="absolute inset-0 bg-blue-500 bg-opacity-75 rounded-full flex items-center justify-center">
-              <Icon name="heroicons:arrow-path" class="w-6 h-6 text-white animate-spin" />
-            </div>
-          </div>
-          
-          <!-- Hidden file input -->
-          <input
-            ref="fileInput"
-            type="file"
-            accept="image/*"
-            @change="handleImageUpload"
-            class="hidden"
-          />
-          
-          <div class="grid grid-cols-2 gap-6 flex-1">
-            <div>
-              <p class="text-sm text-slate-500 font-sans">Full Name</p>
-              <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.fullName }}</p>
-            </div>
-            <div>
-              <p class="text-sm text-slate-500 font-sans">Email</p>
-              <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.email }}</p>
-            </div>
-            <div>
-              <p class="text-sm text-slate-500 font-sans">Current Role</p>
-              <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.currentRole }}</p>
-            </div>
-            <div>
-              <p class="text-sm text-slate-500 font-sans">Years of Experience</p>
-              <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.yearsOfExperience }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="mt-4">
-          <p class="text-sm text-slate-500 font-sans">Career Objective</p>
-          <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.careerObjective }}</p>
-        </div>
-        
-        <!-- Image Upload Error Message -->
-        <div v-if="imageUploadError" class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p class="text-sm text-red-600 font-sans">{{ imageUploadError }}</p>
-        </div>
-      </div>
-
-      <!-- Career Stage Card -->
-      <div class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mb-4 border border-slate-100">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-3xl font-bold text-slate-800 font-sans">Career Stage</h2>
-          <NuxtLink to="/assessment-guide#career-stage" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
-            <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
-          </NuxtLink>
-        </div>
-        <!-- Career Stage D3 Chevron Progression -->
-        <client-only>
-          <div ref="chevronContainer" class="w-full h-40"></div>
-        </client-only>
-        <!-- Identified Stage Card -->
-        <div class="text-center mt-4">
-          <div class="inline-block p-4 rounded-lg bg-blue-100 border border-blue-300 shadow-md min-w-[280px]">
-            <p class="text-sm text-blue-700 font-sans mb-1 uppercase tracking-wider">Your Identified Stage</p>
-            <p class="text-xl font-bold text-blue-800 font-sans">{{ assessmentSummary.careerStage }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Role History & Future Paths -->
-      <div class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mb-4 border border-slate-100">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-3xl font-bold text-slate-800 font-sans">Role History & Future Paths</h2>
-          <NuxtLink to="/assessment-guide#role-history" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
-            <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
-          </NuxtLink>
-        </div>
-        <div class="flex">
-          <!-- Left Side: Previous Roles (30%) -->
-          <div class="flex-shrink-0 w-4/12 pr-6 border-r border-slate-200 relative">
-            <h3 class="text-xl font-semibold text-slate-700 mb-4 font-sans">Your Journey So Far</h3>
+            <!-- Hidden file input -->
+            <input
+              ref="fileInput"
+              type="file"
+              accept="image/*"
+              @change="handleImageUpload"
+              class="hidden"
+            />
             
-            <!-- Vertical Line for progression -->
-            <div class="absolute left-0 top-16 bottom-4 w-0.5 bg-slate-300 ml-1.5"></div>
-
-            <div class="space-y-4 relative">
-              <!-- Current Role -->
-              <div class="flex items-start">
-                <div class="absolute left-0 mt-1.5 w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow z-10 ml-0.5"></div>
-                <div class="ml-6 w-full">
-                  <p class="text-sm text-slate-500 font-sans">Current Role</p>
-                  <div class="mt-1 p-3 rounded-lg bg-blue-100 border border-blue-300 shadow-sm">
-                    <p class="text-md font-semibold text-blue-800 font-sans">{{ assessmentSummary.profile.currentRole }}</p>
-                    <p class="text-xs text-blue-600 font-sans">Present</p>
-                  </div>
-                </div>
+            <div class="space-y-4 w-full">
+              <div>
+                <p class="text-sm text-slate-500 font-sans">Full Name</p>
+                <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.fullName }}</p>
               </div>
+              <div>
+                <p class="text-sm text-slate-500 font-sans">Email</p>
+                <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.email }}</p>
+              </div>
+              <div>
+                <p class="text-sm text-slate-500 font-sans">Current Role</p>
+                <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.currentRole }}</p>
+              </div>
+              <div>
+                <p class="text-sm text-slate-500 font-sans">Years of Experience</p>
+                <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.yearsOfExperience }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4">
+            <p class="text-sm text-slate-500 font-sans">Career Objective</p>
+            <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.careerObjective }}</p>
+          </div>
+          
+          <!-- Image Upload Error Message -->
+          <div v-if="imageUploadError" class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p class="text-sm text-red-600 font-sans">{{ imageUploadError }}</p>
+          </div>
+        </div>
 
-              <!-- Previous Roles -->
-              <div v-if="assessmentSummary.profile.previousRoles.length > 0">
-                <p class="text-sm text-slate-500 font-sans mt-5 ml-6">Previous Roles</p>
-                <div v-for="(role, index) in assessmentSummary.profile.previousRoles" :key="index" class="mt-3 flex items-start">
-                  <div class="absolute left-0 mt-1.5 w-3 h-3 bg-slate-400 rounded-full border-2 border-white shadow z-10 ml-0.5"></div>
-                  <div class="ml-6 w-full p-3 rounded-lg bg-slate-50 border border-slate-200">
-                    <p class="text-md font-semibold text-slate-800 font-sans">{{ role.title }}</p>
-                    <p class="text-xs text-slate-500 font-sans">{{ role.year }}</p>
-                  </div>
-                </div>
+        <!-- Career Stage and Role History Stack (70%) -->
+        <div class="lg:col-span-7 space-y-6">
+          <!-- Career Stage Card -->
+          <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-100">
+            <div class="flex items-center justify-between mb-6">
+                             <h2 class="text-2xl font-bold text-slate-800 font-sans">Career Stage</h2>
+              <NuxtLink to="/assessment-guide#career-stage" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
+                <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
+              </NuxtLink>
+            </div>
+            <!-- Career Stage D3 Chevron Progression -->
+            <client-only>
+              <div ref="chevronContainer" class="w-full h-40"></div>
+            </client-only>
+            <!-- Identified Stage Card -->
+            <div class="text-center mt-4">
+              <div class="inline-block p-4 rounded-lg bg-blue-100 border border-blue-300 shadow-md min-w-[280px]">
+                <p class="text-sm text-blue-700 font-sans mb-1 uppercase tracking-wider">Your Identified Stage</p>
+                <p class="text-xl font-bold text-blue-800 font-sans">{{ assessmentSummary.careerStageResult || assessmentSummary.careerStage }}</p>
               </div>
             </div>
           </div>
 
-          <!-- Right Side: Potential Career Paths (70%) -->
-          <div class="flex-grow pl-8">
-            <h3 class="text-xl font-semibold text-slate-700 mb-6 font-sans">Potential Career Paths</h3>
-            <div class="space-y-6">
-              <div v-if="assessmentSummary.profile.potentialPaths.length === 0" class="text-slate-500 font-sans pl-8">
-                No potential career paths defined yet.
-              </div>
-              <!-- Path Item -->
-              <div v-for="(path, index) in assessmentSummary.profile.potentialPaths" :key="index" class="flex items-start">
-                <!-- Connector Line (simplified branch) -->
-                <div class="w-8 pt-2">
-                  <div class="w-full h-0.5 bg-slate-300"></div>
+          <!-- Role History & Future Paths -->
+          <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-100">
+            <div class="flex items-center justify-between mb-6">
+                             <h2 class="text-2xl font-bold text-slate-800 font-sans">Role History & Future Paths</h2>
+              <NuxtLink to="/assessment-guide#role-history" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
+                <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
+              </NuxtLink>
+            </div>
+            <div class="flex">
+              <!-- Left Side: Previous Roles (30%) -->
+              <div class="flex-shrink-0 w-4/12 pr-6 border-r border-slate-200 relative">
+                <h3 class="text-xl font-semibold text-slate-700 mb-4 font-sans">Your Journey So Far</h3>
+                
+                <!-- Vertical Line for progression -->
+                <div class="absolute left-0 top-16 bottom-4 w-0.5 bg-slate-300 ml-1.5"></div>
+
+                <div class="space-y-4 relative">
+                  <!-- Current Role -->
+                  <div class="flex items-start">
+                    <div class="absolute left-0 mt-1.5 w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow z-10 ml-0.5"></div>
+                    <div class="ml-6 w-full">
+                      <p class="text-sm text-slate-500 font-sans">Current Role</p>
+                      <div class="mt-1 p-3 rounded-lg bg-blue-100 border border-blue-300 shadow-sm">
+                        <p class="text-md font-semibold text-blue-800 font-sans">{{ assessmentSummary.profile.currentRole }}</p>
+                        <p class="text-xs text-blue-600 font-sans">Present</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Previous Roles -->
+                  <div v-if="assessmentSummary.profile.previousRoles.length > 0">
+                    <p class="text-sm text-slate-500 font-sans mt-5 ml-6">Previous Roles</p>
+                    <div v-for="(role, index) in assessmentSummary.profile.previousRoles" :key="index" class="mt-3 flex items-start">
+                      <div class="absolute left-0 mt-1.5 w-3 h-3 bg-slate-400 rounded-full border-2 border-white shadow z-10 ml-0.5"></div>
+                      <div class="ml-6 w-full p-3 rounded-lg bg-slate-50 border border-slate-200">
+                        <p class="text-md font-semibold text-slate-800 font-sans">{{ role.title }}</p>
+                        <p class="text-xs text-slate-500 font-sans">{{ role.year }}</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <!-- Path Content -->
-                <div class="flex-1 p-4 rounded-xl shadow-lg bg-white border border-slate-200 hover:shadow-md transition-shadow">
-                  <p class="text-md font-semibold text-blue-700 mb-3 font-sans">Suggested Path {{ index + 1 }}</p>
-                  <div class="flex space-x-3 items-stretch">
-                    <!-- Future Role Card -->
-                    <div class="flex-1 p-3 rounded-lg border border-slate-200 bg-slate-50 min-w-[150px]">
-                      <p class="text-xs text-slate-500 font-sans uppercase tracking-wider">Future Role</p>
-                      <p class="text-md font-medium text-slate-800 font-sans">{{ path.futureRole }}</p>
+              </div>
+
+              <!-- Right Side: Potential Career Paths (70%) -->
+              <div class="flex-grow pl-8">
+                <h3 class="text-xl font-semibold text-slate-700 mb-6 font-sans">Potential Career Paths</h3>
+                <div class="space-y-6">
+                  <div v-if="assessmentSummary.profile.potentialPaths.length === 0" class="text-slate-500 font-sans pl-8">
+                    No potential career paths defined yet.
+                  </div>
+                  <!-- Path Item -->
+                  <div v-for="(path, index) in assessmentSummary.profile.potentialPaths" :key="index" class="flex items-start">
+                    <!-- Connector Line (simplified branch) -->
+                    <div class="w-8 pt-2">
+                      <div class="w-full h-0.5 bg-slate-300"></div>
                     </div>
-                    <!-- Arrow Connector -->
-                    <div class="flex items-center justify-center px-1">
-                      <Icon name="i-ic-round-arrow-right-alt" class="text-slate-400 text-2xl" />
-                    </div>
-                    <!-- Long Term Role Card -->
-                    <div class="flex-1 p-3 rounded-lg border border-slate-200 bg-slate-50 min-w-[150px]">
-                      <p class="text-xs text-slate-500 font-sans uppercase tracking-wider">Long Term Role</p>
-                      <p class="text-md font-medium text-slate-800 font-sans">{{ path.longTermRole }}</p>
+                    <!-- Path Content -->
+                    <div class="flex-1 p-4 rounded-xl shadow-lg bg-white border border-slate-200 hover:shadow-md transition-shadow">
+                      <p class="text-md font-semibold text-blue-700 mb-3 font-sans">Suggested Path {{ index + 1 }}</p>
+                      <div class="flex space-x-3 items-stretch">
+                        <!-- Future Role Card -->
+                        <div class="flex-1 p-3 rounded-lg border border-slate-200 bg-slate-50 min-w-[150px]">
+                          <p class="text-xs text-slate-500 font-sans uppercase tracking-wider">Future Role</p>
+                          <p class="text-md font-medium text-slate-800 font-sans">{{ path.futureRole }}</p>
+                        </div>
+                        <!-- Arrow Connector -->
+                        <div class="flex items-center justify-center px-1">
+                          <Icon name="i-ic-round-arrow-right-alt" class="text-slate-400 text-2xl" />
+                        </div>
+                        <!-- Long Term Role Card -->
+                        <div class="flex-1 p-3 rounded-lg border border-slate-200 bg-slate-50 min-w-[150px]">
+                          <p class="text-xs text-slate-500 font-sans uppercase tracking-wider">Long Term Role</p>
+                          <p class="text-md font-medium text-slate-800 font-sans">{{ path.longTermRole }}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -206,11 +212,14 @@
           </div>
         </div>
       </div>
+
+      <!-- Remaining sections in grid layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
       <!-- Nine Box Chart -->
       <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-3xl font-bold text-slate-800 font-sans">Nine Box Position</h2>
+          <h2 class="text-2xl font-bold text-slate-800 font-sans">Nine Box Position</h2>
           <NuxtLink to="/assessment-guide#nine-box" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
             <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
           </NuxtLink>
@@ -260,7 +269,7 @@
       <!-- Three by Three by Three Chart -->
       <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-3xl font-bold text-slate-800 font-sans">Performance, Potential & Engagement</h2>
+          <h2 class="text-2xl font-bold text-slate-800 font-sans">Performance, Potential & Engagement</h2>
           <NuxtLink to="/assessment-guide#three-metrics" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
             <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
           </NuxtLink>
@@ -353,7 +362,7 @@
       <!-- Leadership Pipeline Summary -->
       <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-3xl font-bold text-slate-800 font-sans">Leadership Journey</h2>
+          <h2 class="text-2xl font-bold text-slate-800 font-sans">Leadership Journey</h2>
           <NuxtLink to="/assessment-guide#leadership-journey" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
             <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
           </NuxtLink>
@@ -362,42 +371,42 @@
           <div class="grid grid-cols-1 gap-4">
             <div :class="[
               'p-6 rounded-xl border-2 transition-all font-sans',
-              assessmentSummary.leadershipPotential === 'Enterprise Leader' ? 'bg-orange-200 scale-105' : ''
+              (assessmentSummary.leadershipPotentialResult || assessmentSummary.leadershipPotential) === 'Enterprise Leader' ? 'bg-orange-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Enterprise Leader</div>
               <div class="text-sm text-slate-600">CEO-level leadership across multiple business units</div>
             </div>
             <div :class="[
               'p-6 rounded-xl border-2 transition-all font-sans',
-              assessmentSummary.leadershipPotential === 'Business Leader' ? 'bg-orange-200 scale-105' : ''
+              (assessmentSummary.leadershipPotentialResult || assessmentSummary.leadershipPotential) === 'Business Leader' ? 'bg-orange-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Business Leader</div>
               <div class="text-sm text-slate-600">C-suite leadership of a business unit</div>
             </div>
             <div :class="[
               'p-6 rounded-xl border-2 transition-all font-sans',
-              assessmentSummary.leadershipPotential === 'Functional Leader' ? 'bg-orange-200 scale-105' : ''
+              (assessmentSummary.leadershipPotentialResult || assessmentSummary.leadershipPotential) === 'Functional Leader' ? 'bg-orange-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Functional Leader</div>
               <div class="text-sm text-slate-600">Department or function leadership</div>
             </div>
             <div :class="[
               'p-6 rounded-xl border-2 transition-all font-sans',
-              assessmentSummary.leadershipPotential === 'Managing Managers' ? 'bg-orange-200 scale-105' : ''
+              (assessmentSummary.leadershipPotentialResult || assessmentSummary.leadershipPotential) === 'Managing Managers' ? 'bg-orange-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Managing Managers</div>
               <div class="text-sm text-slate-600">Leading multiple teams through managers</div>
             </div>
             <div :class="[
               'p-6 rounded-xl border-2 transition-all font-sans',
-              assessmentSummary.leadershipPotential === 'Managing Others' ? 'bg-orange-200 scale-105' : ''
+              (assessmentSummary.leadershipPotentialResult || assessmentSummary.leadershipPotential) === 'Managing Others' ? 'bg-orange-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Managing Others</div>
               <div class="text-sm text-slate-600">First-time manager leading a team</div>
             </div>
             <div :class="[
               'p-6 rounded-xl border-2 transition-all font-sans',
-              assessmentSummary.leadershipPotential === 'Managing Self' ? 'bg-orange-200 scale-105' : ''
+              (assessmentSummary.leadershipPotentialResult || assessmentSummary.leadershipPotential) === 'Managing Self' ? 'bg-orange-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Managing Self</div>
               <div class="text-sm text-slate-600">Individual contributor</div>
@@ -405,7 +414,7 @@
           </div>
           <div class="text-center mt-6">
             <span class="inline-block px-6 py-2 rounded-full bg-orange-200 text-orange-800 font-semibold text-lg">
-              {{ assessmentSummary.leadershipPotential }}
+              {{ assessmentSummary.leadershipPotentialResult || assessmentSummary.leadershipPotential }}
             </span>
           </div>
         </div>
@@ -414,7 +423,7 @@
       <!-- Kirkpatrick Model Summary -->
       <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-3xl font-bold text-slate-800 font-sans">Development Journey</h2>
+          <h2 class="text-2xl font-bold text-slate-800 font-sans">Development Journey</h2>
           <NuxtLink to="/assessment-guide#development-journey" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
             <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
           </NuxtLink>
@@ -461,7 +470,7 @@
       <!-- Skills Profile Chart -->
       <div class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mb-4 border border-slate-100">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-3xl font-bold text-sky-700 font-sans">Skills Profile</h2>
+          <h2 class="text-2xl font-bold text-slate-800 font-sans">Skills Profile</h2>
           <NuxtLink to="/assessment-guide#skills-profile" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
             <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
           </NuxtLink>
@@ -594,7 +603,7 @@
       <div ref="linkedinInputSection" class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mt-6 mb-4 border border-slate-100">
         <!-- Show "View Your Personalized Report" if user has existing report -->
         <div v-if="hasExistingReport && user && !isGeneratingPlan">
-          <h2 class="text-3xl font-bold text-slate-800 mb-4 text-center font-sans">Your Personalized Report is Ready!</h2>
+          <h2 class="text-2xl font-bold text-slate-800 mb-4 text-center font-sans">Your Personalized Report is Ready!</h2>
           <p class="text-slate-600 text-center mb-6 max-w-2xl mx-auto">
             You have already generated your personalized career action plan. Click below to view your report.
           </p>
@@ -616,7 +625,7 @@
 
         <!-- For logged-in users without existing report, show the LinkedIn input form -->
         <div v-else-if="user && !hasExistingReport && !isGeneratingPlan && !personalizedPlan">
-          <h3 class="text-2xl font-bold text-slate-800 mb-4 font-sans">Generate Your Personalized Report</h3>
+          <h3 class="text-xl font-bold text-slate-800 mb-4 font-sans">Generate Your Personalized Report</h3>
           <p class="text-slate-600 mb-1">Please paste your LinkedIn profile summary or resume text below.</p>
           <p class="text-xs text-slate-500 mb-4">This information, along with your assessment results, will be used to generate your personalized plan.</p>
           <textarea
@@ -640,7 +649,7 @@
 
         <!-- For non-logged-in users, show both CTAs -->
         <div v-else-if="!user && !isGeneratingPlan && !personalizedPlan">
-          <h2 class="text-3xl font-bold text-slate-800 mb-4 text-center font-sans">Get Your Personalized Report </h2>
+          <h2 class="text-2xl font-bold text-slate-800 mb-4 text-center font-sans">Get Your Personalized Report </h2>
           <p class="text-slate-600 text-center mb-6 max-w-2xl mx-auto">
             Leverage your assessment results and professional background to generate a personalized career action plan, including skill development strategies and targeted networking advice.<br>
             <span class="text-sm text-slate-500">You'll be asked to log in and purchase credits if needed.</span>
@@ -670,7 +679,7 @@
 
         <!-- Display Generated Plan -->
         <div v-else-if="personalizedPlan && !isGeneratingPlan">
-          <h2 class="text-3xl font-bold text-slate-800 mb-6 font-sans flex items-center">
+          <h2 class="text-2xl font-bold text-slate-800 mb-6 font-sans flex items-center">
             <Icon name="i-mdi-rocket-launch-outline" class="mr-3 text-indigo-600" /> Your Personalized Career Report
           </h2>
           <div class="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none p-4 bg-slate-50 border border-slate-200 rounded-lg shadow">
@@ -696,6 +705,7 @@
         >
           Back to Assessment
         </button>
+      </div>
       </div>
     </div>
 
@@ -1107,9 +1117,11 @@ onMounted(async () => {
         potentialPaths: data.profile.potentialPaths || [],
         profileImageUrl: data.profile.profileImageUrl || ''
       },
-      careerStage,
+      careerStage: data.careerStage, // Preserve original careerStage object
+      careerStageResult: careerStage, // Store the calculated career stage string
       kirkpatrickLevel,
-      leadershipPotential,
+      leadershipPotential: data.leadershipPotential, // Preserve original leadershipPotential object
+      leadershipPotentialResult: leadershipPotential, // Store the calculated leadership potential string
       nineBoxGrid: {
         performance: data.nineBoxGrid.performance || 'Low',
         delivery: data.nineBoxGrid.delivery || 'Low',
@@ -1210,8 +1222,22 @@ onMounted(async () => {
           potentialPaths: [],
           profileImageUrl: ''
         },
-        careerStage: 'Exploration',
-        leadershipPotential: 'Managing Self',
+        careerStage: {
+          ageRange: '',
+          careerFocus: '',
+          primaryGoal: '',
+          experienceLevel: '',
+          developmentApproach: ''
+        },
+        careerStageResult: 'Exploration',
+        leadershipPotential: {
+          currentRole: '',
+          leadershipExperience: '',
+          leadershipSkills: '',
+          leadershipAspirations: '',
+          readinessLevel: ''
+        },
+        leadershipPotentialResult: 'Managing Self',
         learningDevelopment: {
           learningOpportunities: '',
           skillAcquisition: '',
@@ -1249,6 +1275,14 @@ onMounted(async () => {
         profile: {
           ...defaultData.profile,
           ...assessmentData.profile
+        },
+        careerStage: {
+          ...defaultData.careerStage,
+          ...assessmentData.careerStage
+        },
+        leadershipPotential: {
+          ...defaultData.leadershipPotential,
+          ...assessmentData.leadershipPotential
         },
         learningDevelopment: {
           ...defaultData.learningDevelopment,
@@ -1480,7 +1514,7 @@ const drawChevrons = () => {
 
   careerStages.forEach((stage, i) => {
     const x = i * chevronWidth + chevronGap * i
-    const isCurrent = assessmentSummary.value && stage === assessmentSummary.value.careerStage
+    const isCurrent = assessmentSummary.value && stage === (assessmentSummary.value.careerStageResult || assessmentSummary.value.careerStage)
     const fill = isCurrent ? '#DBEAFE' : '#F8FAFC'
     const borderColor = isCurrent ? '#3B82F6' : '#E2E8F0'
     const borderWidth = isCurrent ? 3 : 1
@@ -1521,7 +1555,7 @@ onMounted(() => {
 
 // Watch for career stage changes
 watch(
-  () => assessmentSummary.value?.careerStage,
+  () => assessmentSummary.value?.careerStageResult || assessmentSummary.value?.careerStage,
   () => {
     if (assessmentSummary.value) drawChevrons()
   }
