@@ -11,19 +11,37 @@
             <NuxtLink
               to="/"
               class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              active-class="!border-blue-500 !text-blue-600"
             >
               Home
             </NuxtLink>
             <NuxtLink
               to="/assessment"
               class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              active-class="!border-blue-500 !text-blue-600"
             >
               Assessment
+            </NuxtLink>
+            <NuxtLink
+              to="/summary"
+              class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              active-class="!border-blue-500 !text-blue-600"
+            >
+              Summary
+            </NuxtLink>
+            <NuxtLink
+              v-if="user"
+              to="/personalized-report"
+              class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              active-class="!border-blue-500 !text-blue-600"
+            >
+              Report
             </NuxtLink>
             <NuxtLink
               v-if="user"
               to="/tasks"
               class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              active-class="!border-blue-500 !text-blue-600"
             >
               Tasks
             </NuxtLink>
@@ -72,17 +90,32 @@
           <NuxtLink
             to="/"
             class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+            active-class="!bg-blue-50 !text-blue-600"
             @click="mobileMenuOpen = false"
           >Home</NuxtLink>
           <NuxtLink
             to="/assessment"
             class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+            active-class="!bg-blue-50 !text-blue-600"
             @click="mobileMenuOpen = false"
           >Assessment</NuxtLink>
+          <NuxtLink
+            to="/summary"
+            class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+            active-class="!bg-blue-50 !text-blue-600"
+            @click="mobileMenuOpen = false"
+          >Summary</NuxtLink>
           <template v-if="user">
+            <NuxtLink
+              to="/personalized-report"
+              class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+              active-class="!bg-blue-50 !text-blue-600"
+              @click="mobileMenuOpen = false"
+            >Report</NuxtLink>
             <NuxtLink
               to="/tasks"
               class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+              active-class="!bg-blue-50 !text-blue-600"
               @click="mobileMenuOpen = false"
             >Tasks</NuxtLink>
             <NuxtLink 
