@@ -356,9 +356,11 @@ export const useAssessment = () => {
         previousRoles: data.profile.previousRoles || [],
         potentialPaths: data.profile.potentialPaths || []
       },
-      careerStage,
+      careerStage: data.careerStage, // Preserve original careerStage object
+      careerStageResult: careerStage, // Store the calculated career stage string
       kirkpatrickLevel,
-      leadershipPotential,
+      leadershipPotential: data.leadershipPotential, // Preserve original leadershipPotential object
+      leadershipPotentialResult: leadershipPotential, // Store the calculated leadership potential string
       nineBoxGrid: {
         performance: data.nineBoxGrid.performance || 'Low',
         delivery: data.nineBoxGrid.delivery || 'Low',
@@ -382,6 +384,47 @@ export const useAssessment = () => {
 
     console.log('Processed Data:', processedData)
     return processedData
+  }
+
+  // Helper function to validate and fix corrupted data
+  const validateAndFixData = (data) => {
+    let dataFixed = false
+    
+    // Check if careerStage is corrupted (should be object, not string)
+    if (typeof data.careerStage === 'string') {
+      console.log('Detected corrupted careerStage data, fixing...')
+      // Reset careerStage to proper object structure
+      data.careerStage = {
+        ageRange: '',
+        careerFocus: '',
+        primaryGoal: '',
+        experienceLevel: '',
+        developmentApproach: ''
+      }
+      dataFixed = true
+    }
+    
+    // Check if leadershipPotential is corrupted (should be object, not string)
+    if (typeof data.leadershipPotential === 'string') {
+      console.log('Detected corrupted leadershipPotential data, fixing...')
+      // Reset leadershipPotential to proper object structure
+      data.leadershipPotential = {
+        currentRole: '',
+        leadershipExperience: '',
+        leadershipSkills: '',
+        leadershipAspirations: '',
+        readinessLevel: ''
+      }
+      dataFixed = true
+    }
+    
+    // If any data was fixed, clear potentially corrupted localStorage
+    if (dataFixed) {
+      localStorage.removeItem('assessmentSummary')
+      localStorage.setItem('assessmentData', JSON.stringify(data))
+    }
+    
+    return data
   }
 
   const submitAssessment = () => {
@@ -448,7 +491,9 @@ export const useAssessment = () => {
     // Update the assessment data if we found any saved data
     if (savedData) {
       console.log('Using saved data:', savedData)
-      assessmentData.value = savedData
+      // Validate and fix corrupted data
+      const validatedData = validateAndFixData(savedData)
+      assessmentData.value = validatedData
     } else {
       console.log('No saved data found, using default values')
     }

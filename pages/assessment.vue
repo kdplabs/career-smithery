@@ -927,64 +927,9 @@ const handleNextStep = async () => {
   }
 }
 
-// Override the previousStep function to include saving
-const handlePreviousStep = async () => {
-  try {
-    isSaving.value = true
-    
-    // If user is logged in, save to database first
-    if (user.value) {
-      // Check if plan exists and update/create accordingly
-      const { data: existingPlan, error: fetchError } = await supabase
-        .from('user_plans')
-        .select('id')
-        .eq('user_id', user.value.id)
-        .single()
-
-      const dataToSave = {
-        ...assessmentData.value,
-        _metadata: {
-          isRawData: true,
-          lastUpdated: new Date().toISOString(),
-          lastStep: currentStep.value
-        }
-      }
-
-      if (existingPlan) {
-        // Update existing plan
-        const { error: updateError } = await supabase
-          .from('user_plans')
-          .update({ assessment_data: dataToSave })
-          .eq('id', existingPlan.id)
-          .eq('user_id', user.value.id)
-
-        if (updateError) throw updateError
-      } else {
-        // Create new plan
-        const { error: insertError } = await supabase
-          .from('user_plans')
-          .insert([{
-            user_id: user.value.id,
-            assessment_data: dataToSave,
-            created_at: new Date().toISOString()
-          }])
-
-        if (insertError) throw insertError
-      }
-
-      // Update localStorage to keep it in sync
-      localStorage.setItem('assessmentData', JSON.stringify(assessmentData.value))
-    } else {
-      // If not logged in, only save to localStorage
-      localStorage.setItem('assessmentData', JSON.stringify(assessmentData.value))
-    }
-    
-    previousStep()
-  } catch (error) {
-    console.error('Error saving assessment data:', error)
-  } finally {
-    isSaving.value = false
-  }
+// Override the previousStep function without saving
+const handlePreviousStep = () => {
+  previousStep()
 }
 
 // Update the submitAssessment function
@@ -1054,68 +999,48 @@ const submitAssessment = async () => {
   }
 }
 
-// Add a watch on the assessment data to save changes
-watch(
-  () => assessmentData.value,
-  async (newData) => {
-    if (user.value && !isSaving.value) {
-      try {
-        isSaving.value = true
-        
-        // Check if plan exists and update/create accordingly
-        const { data: existingPlan, error: fetchError } = await supabase
-          .from('user_plans')
-          .select('id')
-          .eq('user_id', user.value.id)
-          .single()
 
-        const dataToSave = {
-          ...newData,
-          _metadata: {
-            isRawData: true,
-            lastUpdated: new Date().toISOString(),
-            lastStep: currentStep.value
-          }
-        }
 
-        if (existingPlan) {
-          // Update existing plan
-          const { error: updateError } = await supabase
-            .from('user_plans')
-            .update({ assessment_data: dataToSave })
-            .eq('id', existingPlan.id)
-            .eq('user_id', user.value.id)
-
-          if (updateError) throw updateError
-        } else {
-          // Create new plan
-          const { error: insertError } = await supabase
-            .from('user_plans')
-            .insert([{
-              user_id: user.value.id,
-              assessment_data: dataToSave,
-              created_at: new Date().toISOString()
-            }])
-
-          if (insertError) throw insertError
-        }
-
-        // Only update localStorage if user is not logged in
-        if (!user.value) {
-          localStorage.setItem('assessmentData', JSON.stringify(newData))
-        }
-      } catch (error) {
-        console.error('Error auto-saving assessment data:', error)
-      } finally {
-        isSaving.value = false
-      }
-    } else if (!user.value) {
-      // If not logged in, only save to localStorage
-      localStorage.setItem('assessmentData', JSON.stringify(newData))
+// Helper function to validate and fix corrupted data
+const validateAndFixData = (data) => {
+  let dataFixed = false
+  
+  // Check if careerStage is corrupted (should be object, not string)
+  if (typeof data.careerStage === 'string') {
+    console.log('Detected corrupted careerStage data, fixing...')
+    // Reset careerStage to proper object structure
+    data.careerStage = {
+      ageRange: '',
+      careerFocus: '',
+      primaryGoal: '',
+      experienceLevel: '',
+      developmentApproach: ''
     }
-  },
-  { deep: true }
-)
+    dataFixed = true
+  }
+  
+  // Check if leadershipPotential is corrupted (should be object, not string)
+  if (typeof data.leadershipPotential === 'string') {
+    console.log('Detected corrupted leadershipPotential data, fixing...')
+    // Reset leadershipPotential to proper object structure
+    data.leadershipPotential = {
+      currentRole: '',
+      leadershipExperience: '',
+      leadershipSkills: '',
+      leadershipAspirations: '',
+      readinessLevel: ''
+    }
+    dataFixed = true
+  }
+  
+  // If any data was fixed, clear potentially corrupted localStorage
+  if (dataFixed) {
+    localStorage.removeItem('assessmentSummary')
+    localStorage.setItem('assessmentData', JSON.stringify(data))
+  }
+  
+  return data
+}
 
 // Add the clearLocalData function in the script section
 const clearLocalData = () => {
