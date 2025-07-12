@@ -119,25 +119,39 @@ watch(
         // Ensure subscription and credits are set up
         await ensurePayAsYouGoSubscription(newUser.id)
         
-        // Check if we have assessment data to save
+        // First check if user already has a plan with existing data
+        const { data: existingPlan, error: fetchError } = await supabase
+          .from('user_plans')
+          .select('id, assessment_data')
+          .eq('user_id', newUser.id)
+          .single()
+        
+        console.log('Existing plan check:', existingPlan); 
+        
+        if (fetchError && fetchError.code !== 'PGRST116') {
+          throw new Error('Error checking existing plan: ' + fetchError.message)
+        }
+
+        // Check if we have local assessment data
         const savedData = localStorage.getItem('assessmentData')
-        if (savedData) {
-          console.log('Found assessment data to save')
-          const assessmentData = JSON.parse(savedData)
-          
-          // First check if user already has a plan
-          const { data: existingPlan, error: fetchError } = await supabase
-            .from('user_plans')
-            .select('id')
-            .eq('user_id', newUser.id)
-            .single()
+        
+        if (existingPlan) {
+          // User has existing plan - check if it has assessment data
+          const hasExistingData = existingPlan.assessment_data && 
+            Object.keys(existingPlan.assessment_data).length > 0 &&
+            !existingPlan.assessment_data._metadata?.isEmpty
 
-          if (fetchError && fetchError.code !== 'PGRST116') {
-            throw new Error('Error checking existing plan: ' + fetchError.message)
-          }
-
-          if (existingPlan) {
-            // Update existing plan
+          if (hasExistingData) {
+            // Database has data - prioritize database over local data
+            console.log('Found existing assessment data in database, using database data')
+            // Clear local data since database is the source of truth
+            localStorage.removeItem('assessmentData')
+            localStorage.removeItem('assessmentSummary')
+          } else if (savedData) {
+            // Database plan exists but no assessment data - update with local data
+            console.log('Found local assessment data, updating existing plan')
+            const assessmentData = JSON.parse(savedData)
+            
             const { error: updateError } = await supabase
               .from('user_plans')
               .update({ 
@@ -155,45 +169,45 @@ watch(
             if (updateError) {
               throw new Error('Failed to update assessment data: ' + updateError.message)
             }
-          } else {
-            // Create new plan
-            const { error: insertError } = await supabase
-              .from('user_plans')
-              .insert([
-                {
-                  user_id: newUser.id,
-                  assessment_data: {
-                    ...assessmentData,
-                    _metadata: {
-                      isRawData: true,
-                      lastUpdated: new Date().toISOString()
-                    }
-                  },
-                  created_at: new Date().toISOString()
-                }
-              ])
-
-            if (insertError) {
-              throw new Error('Failed to save assessment data: ' + insertError.message)
-            }
+            console.log('Assessment data updated successfully')
           }
+        } else if (savedData) {
+          // No existing plan - create new plan with local data
+          console.log('No existing plan found, creating new plan with local data')
+          const assessmentData = JSON.parse(savedData)
           
-          console.log('Assessment data saved successfully')
+          const { error: insertError } = await supabase
+            .from('user_plans')
+            .insert([
+              {
+                user_id: newUser.id,
+                assessment_data: {
+                  ...assessmentData,
+                  _metadata: {
+                    isRawData: true,
+                    lastUpdated: new Date().toISOString()
+                  }
+                },
+                created_at: new Date().toISOString()
+              }
+            ])
 
-          // Check if we have LinkedIn/resume text
-          const linkedinText = localStorage.getItem('linkedinOrResumeText')
-          if (linkedinText) {
-            // If we have LinkedIn text, redirect to summary with the text
-            router.push({
-              path: '/summary',
-              query: { linkedinText: encodeURIComponent(linkedinText) }
-            })
-          } else {
-            // If no LinkedIn text, just redirect to summary
-            router.push('/summary')
+          if (insertError) {
+            throw new Error('Failed to save assessment data: ' + insertError.message)
           }
+          console.log('Assessment data saved successfully')
+        }
+
+        // Check if we have LinkedIn/resume text
+        const linkedinText = localStorage.getItem('linkedinOrResumeText')
+        if (linkedinText) {
+          // If we have LinkedIn text, redirect to summary with the text
+          router.push({
+            path: '/summary',
+            query: { linkedinText: encodeURIComponent(linkedinText) }
+          })
         } else {
-          console.log('No assessment data found to save')
+          // If no LinkedIn text, just redirect to summary
           router.push('/summary')
         }
       } catch (err) {
