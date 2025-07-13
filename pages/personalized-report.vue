@@ -1,218 +1,228 @@
 <template>
-  <div class="max-w-7xl mx-auto p-6">
-    <div v-if="isLoading" class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-30 z-50">
-      <div class="bg-white p-6 rounded-xl shadow-xl text-lg font-semibold font-sans">Generating tasks...</div>
-    </div>
-    <!-- Enhanced Message Notification -->
-    <transition name="slide-fade">
-      <div v-if="message" class="fixed top-4 right-4 z-50 max-w-sm">
-        <div class="bg-white border border-slate-200 rounded-lg shadow-lg p-4 flex items-center justify-between">
-          <div class="flex items-center">
-            <Icon :name="messageIcon" :class="messageIconClass" class="w-5 h-5 mr-3" />
-            <span :class="messageTextClass" class="font-sans text-sm">{{ message }}</span>
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-100">
+    <div class="max-w-7xl mx-auto p-6">
+      <div v-if="isLoading" class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-30 z-50">
+        <div class="bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl text-lg font-semibold  border border-white/20">Generating tasks...</div>
+      </div>
+      <!-- Enhanced Message Notification -->
+      <transition name="slide-fade">
+        <div v-if="message" class="fixed top-4 right-4 z-50 max-w-sm">
+          <div class="bg-white/90 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl p-4 flex items-center justify-between">
+            <div class="flex items-center">
+              <Icon :name="messageIcon" :class="messageIconClass" class="w-5 h-5 mr-3" />
+              <span :class="messageTextClass" class=" text-sm">{{ message }}</span>
+            </div>
+            <button @click="dismissMessage" class="ml-3 text-slate-400 hover:text-slate-600 transition-colors">
+              <Icon name="i-heroicons-x-mark" class="w-4 h-4" />
+            </button>
           </div>
-          <button @click="dismissMessage" class="ml-3 text-slate-400 hover:text-slate-600 transition-colors">
-            <Icon name="i-heroicons-x-mark" class="w-4 h-4" />
+        </div>
+      </transition>
+      
+      <div v-if="!report && isLoadingReport" class="flex items-center justify-center min-h-screen">
+        <div class="text-center">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <h2 class="text-3xl font-bold text-slate-800 mb-4 ">Loading Your Report...</h2>
+          <p class="text-lg text-slate-600 mb-6 ">Fetching your personalized career report...</p>
+        </div>
+      </div>
+      
+      <div v-else-if="!report && !isLoadingReport" class="flex items-center justify-center min-h-screen">
+        <div class="text-center">
+          <h2 class="text-3xl font-bold text-slate-800 mb-4 ">No Personalized Report Found</h2>
+          <p class="text-lg text-slate-600 mb-6 ">Please generate a report from your summary page first.</p>
+          <button @click="navigateTo('/summary')" class="px-6 py-3 text-base font-semibold text-slate-700 bg-white/80 backdrop-blur-md border border-white/20 rounded-2xl shadow-xl hover:bg-white/90 hover:shadow-2xl hover:-translate-y-1 transition-all ">
+            Back to Summary
           </button>
         </div>
       </div>
-    </transition>
-    
-    <div v-if="!report && isLoadingReport" class="flex items-center justify-center min-h-screen">
-      <div class="text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <h2 class="text-3xl font-bold text-slate-800 mb-4 font-sans">Loading Your Report...</h2>
-        <p class="text-lg text-slate-600 mb-6 font-sans">Fetching your personalized career report...</p>
-      </div>
-    </div>
-    
-    <div v-else-if="!report && !isLoadingReport" class="flex items-center justify-center min-h-screen">
-      <div class="text-center">
-        <h2 class="text-3xl font-bold text-slate-800 mb-4 font-sans">No Personalized Report Found</h2>
-        <p class="text-lg text-slate-600 mb-6 font-sans">Please generate a report from your summary page first.</p>
-        <button @click="navigateTo('/summary')" class="px-6 py-3 text-base font-semibold text-slate-700 bg-white border border-slate-300 rounded-xl shadow hover:bg-slate-50 transition-all font-sans">
-          Back to Summary
-        </button>
-      </div>
-    </div>
 
-    <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Overall Score Card -->
-      <div class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mb-4 border border-slate-100">
-        <div class="flex flex-col items-center mb-6">
-          <h2 class="text-3xl font-bold text-slate-800 mb-6 font-sans">Overall Score</h2>
-          <GaugeChart :score="report.overall_score" />
-          <div class="text-xl font-semibold text-slate-700 mt-4 font-sans">{{ report.overall_score }}/100</div>
-        </div>
-      </div>
-
-      <!-- Summary Card -->
-      <div class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mb-4 border border-slate-100">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-3xl font-bold text-slate-800 font-sans">Summary</h2>
-        </div>
-        <div class="prose max-w-none text-slate-700 font-sans" v-html="report.summary"></div>
-      </div>
-
-      <!-- SWOT Analysis Cards -->
-      <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
-        <h3 class="text-xl font-bold text-green-700 mb-4 font-sans flex items-center">
-          <Icon name="i-heroicons-arrow-trending-up" class="w-6 h-6 mr-2" />
-          Strengths
-        </h3>
-        <div class="prose text-slate-700 font-sans" v-html="report.swot_analysis?.strengths"></div>
-      </div>
-
-      <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
-        <h3 class="text-xl font-bold text-red-700 mb-4 font-sans flex items-center">
-          <Icon name="i-heroicons-exclamation-triangle" class="w-6 h-6 mr-2" />
-          Weaknesses
-        </h3>
-        <div class="prose text-slate-700 font-sans" v-html="report.swot_analysis?.weaknesses"></div>
-      </div>
-
-      <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
-        <h3 class="text-xl font-bold text-blue-700 mb-4 font-sans flex items-center">
-          <Icon name="i-heroicons-light-bulb" class="w-6 h-6 mr-2" />
-          Opportunities
-        </h3>
-        <div class="prose text-slate-700 font-sans" v-html="report.swot_analysis?.opportunities"></div>
-      </div>
-
-      <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
-        <h3 class="text-xl font-bold text-yellow-700 mb-4 font-sans flex items-center">
-          <Icon name="i-heroicons-shield-exclamation" class="w-6 h-6 mr-2" />
-          Threats
-        </h3>
-        <div class="prose text-slate-700 font-sans" v-html="report.swot_analysis?.threats"></div>
-      </div>
-
-      <!-- Focus Areas Section -->
-      <div class="lg:col-span-2 mt-8">
-        <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-3xl font-bold text-slate-800 font-sans">Focus Areas</h2>
+      <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Overall Score Card -->
+        <div class="modern-card lg:col-span-2 mb-4">
+          <div class="flex flex-col items-center mb-6">
+            <h2 class="text-4xl font-extrabold mb-6  tracking-tight">
+              <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">Overall Score</span>
+            </h2>
+            <GaugeChart :score="report.overall_score" />
+            <div class="text-xl font-semibold text-slate-700 mt-4 ">{{ report.overall_score }}/100</div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <FocusAreaCard
-              v-for="key in focusAreaList"
-              :key="key"
-              :title="focusAreaTitles[key]"
-              :description="report.focus_areas?.[key]?.description"
-              :callToAction="report.focus_areas?.[key]?.call_to_action"
-              @create-task="handleCreateTask"
+        </div>
+
+        <!-- Summary Card -->
+        <div class="modern-card lg:col-span-2 mb-4">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-4xl font-extrabold  tracking-tight">
+              <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">Summary</span>
+            </h2>
+          </div>
+          <div class="prose max-w-none text-slate-700 " v-html="report.summary"></div>
+        </div>
+
+        <!-- SWOT Analysis Cards -->
+        <div class="modern-card mb-4">
+          <h3 class="text-2xl font-bold text-green-700 mb-4  flex items-center tracking-tight">
+            <Icon name="i-heroicons-arrow-trending-up" class="w-7 h-7 mr-3" />
+            Strengths
+          </h3>
+          <div class="prose text-slate-700 " v-html="report.swot_analysis?.strengths"></div>
+        </div>
+
+        <div class="modern-card mb-4">
+          <h3 class="text-2xl font-bold text-red-700 mb-4  flex items-center tracking-tight">
+            <Icon name="i-heroicons-exclamation-triangle" class="w-7 h-7 mr-3" />
+            Weaknesses
+          </h3>
+          <div class="prose text-slate-700 " v-html="report.swot_analysis?.weaknesses"></div>
+        </div>
+
+        <div class="modern-card mb-4">
+          <h3 class="text-2xl font-bold text-blue-700 mb-4  flex items-center tracking-tight">
+            <Icon name="i-heroicons-light-bulb" class="w-7 h-7 mr-3" />
+            Opportunities
+          </h3>
+          <div class="prose text-slate-700 " v-html="report.swot_analysis?.opportunities"></div>
+        </div>
+
+        <div class="modern-card mb-4">
+          <h3 class="text-2xl font-bold text-yellow-700 mb-4  flex items-center tracking-tight">
+            <Icon name="i-heroicons-shield-exclamation" class="w-7 h-7 mr-3" />
+            Threats
+          </h3>
+          <div class="prose text-slate-700 " v-html="report.swot_analysis?.threats"></div>
+        </div>
+
+        <!-- Focus Areas Section -->
+        <div class="lg:col-span-2 mt-8">
+          <div class="modern-card mb-4">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-4xl font-extrabold  tracking-tight">
+                <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">Focus Areas</span>
+              </h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <FocusAreaCard
+                v-for="key in focusAreaList"
+                :key="key"
+                :title="focusAreaTitles[key]"
+                :description="report.focus_areas?.[key]?.description"
+                :callToAction="report.focus_areas?.[key]?.call_to_action"
+                @create-task="handleCreateTask"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Kanban Board Section -->
+        <div class="lg:col-span-2 mt-8">
+          <div class="modern-card mb-4">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-4xl font-extrabold  tracking-tight">
+                <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">Your Tasks</span>
+              </h2>
+              <button @click="navigateTo('/tasks')" class="px-6 py-3 text-sm font-semibold text-blue-700 bg-blue-50/80 backdrop-blur-md border border-blue-200/50 rounded-2xl hover:bg-blue-100/80 hover:shadow-lg hover:-translate-y-1 transition-all  flex items-center shadow-md">
+                <Icon name="i-heroicons-squares-2x2" class="w-5 h-5 mr-2" />
+                Full Tasks View
+              </button>
+            </div>
+            <KanbanBoard
+              :tasks="userTasks"
+              :kanbanLoading="kanbanLoading"
+              :kanbanError="kanbanError"
+              :rowField="rowField"
+              :colField="colField"
+              :focusAreaTitles="focusAreaTitles"
+              @add-task="onKanbanAddTask"
+              @edit-task="openEditTaskModal"
+              @delete-task="deleteTask"
             />
           </div>
         </div>
-      </div>
 
-      <!-- Kanban Board Section -->
-      <div class="lg:col-span-2 mt-8">
-        <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-3xl font-bold text-slate-800 font-sans">Your Tasks (Kanban View)</h2>
-            <button @click="navigateTo('/tasks')" class="px-4 py-2 text-sm font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-all font-sans flex items-center">
-              <Icon name="i-heroicons-squares-2x2" class="w-4 h-4 mr-2" />
-              Full Tasks View
-            </button>
-          </div>
-          <KanbanBoard
-            :tasks="userTasks"
-            :kanbanLoading="kanbanLoading"
-            :kanbanError="kanbanError"
-            :rowField="rowField"
-            :colField="colField"
-            :focusAreaTitles="focusAreaTitles"
-            @add-task="onKanbanAddTask"
-            @edit-task="openEditTaskModal"
-            @delete-task="deleteTask"
-          />
+        <!-- Action Buttons -->
+        <div class="lg:col-span-2 flex justify-between mt-6">
+          <button @click="navigateTo('/summary')" class="px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:to-pink-600 rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all ">
+            Back to Summary
+          </button>
         </div>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="lg:col-span-2 flex justify-between mt-6">
-        <button @click="navigateTo('/summary')" class="px-6 py-3 text-base font-semibold text-slate-700 bg-white border border-slate-300 rounded-xl shadow hover:bg-slate-50 transition-all font-sans">
-          Back to Summary
-        </button>
-      </div>
-    </div>
-
-    <!-- Task Modal -->
-    <div v-if="showTaskModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-      <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md relative border border-slate-100">
-        <h3 class="text-xl font-bold text-slate-800 mb-4 font-sans">{{ taskModalMode === 'edit' ? 'Edit Task' : 'Add Task' }}</h3>
-        <form @submit.prevent="saveTask">
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-slate-700 mb-2 font-sans">Title</label>
-            <input v-model="taskForm.title" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-sans" required maxlength="100" />
+      <!-- Task Modal -->
+      <div v-if="showTaskModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
+        <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-8 w-full max-w-md relative border border-white/20">
+          <h3 class="text-2xl font-bold text-slate-800 mb-6 ">{{ taskModalMode === 'edit' ? 'Edit Task' : 'Add Task' }}</h3>
+          <form @submit.prevent="saveTask">
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-slate-700 mb-2 ">Title</label>
+              <input v-model="taskForm.title" class="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500  bg-white/80 backdrop-blur-sm" required maxlength="100" />
+            </div>
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-slate-700 mb-2 ">Description</label>
+              <textarea v-model="taskForm.description" class="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500  bg-white/80 backdrop-blur-sm" rows="3" maxlength="300"></textarea>
+            </div>
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-slate-700 mb-2 ">Due Date</label>
+              <input v-model="taskForm.due_date" type="date" class="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500  bg-white/80 backdrop-blur-sm" />
+            </div>
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-slate-700 mb-2 ">Status</label>
+              <select v-model="taskForm.status" class="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500  bg-white/80 backdrop-blur-sm">
+                <option value="todo">To Do</option>
+                <option value="in_progress">In Progress</option>
+                <option value="done">Done</option>
+                <option value="archived">Archived</option>
+              </select>
+            </div>
+            <div v-if="taskModalError" class="text-red-600 text-sm mb-4  bg-red-50/80 rounded-lg p-3">{{ taskModalError }}</div>
+            <div class="flex gap-4 mt-8">
+              <button type="submit" :disabled="taskModalLoading" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:opacity-60  transition-all shadow-lg hover:shadow-xl">
+                {{ taskModalMode === 'edit' ? 'Save Changes' : 'Add Task' }}
+              </button>
+              <button type="button" @click="showTaskModal = false" class="px-6 py-3 bg-white/80 backdrop-blur-md text-slate-700 rounded-xl hover:bg-white/90  transition-all border border-slate-200 shadow-md hover:shadow-lg">
+                Cancel
+              </button>
+              <button v-if="taskModalMode === 'edit'" type="button" @click="deleteTask(taskForm)" :disabled="taskModalLoading" class="ml-auto px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700  transition-all shadow-lg hover:shadow-xl">
+                Delete
+              </button>
+            </div>
+          </form>
+          <div v-if="taskModalLoading" class="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center rounded-2xl">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-slate-700 mb-2 font-sans">Description</label>
-            <textarea v-model="taskForm.description" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-sans" rows="2" maxlength="300"></textarea>
-          </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-slate-700 mb-2 font-sans">Due Date</label>
-            <input v-model="taskForm.due_date" type="date" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-sans" />
-          </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-slate-700 mb-2 font-sans">Status</label>
-            <select v-model="taskForm.status" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-sans">
-              <option value="todo">To Do</option>
-              <option value="in_progress">In Progress</option>
-              <option value="done">Done</option>
-              <option value="archived">Archived</option>
-            </select>
-          </div>
-          <div v-if="taskModalError" class="text-red-600 text-sm mb-4 font-sans">{{ taskModalError }}</div>
-          <div class="flex gap-3 mt-6">
-            <button type="submit" :disabled="taskModalLoading" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-60 font-sans transition-all">
-              {{ taskModalMode === 'edit' ? 'Save Changes' : 'Add Task' }}
-            </button>
-            <button type="button" @click="showTaskModal = false" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 font-sans transition-all">
-              Cancel
-            </button>
-            <button v-if="taskModalMode === 'edit'" type="button" @click="deleteTask(taskForm)" :disabled="taskModalLoading" class="ml-auto px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-sans transition-all">
-              Delete
-            </button>
-          </div>
-        </form>
-        <div v-if="taskModalLoading" class="absolute inset-0 bg-white bg-opacity-60 flex items-center justify-center rounded-2xl">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
       </div>
-    </div>
 
-    <!-- Create Tasks Modal -->
-    <div v-if="showCreateTasksModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-      <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md relative border border-slate-100">
-        <h3 class="text-xl font-bold text-slate-800 mb-4 font-sans">Create Tasks</h3>
-        <form @submit.prevent="submitCreateTasks">
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-slate-700 mb-2 font-sans">Focus Area</label>
-            <input v-model="createTasksForm.area" class="w-full border border-slate-300 rounded-lg px-3 py-2 bg-slate-100 font-sans" readonly />
+      <!-- Create Tasks Modal -->
+      <div v-if="showCreateTasksModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
+        <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-8 w-full max-w-md relative border border-white/20">
+          <h3 class="text-2xl font-bold text-slate-800 mb-6 ">Create Tasks</h3>
+          <form @submit.prevent="submitCreateTasks">
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-slate-700 mb-2 ">Focus Area</label>
+              <input v-model="createTasksForm.area" class="w-full border border-slate-200 rounded-xl px-4 py-3 bg-slate-50/80 backdrop-blur-sm " readonly />
+            </div>
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-slate-700 mb-2 ">Starting Quarter</label>
+              <input v-model="createTasksForm.quarter" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500  bg-white/80 backdrop-blur-sm" required maxlength="10" placeholder="e.g., 2024-Q4" />
+            </div>
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-slate-700 mb-2 ">Custom Instructions (Optional)</label>
+              <textarea v-model="createTasksForm.customPrompt" class="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500  bg-white/80 backdrop-blur-sm" rows="4" maxlength="500" placeholder="Add any specific focus or requirements for the generated tasks..."></textarea>
+              <p class="text-xs text-slate-500 mt-2">This will be added as 'User Input' to help customize the task generation to your specific needs.</p>
+            </div>
+            <div v-if="createTasksModalError" class="text-red-600 text-sm mb-4  bg-red-50/80 rounded-lg p-3">{{ createTasksModalError }}</div>
+            <div class="flex gap-4 mt-8">
+              <button type="submit" :disabled="createTasksModalLoading" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:opacity-60  transition-all shadow-lg hover:shadow-xl">
+                Create Tasks
+              </button>
+              <button type="button" @click="showCreateTasksModal = false" class="px-6 py-3 bg-white/80 backdrop-blur-md text-slate-700 rounded-xl hover:bg-white/90  transition-all border border-slate-200 shadow-md hover:shadow-lg">
+                Cancel
+              </button>
+            </div>
+          </form>
+          <div v-if="createTasksModalLoading" class="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center rounded-2xl">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-slate-700 mb-2 font-sans">Starting Quarter</label>
-            <input v-model="createTasksForm.quarter" type="text" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-sans" required maxlength="10" placeholder="e.g., 2024-Q4" />
-          </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-slate-700 mb-2 font-sans">Custom Instructions (Optional)</label>
-            <textarea v-model="createTasksForm.customPrompt" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-sans" rows="3" maxlength="500" placeholder="Add any specific focus or requirements for the generated tasks..."></textarea>
-            <p class="text-xs text-slate-500 mt-1">This will be added as 'User Input' to help customize the task generation to your specific needs.</p>
-          </div>
-          <div v-if="createTasksModalError" class="text-red-600 text-sm mb-4 font-sans">{{ createTasksModalError }}</div>
-          <div class="flex gap-3 mt-6">
-            <button type="submit" :disabled="createTasksModalLoading" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-60 font-sans transition-all">
-              Create Tasks
-            </button>
-            <button type="button" @click="showCreateTasksModal = false" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 font-sans transition-all">
-              Cancel
-            </button>
-          </div>
-        </form>
-        <div v-if="createTasksModalLoading" class="absolute inset-0 bg-white bg-opacity-60 flex items-center justify-center rounded-2xl">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
       </div>
     </div>
@@ -649,6 +659,12 @@ onMounted(async () => {
 
 .prose li {
   margin-bottom: 0.5em;
+}
+
+/* Modern card styling matching index page */
+.modern-card {
+  @apply bg-white/80 rounded-2xl shadow-xl border border-gray-100 p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:bg-white/90 cursor-pointer;
+  backdrop-filter: blur(6px);
 }
 
 /* Fade transition for smooth appearance */

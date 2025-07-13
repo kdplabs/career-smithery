@@ -26,7 +26,7 @@
         <!-- Profile Card (30%) -->
         <div class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-3 border border-slate-100">
           <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold text-slate-800 font-sans">Profile Information</h2>
+            <h2 class="text-2xl font-bold text-slate-800 ">Profile Information</h2>
             <NuxtLink to="/assessment-guide#profile-info" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
               <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
             </NuxtLink>
@@ -78,31 +78,31 @@
             
             <div class="space-y-4 w-full">
               <div>
-                <p class="text-sm text-slate-500 font-sans">Full Name</p>
-                <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.fullName }}</p>
+                <p class="text-sm text-slate-500 ">Full Name</p>
+                <p class="text-lg font-semibold text-slate-800 ">{{ assessmentSummary.profile.fullName }}</p>
               </div>
               <div>
-                <p class="text-sm text-slate-500 font-sans">Email</p>
-                <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.email }}</p>
+                <p class="text-sm text-slate-500 ">Email</p>
+                <p class="text-lg font-semibold text-slate-800 ">{{ assessmentSummary.profile.email }}</p>
               </div>
               <div>
-                <p class="text-sm text-slate-500 font-sans">Current Role</p>
-                <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.currentRole }}</p>
+                <p class="text-sm text-slate-500 ">Current Role</p>
+                <p class="text-lg font-semibold text-slate-800 ">{{ assessmentSummary.profile.currentRole }}</p>
               </div>
               <div>
-                <p class="text-sm text-slate-500 font-sans">Years of Experience</p>
-                <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.yearsOfExperience }}</p>
+                <p class="text-sm text-slate-500 ">Years of Experience</p>
+                <p class="text-lg font-semibold text-slate-800 ">{{ assessmentSummary.profile.yearsOfExperience }}</p>
               </div>
             </div>
           </div>
           <div class="mt-4">
-            <p class="text-sm text-slate-500 font-sans">Career Objective</p>
-            <p class="text-lg font-semibold text-slate-800 font-sans">{{ assessmentSummary.profile.careerObjective }}</p>
+            <p class="text-sm text-slate-500 ">Career Objective</p>
+            <p class="text-lg font-semibold text-slate-800 ">{{ assessmentSummary.profile.careerObjective }}</p>
           </div>
           
           <!-- Image Upload Error Message -->
           <div v-if="imageUploadError" class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p class="text-sm text-red-600 font-sans">{{ imageUploadError }}</p>
+            <p class="text-sm text-red-600 ">{{ imageUploadError }}</p>
           </div>
         </div>
 
@@ -111,7 +111,7 @@
           <!-- Career Stage Card -->
           <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-100">
             <div class="flex items-center justify-between mb-6">
-                             <h2 class="text-2xl font-bold text-slate-800 font-sans">Career Stage</h2>
+                             <h2 class="text-2xl font-bold text-slate-800 ">Career Stage</h2>
               <NuxtLink to="/assessment-guide#career-stage" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
                 <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
               </NuxtLink>
@@ -123,8 +123,8 @@
             <!-- Identified Stage Card -->
             <div class="text-center mt-4">
               <div class="inline-block p-4 rounded-lg bg-blue-100 border border-blue-300 shadow-md min-w-[280px]">
-                <p class="text-sm text-blue-700 font-sans mb-1 uppercase tracking-wider">Your Identified Stage</p>
-                <p class="text-xl font-bold text-blue-800 font-sans">{{ assessmentSummary.careerStageResult || assessmentSummary.careerStage }}</p>
+                <p class="text-sm text-blue-700  mb-1 uppercase tracking-wider">Your Identified Stage</p>
+                <p class="text-xl font-bold text-blue-800 ">{{ assessmentSummary.careerStageResult || assessmentSummary.careerStage }}</p>
               </div>
             </div>
           </div>
@@ -132,7 +132,7 @@
           <!-- Role History & Future Paths -->
           <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-100">
             <div class="flex items-center justify-between mb-6">
-                             <h2 class="text-2xl font-bold text-slate-800 font-sans">Role History & Future Paths</h2>
+                             <h2 class="text-2xl font-bold text-slate-800 ">Role History & Future Paths</h2>
               <NuxtLink to="/assessment-guide#role-history" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
                 <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
               </NuxtLink>
@@ -140,7 +140,7 @@
             <div class="flex">
               <!-- Left Side: Previous Roles (30%) -->
               <div class="flex-shrink-0 w-4/12 pr-6 border-r border-slate-200 relative">
-                <h3 class="text-xl font-semibold text-slate-700 mb-4 font-sans">Your Journey So Far</h3>
+                <h3 class="text-xl font-semibold text-slate-700 mb-4 ">Your Journey So Far</h3>
                 
                 <!-- Vertical Line for progression -->
                 <div class="absolute left-0 top-16 bottom-4 w-0.5 bg-slate-300 ml-1.5"></div>
@@ -150,22 +150,22 @@
                   <div class="flex items-start">
                     <div class="absolute left-0 mt-1.5 w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow z-10 ml-0.5"></div>
                     <div class="ml-6 w-full">
-                      <p class="text-sm text-slate-500 font-sans">Current Role</p>
+                      <p class="text-sm text-slate-500 ">Current Role</p>
                       <div class="mt-1 p-3 rounded-lg bg-blue-100 border border-blue-300 shadow-sm">
-                        <p class="text-md font-semibold text-blue-800 font-sans">{{ assessmentSummary.profile.currentRole }}</p>
-                        <p class="text-xs text-blue-600 font-sans">Present</p>
+                        <p class="text-md font-semibold text-blue-800 ">{{ assessmentSummary.profile.currentRole }}</p>
+                        <p class="text-xs text-blue-600 ">Present</p>
                       </div>
                     </div>
                   </div>
 
                   <!-- Previous Roles -->
                   <div v-if="assessmentSummary.profile.previousRoles.length > 0">
-                    <p class="text-sm text-slate-500 font-sans mt-5 ml-6">Previous Roles</p>
+                    <p class="text-sm text-slate-500  mt-5 ml-6">Previous Roles</p>
                     <div v-for="(role, index) in assessmentSummary.profile.previousRoles" :key="index" class="mt-3 flex items-start">
                       <div class="absolute left-0 mt-1.5 w-3 h-3 bg-slate-400 rounded-full border-2 border-white shadow z-10 ml-0.5"></div>
                       <div class="ml-6 w-full p-3 rounded-lg bg-slate-50 border border-slate-200">
-                        <p class="text-md font-semibold text-slate-800 font-sans">{{ role.title }}</p>
-                        <p class="text-xs text-slate-500 font-sans">{{ role.year }}</p>
+                        <p class="text-md font-semibold text-slate-800 ">{{ role.title }}</p>
+                        <p class="text-xs text-slate-500 ">{{ role.year }}</p>
                       </div>
                     </div>
                   </div>
@@ -174,9 +174,9 @@
 
               <!-- Right Side: Potential Career Paths (70%) -->
               <div class="flex-grow pl-8">
-                <h3 class="text-xl font-semibold text-slate-700 mb-6 font-sans">Potential Career Paths</h3>
+                <h3 class="text-xl font-semibold text-slate-700 mb-6 ">Potential Career Paths</h3>
                 <div class="space-y-6">
-                  <div v-if="assessmentSummary.profile.potentialPaths.length === 0" class="text-slate-500 font-sans pl-8">
+                  <div v-if="assessmentSummary.profile.potentialPaths.length === 0" class="text-slate-500  pl-8">
                     No potential career paths defined yet.
                   </div>
                   <!-- Path Item -->
@@ -187,12 +187,12 @@
                     </div>
                     <!-- Path Content -->
                     <div class="flex-1 p-4 rounded-xl shadow-lg bg-white border border-slate-200 hover:shadow-md transition-shadow">
-                      <p class="text-md font-semibold text-blue-700 mb-3 font-sans">Suggested Path {{ index + 1 }}</p>
+                      <p class="text-md font-semibold text-blue-700 mb-3 ">Suggested Path {{ index + 1 }}</p>
                       <div class="flex space-x-3 items-stretch">
                         <!-- Future Role Card -->
                         <div class="flex-1 p-3 rounded-lg border border-slate-200 bg-slate-50 min-w-[150px]">
-                          <p class="text-xs text-slate-500 font-sans uppercase tracking-wider">Future Role</p>
-                          <p class="text-md font-medium text-slate-800 font-sans">{{ path.futureRole }}</p>
+                          <p class="text-xs text-slate-500  uppercase tracking-wider">Future Role</p>
+                          <p class="text-md font-medium text-slate-800 ">{{ path.futureRole }}</p>
                         </div>
                         <!-- Arrow Connector -->
                         <div class="flex items-center justify-center px-1">
@@ -200,8 +200,8 @@
                         </div>
                         <!-- Long Term Role Card -->
                         <div class="flex-1 p-3 rounded-lg border border-slate-200 bg-slate-50 min-w-[150px]">
-                          <p class="text-xs text-slate-500 font-sans uppercase tracking-wider">Long Term Role</p>
-                          <p class="text-md font-medium text-slate-800 font-sans">{{ path.longTermRole }}</p>
+                          <p class="text-xs text-slate-500  uppercase tracking-wider">Long Term Role</p>
+                          <p class="text-md font-medium text-slate-800 ">{{ path.longTermRole }}</p>
                         </div>
                       </div>
                     </div>
@@ -219,7 +219,7 @@
       <!-- Nine Box Chart -->
       <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-slate-800 font-sans">Nine Box Position</h2>
+          <h2 class="text-2xl font-bold text-slate-800 ">Nine Box Position</h2>
           <NuxtLink to="/assessment-guide#nine-box" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
             <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
           </NuxtLink>
@@ -229,7 +229,7 @@
             <template v-for="(row, rowIdx) in nineBoxRows" :key="rowIdx">
               <template v-for="(cell, colIdx) in row" :key="colIdx">
                 <div :class="[
-                  'flex flex-col items-center justify-center rounded-xl p-5 min-h-[90px] min-w-[120px] border-2 transition font-sans',
+                  'flex flex-col items-center justify-center rounded-xl p-5 min-h-[90px] min-w-[120px] border-2 transition ',
                   isNineBoxSelected(rowIdx, colIdx) 
                     ? 'bg-blue-200 text-blue-800 ring-4 ring-inset ring-blue-400 border-blue-600 scale-100 z-10'
                     : 'bg-slate-100 text-slate-700 border-slate-200'
@@ -255,10 +255,10 @@
         
         <!-- Nine Box Explanation and Recommendations -->
         <div class="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-100">
-          <h3 class="text-xl font-bold text-blue-800 mb-3 font-sans">Your Nine Box Position: {{ getNineBoxPositionName() }}</h3>
-          <p class="text-blue-800 mb-4 font-sans">{{ getNineBoxDescription() }}</p>
+          <h3 class="text-xl font-bold text-blue-800 mb-3 ">Your Nine Box Position: {{ getNineBoxPositionName() }}</h3>
+          <p class="text-blue-800 mb-4 ">{{ getNineBoxDescription() }}</p>
           
-          <ul class="mt-2 list-disc pl-5 space-y-2 text-blue-800 font-sans">
+          <ul class="mt-2 list-disc pl-5 space-y-2 text-blue-800 ">
             <li v-for="(recommendation, index) in getNineBoxRecommendations()" :key="index">
               {{ recommendation }}
             </li>
@@ -269,7 +269,7 @@
       <!-- Three by Three by Three Chart -->
       <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-slate-800 font-sans">Performance, Potential & Engagement</h2>
+          <h2 class="text-2xl font-bold text-slate-800 ">Performance, Potential & Engagement</h2>
           <NuxtLink to="/assessment-guide#three-metrics" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
             <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
           </NuxtLink>
@@ -333,25 +333,25 @@
         
         <!-- Three Metrics Explanation and Recommendations -->
         <div class="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-100">
-          <h3 class="text-xl font-bold text-blue-800 mb-3 font-sans">Your Three Metrics Analysis</h3>
-          <p class="text-blue-800 mb-4 font-sans">{{ getThreeMetricsDescription() }}</p>
+          <h3 class="text-xl font-bold text-blue-800 mb-3 ">Your Three Metrics Analysis</h3>
+          <p class="text-blue-800 mb-4 ">{{ getThreeMetricsDescription() }}</p>
           
           <div class="grid grid-cols-1 gap-1 mt-4">
             <div class="p-4 bg-white rounded-lg shadow-sm border border-blue-100">
-              <h4 class="text-lg font-semibold text-blue-700 mb-2 font-sans">Performance: {{ assessmentSummary?.threeByThreePosition?.performance || 'Not Set' }}</h4>
-              <p class="text-blue-800 text-sm font-sans">{{ getMetricDescription('performance') }}</p>
+              <h4 class="text-lg font-semibold text-blue-700 mb-2 ">Performance: {{ assessmentSummary?.threeByThreePosition?.performance || 'Not Set' }}</h4>
+              <p class="text-blue-800 text-sm ">{{ getMetricDescription('performance') }}</p>
             </div>
             <div class="p-4 bg-white rounded-lg shadow-sm border border-blue-100">
-              <h4 class="text-lg font-semibold text-blue-700 mb-2 font-sans">Potential: {{ assessmentSummary?.threeByThreePosition?.potential || 'Not Set' }}</h4>
-              <p class="text-blue-800 text-sm font-sans">{{ getMetricDescription('potential') }}</p>
+              <h4 class="text-lg font-semibold text-blue-700 mb-2 ">Potential: {{ assessmentSummary?.threeByThreePosition?.potential || 'Not Set' }}</h4>
+              <p class="text-blue-800 text-sm ">{{ getMetricDescription('potential') }}</p>
             </div>
             <div class="p-4 bg-white rounded-lg shadow-sm border border-blue-100">
-              <h4 class="text-lg font-semibold text-blue-700 mb-2 font-sans">Engagement: {{ assessmentSummary?.threeByThreePosition?.engagement || 'Not Set' }}</h4>
-              <p class="text-blue-800 text-sm font-sans">{{ getMetricDescription('engagement') }}</p>
+              <h4 class="text-lg font-semibold text-blue-700 mb-2 ">Engagement: {{ assessmentSummary?.threeByThreePosition?.engagement || 'Not Set' }}</h4>
+              <p class="text-blue-800 text-sm ">{{ getMetricDescription('engagement') }}</p>
             </div>
           </div>
           
-          <ul class="mt-4 list-disc pl-5 space-y-2 text-blue-800 font-sans">
+          <ul class="mt-4 list-disc pl-5 space-y-2 text-blue-800 ">
             <li v-for="(recommendation, index) in getThreeMetricsRecommendations()" :key="index">
               {{ recommendation }}
             </li>
@@ -362,7 +362,7 @@
       <!-- Leadership Pipeline Summary -->
       <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-slate-800 font-sans">Leadership Journey</h2>
+          <h2 class="text-2xl font-bold text-slate-800 ">Leadership Journey</h2>
           <NuxtLink to="/assessment-guide#leadership-journey" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
             <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
           </NuxtLink>
@@ -370,42 +370,42 @@
         <div class="space-y-6">
           <div class="grid grid-cols-1 gap-4">
             <div :class="[
-              'p-6 rounded-xl border-2 transition-all font-sans',
+              'p-6 rounded-xl border-2 transition-all ',
               (assessmentSummary.leadershipPotentialResult || assessmentSummary.leadershipPotential) === 'Enterprise Leader' ? 'bg-orange-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Enterprise Leader</div>
               <div class="text-sm text-slate-600">CEO-level leadership across multiple business units</div>
             </div>
             <div :class="[
-              'p-6 rounded-xl border-2 transition-all font-sans',
+              'p-6 rounded-xl border-2 transition-all ',
               (assessmentSummary.leadershipPotentialResult || assessmentSummary.leadershipPotential) === 'Business Leader' ? 'bg-orange-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Business Leader</div>
               <div class="text-sm text-slate-600">C-suite leadership of a business unit</div>
             </div>
             <div :class="[
-              'p-6 rounded-xl border-2 transition-all font-sans',
+              'p-6 rounded-xl border-2 transition-all ',
               (assessmentSummary.leadershipPotentialResult || assessmentSummary.leadershipPotential) === 'Functional Leader' ? 'bg-orange-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Functional Leader</div>
               <div class="text-sm text-slate-600">Department or function leadership</div>
             </div>
             <div :class="[
-              'p-6 rounded-xl border-2 transition-all font-sans',
+              'p-6 rounded-xl border-2 transition-all ',
               (assessmentSummary.leadershipPotentialResult || assessmentSummary.leadershipPotential) === 'Managing Managers' ? 'bg-orange-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Managing Managers</div>
               <div class="text-sm text-slate-600">Leading multiple teams through managers</div>
             </div>
             <div :class="[
-              'p-6 rounded-xl border-2 transition-all font-sans',
+              'p-6 rounded-xl border-2 transition-all ',
               (assessmentSummary.leadershipPotentialResult || assessmentSummary.leadershipPotential) === 'Managing Others' ? 'bg-orange-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Managing Others</div>
               <div class="text-sm text-slate-600">First-time manager leading a team</div>
             </div>
             <div :class="[
-              'p-6 rounded-xl border-2 transition-all font-sans',
+              'p-6 rounded-xl border-2 transition-all ',
               (assessmentSummary.leadershipPotentialResult || assessmentSummary.leadershipPotential) === 'Managing Self' ? 'bg-orange-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Managing Self</div>
@@ -423,7 +423,7 @@
       <!-- Kirkpatrick Model Summary -->
       <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-slate-800 font-sans">Development Journey</h2>
+          <h2 class="text-2xl font-bold text-slate-800 ">Development Journey</h2>
           <NuxtLink to="/assessment-guide#development-journey" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
             <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
           </NuxtLink>
@@ -431,28 +431,28 @@
         <div class="space-y-6">
           <div class="grid grid-cols-1 gap-4">
             <div :class="[
-              'p-6 rounded-xl border-2 transition-all font-sans',
+              'p-6 rounded-xl border-2 transition-all ',
               assessmentSummary.kirkpatrickLevel === 'Level 4: Results' ? 'bg-blue-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Level 4: Results</div>
               <div class="text-sm text-slate-600">Impact on business outcomes and organizational goals</div>
             </div>
             <div :class="[
-              'p-6 rounded-xl border-2 transition-all font-sans',
+              'p-6 rounded-xl border-2 transition-all ',
               assessmentSummary.kirkpatrickLevel === 'Level 3: Behavior' ? 'bg-blue-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Level 3: Behavior</div>
               <div class="text-sm text-slate-600">Application of skills in the workplace</div>
             </div>
             <div :class="[
-              'p-6 rounded-xl border-2 transition-all font-sans',
+              'p-6 rounded-xl border-2 transition-all ',
               assessmentSummary.kirkpatrickLevel === 'Level 2: Learning' ? 'bg-blue-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Level 2: Learning</div>
               <div class="text-sm text-slate-600">Knowledge and skills acquisition</div>
             </div>
             <div :class="[
-              'p-6 rounded-xl border-2 transition-all font-sans',
+              'p-6 rounded-xl border-2 transition-all ',
               assessmentSummary.kirkpatrickLevel === 'Level 1: Reaction' ? 'bg-blue-200 scale-105' : ''
             ]">
               <div class="font-semibold text-slate-800">Level 1: Reaction</div>
@@ -470,23 +470,23 @@
       <!-- Skills Profile Chart -->
       <div class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mb-4 border border-slate-100">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-slate-800 font-sans">Skills Profile</h2>
+          <h2 class="text-2xl font-bold text-slate-800 ">Skills Profile</h2>
           <NuxtLink to="/assessment-guide#skills-profile" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
             <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
           </NuxtLink>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          <div :class="['rounded-xl shadow p-8 flex flex-col items-center font-sans', assessmentSummary?.skillsProfile?.type === 'I-Shaped' ? 'border-2 border-blue-500' : 'bg-white border border-slate-100']">
+          <div :class="['rounded-xl shadow p-8 flex flex-col items-center ', assessmentSummary?.skillsProfile?.type === 'I-Shaped' ? 'border-2 border-blue-500' : 'bg-white border border-slate-100']">
             <span class="text-6xl mb-4">𝐈</span>
             <div class="font-bold mb-2 text-blue-700">I-Shaped</div>
             <div class="text-sm text-slate-600 text-center mb-2">Deep expertise in one area (specialist)</div>
           </div>
-          <div :class="['rounded-xl shadow p-8 flex flex-col items-center font-sans', assessmentSummary?.skillsProfile?.type === 'T-Shaped' ? 'border-2 border-blue-500' : 'bg-white border border-slate-100']">
+          <div :class="['rounded-xl shadow p-8 flex flex-col items-center ', assessmentSummary?.skillsProfile?.type === 'T-Shaped' ? 'border-2 border-blue-500' : 'bg-white border border-slate-100']">
             <span class="text-6xl mb-4">𝐓</span>
             <div class="font-bold mb-2 text-blue-700">T-Shaped</div>
             <div class="text-sm text-slate-600 text-center mb-2">Deep expertise in one area + broad knowledge in others</div>
           </div>
-          <div :class="['rounded-xl shadow p-8 flex flex-col items-center font-sans', assessmentSummary?.skillsProfile?.type === 'Pi-Shaped' ? 'border-2 border-blue-500' : 'bg-white border border-slate-100']">
+          <div :class="['rounded-xl shadow p-8 flex flex-col items-center ', assessmentSummary?.skillsProfile?.type === 'Pi-Shaped' ? 'border-2 border-blue-500' : 'bg-white border border-slate-100']">
             <span class="text-6xl mb-4">𝚷</span>
             <div class="font-bold mb-2 text-blue-700">Pi-Shaped</div>
             <div class="text-sm text-slate-600 text-center mb-2">Expertise in two domains + broad knowledge</div>
@@ -495,19 +495,19 @@
 
         <!-- Skills Description Section -->
         <div class="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-100">
-          <h3 class="text-xl font-bold text-blue-800 mb-6 font-sans">Your Skills Profile Analysis</h3>
+          <h3 class="text-xl font-bold text-blue-800 mb-6 ">Your Skills Profile Analysis</h3>
           
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Primary Skills -->
             <div class="bg-white rounded-lg shadow-sm border border-blue-100 p-4">
-              <h4 class="text-lg font-semibold text-blue-700 mb-3 font-sans">Primary Expertise</h4>
+              <h4 class="text-lg font-semibold text-blue-700 mb-3 ">Primary Expertise</h4>
               <div class="space-y-3">
                 <div>
-                  <p class="text-sm text-slate-500 font-sans">Area</p>
-                  <p class="text-blue-800 font-sans font-medium">{{ assessmentSummary?.skillsProfile?.primarySkill || 'Not specified' }}</p>
+                  <p class="text-sm text-slate-500 ">Area</p>
+                  <p class="text-blue-800  font-medium">{{ assessmentSummary?.skillsProfile?.primarySkill || 'Not specified' }}</p>
                 </div>
                 <div>
-                  <p class="text-sm text-slate-500 font-sans">Expertise Level</p>
+                  <p class="text-sm text-slate-500 ">Expertise Level</p>
                   <span :class="[
                     'inline-block px-3 py-1 rounded-full text-sm font-medium',
                     assessmentSummary?.skillsProfile?.primaryLevel === 'expert' ? 'bg-green-100 text-green-800' :
@@ -523,10 +523,10 @@
 
             <!-- Secondary Skills -->
             <div class="bg-white rounded-lg shadow-sm border border-blue-100 p-4">
-              <h4 class="text-lg font-semibold text-blue-700 mb-3 font-sans">Secondary Skills</h4>
+              <h4 class="text-lg font-semibold text-blue-700 mb-3 ">Secondary Skills</h4>
               <div class="space-y-3">
                 <div>
-                  <p class="text-sm text-slate-500 font-sans">Skill Breadth</p>
+                  <p class="text-sm text-slate-500 ">Skill Breadth</p>
                   <span :class="[
                     'inline-block px-3 py-1 rounded-full text-sm font-medium',
                     assessmentSummary?.skillsProfile?.breadth === 'broad' ? 'bg-green-100 text-green-800' :
@@ -537,7 +537,7 @@
                   </span>
                 </div>
                 <div>
-                  <p class="text-sm text-slate-500 font-sans">Areas of Knowledge</p>
+                  <p class="text-sm text-slate-500 ">Areas of Knowledge</p>
                   <div v-if="assessmentSummary?.skillsProfile?.secondarySkills?.length > 0" class="flex flex-wrap gap-2 mt-2">
                     <span v-for="skill in assessmentSummary.skillsProfile.secondarySkills" 
                           :key="skill"
@@ -552,10 +552,10 @@
 
             <!-- Development Areas -->
             <div class="bg-white rounded-lg shadow-sm border border-blue-100 p-4">
-              <h4 class="text-lg font-semibold text-blue-700 mb-3 font-sans">Development Areas</h4>
+              <h4 class="text-lg font-semibold text-blue-700 mb-3 ">Development Areas</h4>
               <div class="space-y-3">
                 <div>
-                  <p class="text-sm text-slate-500 font-sans">Skills to Develop</p>
+                  <p class="text-sm text-slate-500 ">Skills to Develop</p>
                   <div v-if="assessmentSummary?.skillsProfile?.developmentAreas?.length > 0" class="flex flex-wrap gap-2 mt-2">
                     <span v-for="skill in assessmentSummary.skillsProfile.developmentAreas" 
                           :key="skill"
@@ -571,8 +571,8 @@
 
           <!-- Skills Profile Recommendations -->
           <div class="mt-6 bg-white rounded-lg shadow-sm border border-blue-100 p-4">
-            <h4 class="text-lg font-semibold text-blue-700 mb-3 font-sans">Recommendations</h4>
-            <ul class="list-disc pl-5 space-y-2 text-blue-800 font-sans">
+            <h4 class="text-lg font-semibold text-blue-700 mb-3 ">Recommendations</h4>
+            <ul class="list-disc pl-5 space-y-2 text-blue-800 ">
               <li v-if="assessmentSummary?.skillsProfile?.type === 'I-Shaped'">
                 Consider developing complementary skills to transition towards a T-shaped profile
               </li>
@@ -603,20 +603,20 @@
       <div ref="linkedinInputSection" class="bg-white rounded-2xl shadow-xl p-6 lg:col-span-2 mt-6 mb-4 border border-slate-100">
         <!-- Show "View Your Personalized Report" if user has existing report -->
         <div v-if="hasExistingReport && user && !isGeneratingPlan">
-          <h2 class="text-2xl font-bold text-slate-800 mb-4 text-center font-sans">Your Personalized Report is Ready!</h2>
+          <h2 class="text-2xl font-bold text-slate-800 mb-4 text-center ">Your Personalized Report is Ready!</h2>
           <p class="text-slate-600 text-center mb-6 max-w-2xl mx-auto">
             You have already generated your personalized career action plan. Click below to view your report.
           </p>
           <div class="text-center flex flex-col sm:flex-row justify-center gap-4">
             <button
               @click="navigateTo('/personalized-report')"
-              class="px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-green-600 to-blue-600 rounded-xl shadow-lg hover:from-green-700 hover:to-blue-700 transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 font-sans flex items-center justify-center"
+              class="px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-green-600 to-blue-600 rounded-xl shadow-lg hover:from-green-700 hover:to-blue-700 transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300  flex items-center justify-center"
             >
               <Icon name="i-mdi-file-document-outline" class="mr-2" /> View Your Personalized Report
             </button>
             <button
               @click="clearExistingReport()"
-              class="px-8 py-4 text-lg font-semibold text-blue-700 bg-white border border-blue-300 rounded-xl shadow hover:bg-blue-50 transition-all font-sans flex items-center justify-center"
+              class="px-8 py-4 text-lg font-semibold text-blue-700 bg-white border border-blue-300 rounded-xl shadow hover:bg-blue-50 transition-all  flex items-center justify-center"
             >
               <Icon name="i-mdi-refresh" class="mr-2" /> Generate New Report
             </button>
@@ -625,12 +625,12 @@
 
         <!-- For logged-in users without existing report, show the LinkedIn input form -->
         <div v-else-if="user && !hasExistingReport && !isGeneratingPlan && !personalizedPlan">
-          <h3 class="text-xl font-bold text-slate-800 mb-4 font-sans">Generate Your Personalized Report</h3>
+          <h3 class="text-xl font-bold text-slate-800 mb-4 ">Generate Your Personalized Report</h3>
           <p class="text-slate-600 mb-1">Please paste your LinkedIn profile summary or resume text below.</p>
           <p class="text-xs text-slate-500 mb-4">This information, along with your assessment results, will be used to generate your personalized plan.</p>
           <textarea
             v-model="linkedinOrResumeText" 
-            class="w-full h-60 p-3 border border-slate-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 font-sans text-sm"
+            class="w-full h-60 p-3 border border-slate-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500  text-sm"
             placeholder="Paste your LinkedIn profile summary or resume text here..."
           ></textarea>
           <div v-if="planError" class="mt-3 text-red-600 text-sm font-medium">
@@ -640,7 +640,7 @@
             <button 
               @click="submitForPersonalizedPlan()"
               :disabled="!linkedinOrResumeText.trim()"
-              class="px-6 py-2 text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-slate-400 transition-all font-sans flex items-center"
+              class="px-6 py-2 text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-slate-400 transition-all  flex items-center"
             >
               <Icon name="i-mdi-brain" class="mr-2" /> Generate Report
             </button>
@@ -649,7 +649,7 @@
 
         <!-- For non-logged-in users, show both CTAs -->
         <div v-else-if="!user && !isGeneratingPlan && !personalizedPlan">
-          <h2 class="text-2xl font-bold text-slate-800 mb-4 text-center font-sans">Get Your Personalized Report </h2>
+          <h2 class="text-2xl font-bold text-slate-800 mb-4 text-center ">Get Your Personalized Report </h2>
           <p class="text-slate-600 text-center mb-6 max-w-2xl mx-auto">
             Leverage your assessment results and professional background to generate a personalized career action plan, including skill development strategies and targeted networking advice.<br>
             <span class="text-sm text-slate-500">You'll be asked to log in and purchase credits if needed.</span>
@@ -657,13 +657,13 @@
           <div class="text-center flex flex-col sm:flex-row justify-center gap-4">
             <button
               @click="submitForPersonalizedPlan()"
-              class="px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300 font-sans flex items-center justify-center"
+              class="px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300  flex items-center justify-center"
             >
               <Icon name="i-mdi-sparkles" class="mr-2" /> Get Personalized Report <span class="text-sm ml-2">(10 credit points, $3)</span>
             </button>
             <button
               @click="handleSave()"
-              class="px-8 py-4 text-lg font-semibold text-blue-700 bg-white border border-blue-300 rounded-xl shadow hover:bg-blue-50 transition-all font-sans flex items-center justify-center"
+              class="px-8 py-4 text-lg font-semibold text-blue-700 bg-white border border-blue-300 rounded-xl shadow hover:bg-blue-50 transition-all  flex items-center justify-center"
             >
               Na!! just, Let me save my plan
             </button>
@@ -673,23 +673,23 @@
         <!-- Loading State -->
         <div v-else-if="isGeneratingPlan" class="text-center py-10">
           <Icon name="i-eos-icons:loading" class="text-5xl text-indigo-600 mb-4 animate-spin" />
-          <p class="text-xl font-semibold text-slate-700 font-sans">Generating your personalized report...</p>
-          <p class="text-slate-500 font-sans">This may take a few moments. Please wait.</p>
+          <p class="text-xl font-semibold text-slate-700 ">Generating your personalized report...</p>
+          <p class="text-slate-500 ">This may take a few moments. Please wait.</p>
         </div>
 
         <!-- Display Generated Plan -->
         <div v-else-if="personalizedPlan && !isGeneratingPlan">
-          <h2 class="text-2xl font-bold text-slate-800 mb-6 font-sans flex items-center">
+          <h2 class="text-2xl font-bold text-slate-800 mb-6  flex items-center">
             <Icon name="i-mdi-rocket-launch-outline" class="mr-3 text-indigo-600" /> Your Personalized Career Report
           </h2>
           <div class="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none p-4 bg-slate-50 border border-slate-200 rounded-lg shadow">
-            <pre class="whitespace-pre-wrap font-sans">{{ personalizedPlan }}</pre>
+            <pre class="whitespace-pre-wrap ">{{ personalizedPlan }}</pre>
           </div>
           
           <div class="mt-8 text-center">
             <button 
               @click="personalizedPlan = null" 
-              class="px-6 py-3 text-base font-semibold text-white bg-blue-600 rounded-xl shadow hover:bg-blue-700 transition-all font-sans"
+              class="px-6 py-3 text-base font-semibold text-white bg-blue-600 rounded-xl shadow hover:bg-blue-700 transition-all "
             >
               <Icon name="i-mdi-close-circle-outline" class="mr-2" /> Close Report & Generate New
             </button>
@@ -701,7 +701,7 @@
       <div class="lg:col-span-2 flex justify-between mt-6">
         <button
           @click="navigateTo('/assessment')"
-          class="px-6 py-3 text-base font-semibold text-slate-700 bg-white border border-slate-300 rounded-xl shadow hover:bg-slate-50 transition-all font-sans"
+          class="px-6 py-3 text-base font-semibold text-slate-700 bg-white border border-slate-300 rounded-xl shadow hover:bg-slate-50 transition-all "
         >
           Back to Assessment
         </button>
