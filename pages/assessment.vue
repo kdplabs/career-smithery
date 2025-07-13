@@ -1,17 +1,17 @@
 <template>
-  <div class="min-h-screen bg-blue-50 flex items-center justify-center py-8">
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-100 flex items-center justify-center py-8">
     <div class="w-full max-w-3xl mx-auto">
-      <div class="bg-white rounded-2xl shadow-xl p-0 sm:p-0">
-        <div class="p-8">
+      <div class="bg-white/80 rounded-2xl shadow-2xl p-0 sm:p-0 backdrop-blur-xl border border-gray-100">
+        <div class="p-10">
           <!-- Progress Bar -->
-          <div class="mb-8">
+          <div class="mb-10">
             <div class="flex justify-between mb-2">
-              <span class="text-sm font-medium text-gray-700">Step {{ currentStep }} of {{ totalSteps }}</span>
-              <span class="text-sm font-medium text-gray-700">{{ Math.round((currentStep / totalSteps) * 100) }}%</span>
+              <span class="text-sm font-semibold text-gray-700">Step {{ currentStep }} of {{ totalSteps }}</span>
+              <span class="text-sm font-semibold text-gray-700">{{ Math.round((currentStep / totalSteps) * 100) }}%</span>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2">
               <div
-                class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                class="bg-gradient-to-r from-blue-600 via-purple-500 to-pink-400 h-2 rounded-full transition-all duration-300"
                 :style="{ width: `${(currentStep / totalSteps) * 100}%` }"
               ></div>
             </div>
@@ -21,13 +21,15 @@
           <div>
             <!-- Step 1: Profile & Career Trajectory -->
             <div v-if="currentStep === 1">
-              <h2 class="text-3xl font-bold text-gray-900 mb-4">Profile & Career Trajectory</h2>
-              <p class="text-lg text-gray-600 mb-8">Let's gather some information about you, your past roles, and future aspirations.</p>
+              <h2 class="text-4xl font-extrabold mb-4 tracking-tight">
+                <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">Profile & Career Trajectory</span>
+              </h2>
+              <p class="text-lg text-gray-600 mb-10">Let's gather some information about you, your past roles, and future aspirations.</p>
               
               <div class="space-y-12">
                 <!-- Basic Information -->
-                <div class="space-y-6 bg-blue-50 p-6 rounded-lg border border-blue-100 shadow-sm">
-                  <h3 class="text-xl font-semibold text-gray-900">Basic Information</h3>
+                <div class="space-y-6 bg-white/80 p-8 rounded-2xl border border-blue-100 shadow-xl backdrop-blur-md">
+                  <h3 class="text-2xl font-semibold text-gray-900 mb-2">Basic Information</h3>
                   
                   <div class="space-y-6">
                     <div>
@@ -35,7 +37,7 @@
                       <input
                         v-model="assessmentData.profile.fullName"
                         type="text"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       />
                     </div>
 
@@ -44,7 +46,7 @@
                       <input
                         v-model="assessmentData.profile.email"
                         type="email"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       />
                     </div>
 
@@ -53,7 +55,7 @@
                       <input
                         v-model="assessmentData.profile.currentRole"
                         type="text"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       />
                     </div>
 
@@ -61,7 +63,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">Years of Experience</label>
                       <select
                         v-model="assessmentData.profile.yearsOfExperience"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select years</option>
                         <option value="0-2">0-2 years</option>
@@ -77,20 +79,20 @@
                       <textarea
                         v-model="assessmentData.profile.careerObjective"
                         rows="3"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       ></textarea>
                     </div>
                   </div>
                 </div>
 
                 <!-- Previous Roles -->
-                <div class="space-y-6 bg-blue-50 p-6 rounded-lg border border-blue-100 shadow-sm">
-                  <h3 class="text-xl font-semibold text-gray-900">Previous Roles (up to 4)</h3>
+                <div class="space-y-6 bg-white/80 p-8 rounded-2xl border border-blue-100 shadow-xl backdrop-blur-md">
+                  <h3 class="text-2xl font-semibold text-gray-900 mb-2">Previous Roles (up to 4)</h3>
                   <div class="space-y-6">
-                    <div v-for="(role, index) in assessmentData.profile.previousRoles" :key="index" class="relative bg-white p-6 rounded-md shadow-sm border border-gray-200">
+                    <div v-for="(role, index) in assessmentData.profile.previousRoles" :key="index" class="relative bg-white p-6 rounded-xl shadow-md border border-gray-200">
                       <div class="flex justify-between items-center mb-4">
                         <span class="text-lg font-medium text-gray-800">Previous Role {{ index + 1 }}</span>
-                        <button @click="removePreviousRole(index)" class="flex items-center text-red-500 hover:text-red-700 text-sm font-medium">
+                        <button @click="removePreviousRole(index)" class="flex items-center text-red-500 hover:text-red-700 text-sm font-medium transition-colors">
                           <span class="mr-1">&#10006;</span> Remove
                         </button>
                       </div>
@@ -101,7 +103,7 @@
                             v-model="role.title"
                             type="text"
                             placeholder="E.g., Software Engineer"
-                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                            class="block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                           />
                         </div>
                         <div>
@@ -110,7 +112,7 @@
                             v-model="role.year"
                             type="text"
                             placeholder="e.g., 2020"
-                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                            class="block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                           />
                         </div>
                       </div>
@@ -119,20 +121,20 @@
                   <button
                     v-if="assessmentData.profile.previousRoles.length < 4"
                     @click="addPreviousRole"
-                    class="mt-4 inline-flex items-center px-5 py-2.5 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    class="mt-4 inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:to-pink-600 shadow-lg hover:scale-105 transition-all duration-300"
                   >
                     <span class="mr-2">➕</span> Add Previous Role
                   </button>
                 </div>
 
                 <!-- Potential Career Paths -->
-                <div class="space-y-6 bg-blue-50 p-6 rounded-lg border border-blue-100 shadow-sm">
-                  <h3 class="text-xl font-semibold text-gray-900">Potential Career Paths (up to 3)</h3>
+                <div class="space-y-6 bg-white/80 p-8 rounded-2xl border border-blue-100 shadow-xl backdrop-blur-md">
+                  <h3 class="text-2xl font-semibold text-gray-900 mb-2">Potential Career Paths (up to 3)</h3>
                   <div class="space-y-6">
-                    <div v-for="(path, index) in assessmentData.profile.potentialPaths" :key="index" class="relative bg-white p-6 rounded-md shadow-sm border border-gray-200">
+                    <div v-for="(path, index) in assessmentData.profile.potentialPaths" :key="index" class="relative bg-white p-6 rounded-xl shadow-md border border-gray-200">
                       <div class="flex justify-between items-center mb-4">
                         <span class="text-lg font-medium text-gray-800">Potential Path {{ index + 1 }}</span>
-                        <button @click="removePotentialPath(index)" class="flex items-center text-red-500 hover:text-red-700 text-sm font-medium">
+                        <button @click="removePotentialPath(index)" class="flex items-center text-red-500 hover:text-red-700 text-sm font-medium transition-colors">
                           <span class="mr-1">&#10006;</span> Remove
                         </button>
                       </div>
@@ -143,7 +145,7 @@
                             v-model="path.futureRole"
                             type="text"
                             placeholder="E.g., Senior Developer"
-                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                            class="block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                           />
                         </div>
                         <div>
@@ -152,7 +154,7 @@
                             v-model="path.longTermRole"
                             type="text"
                             placeholder="E.g., Tech Lead / Architect"
-                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                            class="block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                           />
                         </div>
                       </div>
@@ -161,7 +163,7 @@
                   <button
                     v-if="assessmentData.profile.potentialPaths.length < 3"
                     @click="addPotentialPath"
-                    class="mt-4 inline-flex items-center px-5 py-2.5 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    class="mt-4 inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:to-pink-600 shadow-lg hover:scale-105 transition-all duration-300"
                   >
                     <span class="mr-2">➕</span> Add Potential Path
                   </button>
@@ -171,19 +173,21 @@
 
             <!-- Step 2: Career Stage Assessment -->
             <div v-if="currentStep === 2">
-              <h2 class="text-3xl font-bold text-gray-900 mb-4">Career Stage Assessment</h2>
-              <p class="text-lg text-gray-600 mb-8">Based on Super's Career Development Theory, let's determine your current career stage.</p>
+              <h2 class="text-4xl font-extrabold mb-4 tracking-tight">
+                <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">Career Stage Assessment</span>
+              </h2>
+              <p class="text-lg text-gray-600 mb-10">Based on Super's Career Development Theory, let's determine your current career stage.</p>
               
               <div class="space-y-12">
-                <div class="space-y-6 bg-blue-50 p-6 rounded-lg border border-blue-100 shadow-sm">
-                  <h3 class="text-xl font-semibold text-gray-900">Career Stage Questions</h3>
+                <div class="space-y-6 bg-white/80 p-8 rounded-2xl border border-blue-100 shadow-xl backdrop-blur-md">
+                  <h3 class="text-2xl font-semibold text-gray-900 mb-2">Career Stage Questions</h3>
                   
                   <div class="space-y-6">
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-2">What is your current age range?</label>
                       <select
                         v-model="assessmentData.careerStage.ageRange"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select age range</option>
                         <option value="15-25">15-25 years (Exploration)</option>
@@ -197,7 +201,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">How would you describe your current career focus?</label>
                       <select
                         v-model="assessmentData.careerStage.careerFocus"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select focus</option>
                         <option value="exploring">Exploring different career options</option>
@@ -211,7 +215,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">What is your primary career goal right now?</label>
                       <select
                         v-model="assessmentData.careerStage.primaryGoal"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select goal</option>
                         <option value="learning">Learning and skill development</option>
@@ -225,7 +229,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">How would you describe your current work experience level?</label>
                       <select
                         v-model="assessmentData.careerStage.experienceLevel"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select experience level</option>
                         <option value="entry">Entry level / Learning the basics</option>
@@ -239,7 +243,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">What is your current approach to career development?</label>
                       <select
                         v-model="assessmentData.careerStage.developmentApproach"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select approach</option>
                         <option value="exploring">Exploring and trying different paths</option>
@@ -255,19 +259,21 @@
 
             <!-- Step 3: Learning & Development Assessment -->
             <div v-if="currentStep === 3">
-              <h2 class="text-3xl font-bold text-gray-900 mb-4">Learning & Development Assessment</h2>
-              <p class="text-lg text-gray-600 mb-8">Based on Kirkpatrick's Model, let's evaluate your current development stage.</p>
+              <h2 class="text-4xl font-extrabold mb-4 tracking-tight">
+                <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">Learning & Development Assessment</span>
+              </h2>
+              <p class="text-lg text-gray-600 mb-10">Based on Kirkpatrick's Model, let's evaluate your current development stage.</p>
               
               <div class="space-y-12">
-                <div class="space-y-6 bg-blue-50 p-6 rounded-lg border border-blue-100 shadow-sm">
-                  <h3 class="text-xl font-semibold text-gray-900">Learning & Development Questions</h3>
+                <div class="space-y-6 bg-white/80 p-8 rounded-2xl border border-blue-100 shadow-xl backdrop-blur-md">
+                  <h3 class="text-2xl font-semibold text-gray-900 mb-2">Learning & Development Questions</h3>
                   
                   <div class="space-y-6">
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-2">How do you feel about your current learning and development opportunities?</label>
                       <select
                         v-model="assessmentData.learningDevelopment.learningOpportunities"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select your reaction</option>
                         <option value="very_positive">Very positive and engaged</option>
@@ -281,7 +287,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">How would you rate your current skill acquisition and knowledge development?</label>
                       <select
                         v-model="assessmentData.learningDevelopment.skillAcquisition"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select your learning level</option>
                         <option value="excellent">Excellent - Actively learning and growing</option>
@@ -295,7 +301,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">How well are you applying your learned skills in your work?</label>
                       <select
                         v-model="assessmentData.learningDevelopment.skillApplication"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select application level</option>
                         <option value="excellent">Excellent - Consistently applying new skills</option>
@@ -309,7 +315,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">How would you rate the impact of your learning on work outcomes?</label>
                       <select
                         v-model="assessmentData.learningDevelopment.learningImpact"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select impact level</option>
                         <option value="significant">Significant - Clear positive impact</option>
@@ -323,7 +329,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">What is your approach to future development?</label>
                       <select
                         v-model="assessmentData.learningDevelopment.futureDevelopment"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select your approach</option>
                         <option value="proactive">Proactive - Actively seeking development</option>
@@ -339,19 +345,21 @@
 
             <!-- Step 4: Leadership Potential Assessment -->
             <div v-if="currentStep === 4">
-              <h2 class="text-3xl font-bold text-gray-900 mb-4">Leadership Potential Assessment</h2>
-              <p class="text-lg text-gray-600 mb-8">Based on Ram Charan's Leadership Pipeline model, let's evaluate your leadership potential.</p>
+              <h2 class="text-4xl font-extrabold mb-4 tracking-tight">
+                <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">Leadership Potential Assessment</span>
+              </h2>
+              <p class="text-lg text-gray-600 mb-10">Based on Ram Charan's Leadership Pipeline model, let's evaluate your leadership potential.</p>
               
               <div class="space-y-12">
-                <div class="space-y-6 bg-blue-50 p-6 rounded-lg border border-blue-100 shadow-sm">
-                  <h3 class="text-xl font-semibold text-gray-900">Leadership Assessment Questions</h3>
+                <div class="space-y-6 bg-white/80 p-8 rounded-2xl border border-blue-100 shadow-xl backdrop-blur-md">
+                  <h3 class="text-2xl font-semibold text-gray-900 mb-2">Leadership Assessment Questions</h3>
                   
                   <div class="space-y-6">
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-2">What best describes your current role?</label>
                       <select
                         v-model="assessmentData.leadershipPotential.currentRole"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select your role</option>
                         <option value="individual">Individual Contributor</option>
@@ -367,7 +375,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">How would you describe your leadership experience?</label>
                       <select
                         v-model="assessmentData.leadershipPotential.leadershipExperience"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select experience level</option>
                         <option value="none">No formal leadership experience</option>
@@ -383,7 +391,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">How would you rate your leadership skills?</label>
                       <select
                         v-model="assessmentData.leadershipPotential.leadershipSkills"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select skill level</option>
                         <option value="developing">Developing - Learning leadership basics</option>
@@ -398,7 +406,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">What are your leadership aspirations?</label>
                       <select
                         v-model="assessmentData.leadershipPotential.leadershipAspirations"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select your aspirations</option>
                         <option value="team_lead">Team Leadership</option>
@@ -413,7 +421,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">How ready do you feel for the next leadership level?</label>
                       <select
                         v-model="assessmentData.leadershipPotential.readinessLevel"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select readiness level</option>
                         <option value="not_ready">Not Ready - Need more development</option>
@@ -430,20 +438,22 @@
 
             <!-- Step 5: 9-Box Grid Assessment -->
             <div v-if="currentStep === 5">
-              <h2 class="text-3xl font-bold text-gray-900 mb-4">9-Box Grid Assessment</h2>
-              <p class="text-lg text-gray-600 mb-8">Let's evaluate your performance and potential using the 9-box grid model.</p>
+              <h2 class="text-4xl font-extrabold mb-4 tracking-tight">
+                <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">9-Box Grid Assessment</span>
+              </h2>
+              <p class="text-lg text-gray-600 mb-10">Let's evaluate your performance and potential using the 9-box grid model.</p>
               
               <div class="space-y-12">
                 <!-- Performance Assessment -->
-                <div class="space-y-6 bg-blue-50 p-6 rounded-lg border border-blue-100 shadow-sm">
-                  <h3 class="text-xl font-semibold text-gray-900">Performance Assessment</h3>
+                <div class="space-y-6 bg-white/80 p-8 rounded-2xl border border-blue-100 shadow-xl backdrop-blur-md">
+                  <h3 class="text-2xl font-semibold text-gray-900 mb-2">Performance Assessment</h3>
                   
                   <div class="space-y-6">
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-2">How would you rate your current job performance?</label>
                       <select
                         v-model="assessmentData.nineBoxGrid.performance"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select performance level</option>
                         <option value="High">High - Consistently exceeds expectations</option>
@@ -456,7 +466,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">How would you rate your ability to deliver results?</label>
                       <select
                         v-model="assessmentData.nineBoxGrid.delivery"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select delivery level</option>
                         <option value="High">High - Consistently delivers excellent results</option>
@@ -469,7 +479,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">How would you rate the quality of your work?</label>
                       <select
                         v-model="assessmentData.nineBoxGrid.quality"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select quality level</option>
                         <option value="High">High - Exceptional quality</option>
@@ -481,15 +491,15 @@
                 </div>
 
                 <!-- Potential Assessment -->
-                <div class="space-y-6 bg-blue-50 p-6 rounded-lg border border-blue-100 shadow-sm">
-                  <h3 class="text-xl font-semibold text-gray-900">Potential Assessment</h3>
+                <div class="space-y-6 bg-white/80 p-8 rounded-2xl border border-blue-100 shadow-xl backdrop-blur-md">
+                  <h3 class="text-2xl font-semibold text-gray-900 mb-2">Potential Assessment</h3>
                   
                   <div class="space-y-6">
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-2">How would you rate your growth potential?</label>
                       <select
                         v-model="assessmentData.nineBoxGrid.growthPotential"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select potential level</option>
                         <option value="High">High - Ready for significant growth</option>
@@ -502,7 +512,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">How would you rate your ability to learn and adapt?</label>
                       <select
                         v-model="assessmentData.nineBoxGrid.learningAbility"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select learning ability</option>
                         <option value="High">High - Quick learner, adapts well</option>
@@ -514,15 +524,15 @@
                 </div>
 
                 <!-- Engagement Assessment -->
-                <div class="space-y-6 bg-blue-50 p-6 rounded-lg border border-blue-100 shadow-sm">
-                  <h3 class="text-xl font-semibold text-gray-900">Engagement Assessment</h3>
+                <div class="space-y-6 bg-white/80 p-8 rounded-2xl border border-blue-100 shadow-xl backdrop-blur-md">
+                  <h3 class="text-2xl font-semibold text-gray-900 mb-2">Engagement Assessment</h3>
                   
                   <div class="space-y-6">
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-2">How satisfied are you with your current role and responsibilities?</label>
                       <select
                         v-model="assessmentData.nineBoxGrid.satisfaction"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select satisfaction level</option>
                         <option value="High">High - Very satisfied</option>
@@ -535,7 +545,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">How motivated do you feel to contribute to your team and organizational goals?</label>
                       <select
                         v-model="assessmentData.nineBoxGrid.motivation"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select motivation level</option>
                         <option value="High">High - Very motivated</option>
@@ -550,20 +560,22 @@
 
             <!-- Step 6: Skills Assessment -->
             <div v-if="currentStep === 6">
-              <h2 class="text-3xl font-bold text-gray-900 mb-4">Skills Assessment</h2>
-              <p class="text-lg text-gray-600 mb-8">Let's evaluate your skills profile using the T/I/Pi-shaped model.</p>
+              <h2 class="text-4xl font-extrabold mb-4 tracking-tight">
+                <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">Skills Assessment</span>
+              </h2>
+              <p class="text-lg text-gray-600 mb-10">Let's evaluate your skills profile using the T/I/Pi-shaped model.</p>
               
               <div class="space-y-12">
                 <!-- Primary Skills -->
-                <div class="space-y-6 bg-blue-50 p-6 rounded-lg border border-blue-100 shadow-sm">
-                  <h3 class="text-xl font-semibold text-gray-900">Primary Skills</h3>
+                <div class="space-y-6 bg-white/80 p-8 rounded-2xl border border-blue-100 shadow-xl backdrop-blur-md">
+                  <h3 class="text-2xl font-semibold text-gray-900 mb-2">Primary Skills</h3>
                   
                   <div class="space-y-6">
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-2">What is your primary area of expertise?</label>
                       <select
                         v-model="assessmentData.skills.primaryExpertise"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select primary skill</option>
                         <option value="technical">Technical (e.g., Software Development)</option>
@@ -580,7 +592,7 @@
                         v-model="assessmentData.skills.customPrimarySkill"
                         type="text"
                         placeholder="Enter your primary skill"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       />
                     </div>
 
@@ -588,7 +600,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">How would you rate your expertise level in your primary area?</label>
                       <select
                         v-model="assessmentData.skills.expertiseLevel"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select expertise level</option>
                         <option value="expert">Expert - Deep knowledge and experience</option>
@@ -601,8 +613,8 @@
                 </div>
 
                 <!-- Secondary Skills -->
-                <div class="space-y-6 bg-blue-50 p-6 rounded-lg border border-blue-100 shadow-sm">
-                  <h3 class="text-xl font-semibold text-gray-900">Secondary Skills</h3>
+                <div class="space-y-6 bg-white/80 p-8 rounded-2xl border border-blue-100 shadow-xl backdrop-blur-md">
+                  <h3 class="text-2xl font-semibold text-gray-900 mb-2">Secondary Skills</h3>
                   
                   <div class="space-y-6">
                     <div>
@@ -614,7 +626,7 @@
                             v-model="assessmentData.skills.secondaryAreas"
                             :value="skill.toLowerCase()"
                             type="checkbox"
-                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-2 border-blue-400 rounded focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all"
                           />
                           <label :for="skill.toLowerCase()" class="ml-3 block text-sm text-gray-700">
                             {{ skill }}
@@ -626,7 +638,7 @@
                             id="other-secondary"
                             v-model="assessmentData.skills.hasOtherSecondary"
                             type="checkbox"
-                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-2 border-blue-400 rounded focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all"
                           />
                           <label for="other-secondary" class="ml-3 block text-sm text-gray-700">
                             Other
@@ -643,7 +655,7 @@
                           v-model="assessmentData.skills.customSecondarySkills[index]"
                           type="text"
                           placeholder="Enter secondary skill"
-                          class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                          class="flex-1 rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                         />
                         <button
                           @click="removeCustomSecondarySkill(index)"
@@ -664,7 +676,7 @@
                       <label class="block text-sm font-medium text-gray-700 mb-2">How would you describe your skill breadth?</label>
                       <select
                         v-model="assessmentData.skills.skillBreadth"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                        class="mt-1 block w-full rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                       >
                         <option value="">Select breadth level</option>
                         <option value="broad">Broad - Knowledge across many areas</option>
@@ -676,8 +688,8 @@
                 </div>
 
                 <!-- Future Development -->
-                <div class="space-y-6 bg-blue-50 p-6 rounded-lg border border-blue-100 shadow-sm">
-                  <h3 class="text-xl font-semibold text-gray-900">Future Development</h3>
+                <div class="space-y-6 bg-white/80 p-8 rounded-2xl border border-blue-100 shadow-xl backdrop-blur-md">
+                  <h3 class="text-2xl font-semibold text-gray-900 mb-2">Future Development</h3>
                   
                   <div class="space-y-6">
                     <div>
@@ -689,7 +701,7 @@
                             v-model="assessmentData.skills.futureSkills"
                             :value="skill.toLowerCase()"
                             type="checkbox"
-                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-2 border-blue-400 rounded focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all"
                           />
                           <label :for="skill.toLowerCase().replace(' ', '-')" class="ml-3 block text-sm text-gray-700">
                             {{ skill }}
@@ -701,7 +713,7 @@
                             id="other-future"
                             v-model="assessmentData.skills.hasOtherFuture"
                             type="checkbox"
-                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-2 border-blue-400 rounded focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all"
                           />
                           <label for="other-future" class="ml-3 block text-sm text-gray-700">
                             Other
@@ -718,7 +730,7 @@
                           v-model="assessmentData.skills.customFutureSkills[index]"
                           type="text"
                           placeholder="Enter skill to develop"
-                          class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3"
+                          class="flex-1 rounded-xl border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 shadow-sm py-2.5 px-4 bg-white/70 transition-all"
                         />
                         <button
                           @click="removeCustomFutureSkill(index)"
@@ -740,18 +752,18 @@
             </div>
 
             <!-- Navigation Buttons -->
-            <div class="mt-12 flex justify-between">
+            <div class="mt-14 flex justify-between">
               <div class="flex space-x-4">
                 <button
                   v-if="currentStep > 1"
                   @click="handlePreviousStep"
-                  class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  class="inline-flex items-center px-7 py-3 border border-gray-300 shadow-md text-base font-semibold rounded-xl text-gray-700 bg-white hover:bg-gray-50 hover:scale-105 transition-all duration-300"
                 >
                   Previous
                 </button>
                 <button
                   @click="clearLocalData"
-                  class="inline-flex items-center px-6 py-3 border border-red-300 shadow-sm text-base font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  class="inline-flex items-center px-7 py-3 border border-red-300 shadow-md text-base font-semibold rounded-xl text-red-700 bg-white hover:bg-red-50 hover:scale-105 transition-all duration-300"
                 >
                   Clear Data
                 </button>
@@ -760,7 +772,7 @@
               <button
                 v-if="currentStep < totalSteps"
                 @click="handleNextStep"
-                class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                class="inline-flex items-center px-7 py-3 border border-transparent text-base font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:to-pink-600 shadow-lg hover:scale-105 transition-all duration-300"
               >
                 Next
               </button>
@@ -768,7 +780,7 @@
               <button
                 v-else
                 @click="submitAssessment"
-                class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                class="inline-flex items-center px-7 py-3 border border-transparent text-base font-semibold rounded-xl text-white bg-gradient-to-r from-green-600 via-green-500 to-blue-500 hover:from-green-700 hover:to-blue-600 shadow-lg hover:scale-105 transition-all duration-300"
               >
                 Complete Assessment
               </button>

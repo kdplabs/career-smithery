@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-7xl mx-auto p-6">
     <div v-if="isLoading" class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-30 z-50">
-      <div class="bg-white p-6 rounded-xl shadow-xl text-lg font-semibold font-sans">Generating tasks...</div>
+      <div class="bg-white p-6 rounded-xl shadow-xl text-lg font-semibold ">Generating tasks...</div>
     </div>
     <!-- Enhanced Message Notification -->
     <transition name="slide-fade">
@@ -9,7 +9,7 @@
         <div class="bg-white border border-slate-200 rounded-lg shadow-lg p-4 flex items-center justify-between">
           <div class="flex items-center">
             <Icon :name="messageIcon" :class="messageIconClass" class="w-5 h-5 mr-3" />
-            <span :class="messageTextClass" class="font-sans text-sm">{{ message }}</span>
+            <span :class="messageTextClass" class=" text-sm">{{ message }}</span>
           </div>
           <button @click="dismissMessage" class="ml-3 text-slate-400 hover:text-slate-600 transition-colors">
             <Icon name="i-heroicons-x-mark" class="w-4 h-4" />
@@ -19,91 +19,263 @@
     </transition>
     
     <!-- Header -->
-    <div class="bg-white rounded-2xl shadow-xl p-6 mb-6 border border-slate-100">
+    <!-- <div class="bg-white rounded-2xl shadow-xl p-6 mb-6 border border-slate-100">
       <div class="flex items-center justify-between mb-4">
         <div>
-          <h1 class="text-3xl font-bold text-slate-800 font-sans">Task Management</h1>
-          <p class="text-slate-600 font-sans">Organize and track your career development tasks</p>
+          <h1 class="text-3xl font-bold text-slate-800 ">Task Management</h1>
+          <p class="text-slate-600 ">Organize and track your career development tasks</p>
         </div>
-        <button @click="navigateTo('/personalized-report')" class="px-4 py-2 text-sm font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-all font-sans flex items-center">
+        <button @click="navigateTo('/personalized-report')" class="px-4 py-2 text-sm font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-all  flex items-center">
           <Icon name="i-heroicons-arrow-left" class="w-4 h-4 mr-2" />
           Back to Report
         </button>
       </div>
-    </div>
+    </div> -->
 
-    <!-- Kanban Board Section -->
+    <!-- Tasks Section -->
     <div class="bg-white rounded-2xl shadow-xl p-6 mb-6 border border-slate-100">
+      <!-- Header with Controls -->
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-slate-800 font-sans">Your Tasks (Kanban View)</h2>
+        <h2 class="text-2xl font-bold text-slate-800">Your Tasks</h2>
+        <div class="flex items-center gap-4">
+          <!-- View Toggle -->
+          <div class="flex items-center bg-slate-100 rounded-lg p-1">
+            <button
+              @click="currentView = 'kanban'"
+              :class="[
+                'px-3 py-2 text-sm font-medium rounded-md transition-all',
+                currentView === 'kanban' 
+                  ? 'bg-white text-slate-900 shadow-sm' 
+                  : 'text-slate-600 hover:text-slate-900'
+              ]"
+            >
+              <Icon name="i-heroicons-view-columns" class="w-4 h-4 mr-2 inline" />
+              Kanban
+            </button>
+            <button
+              @click="currentView = 'table'"
+              :class="[
+                'px-3 py-2 text-sm font-medium rounded-md transition-all',
+                currentView === 'table' 
+                  ? 'bg-white text-slate-900 shadow-sm' 
+                  : 'text-slate-600 hover:text-slate-900'
+              ]"
+            >
+              <Icon name="i-heroicons-table-cells" class="w-4 h-4 mr-2 inline" />
+              Table
+            </button>
+          </div>
+          
+          <!-- Row/Column Selectors -->
+          <div v-if="currentView === 'kanban'" class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
+              <label class="text-sm font-medium text-slate-700">Rows:</label>
+              <select v-model="rowField" class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="category">Category</option>
+                <option value="quarter">Quarter</option>
+                <option value="status">Status</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-2">
+              <label class="text-sm font-medium text-slate-700">Columns:</label>
+              <select v-model="colField" class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="quarter">Quarter</option>
+                <option value="category">Category</option>
+                <option value="status">Status</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
-      <KanbanBoard
-        :tasks="userTasks"
-        :kanbanLoading="kanbanLoading"
-        :kanbanError="kanbanError"
-        :rowField="rowField"
-        :colField="colField"
-        :focusAreaTitles="focusAreaTitles"
-        @add-task="onKanbanAddTask"
-        @edit-task="openEditTaskModal"
-        @delete-task="deleteTask"
-      />
+
+      <!-- Kanban View -->
+      <div v-if="currentView === 'kanban'">
+        <KanbanBoard
+          :tasks="userTasks"
+          :kanbanLoading="kanbanLoading"
+          :kanbanError="kanbanError"
+          :rowField="rowField"
+          :colField="colField"
+          :focusAreaTitles="focusAreaTitles"
+          @add-task="onKanbanAddTask"
+          @edit-task="openEditTaskModal"
+          @delete-task="deleteTask"
+          @update-task="updateTaskPosition"
+        />
+      </div>
+
+      <!-- Table View -->
+      <div v-else-if="currentView === 'table'">
+        <TaskTable
+          :tasks="userTasks"
+          :loading="kanbanLoading"
+          :error="kanbanError"
+          :focusAreaTitles="focusAreaTitles"
+          @add-task="openAddTaskModal"
+          @edit-task="openEditTaskModal"
+          @delete-task="deleteTask"
+          @update-task="updateTaskPosition"
+        />
+      </div>
     </div>
 
     <!-- Task Modal -->
-    <div v-if="showTaskModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-      <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md relative border border-slate-100">
-        <h3 class="text-xl font-bold text-slate-800 mb-4 font-sans">{{ taskModalMode === 'edit' ? 'Edit Task' : 'Add Task' }}</h3>
-        <form @submit.prevent="saveTask">
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-slate-700 mb-2 font-sans">Title</label>
-            <input v-model="taskForm.title" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-sans" required maxlength="100" />
+    <div v-if="showTaskModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4 overflow-y-auto">
+      <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl relative border border-slate-100 my-8 max-h-[calc(100vh-4rem)]">
+        <div class="flex flex-col h-full max-h-[calc(100vh-4rem)]">
+          <!-- Header - Fixed -->
+          <div class="flex-shrink-0 p-6 border-b border-slate-200">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <h3 class="text-xl font-bold text-slate-800">{{ taskModalMode === 'edit' ? 'Edit Task' : 'Add Task' }}</h3>
+                <!-- Delete button close to heading for edit mode -->
+                <button 
+                  v-if="taskModalMode === 'edit'" 
+                  type="button" 
+                  @click="deleteTask(taskForm)" 
+                  :disabled="taskModalLoading" 
+                  class="px-3 py-1.5 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all flex items-center gap-2 disabled:opacity-60"
+                >
+                  <Icon name="i-heroicons-trash" class="w-4 h-4" />
+                  Delete
+                </button>
+              </div>
+              <button @click="showTaskModal = false" class="text-slate-400 hover:text-slate-600 transition-colors">
+                <Icon name="i-heroicons-x-mark" class="w-6 h-6" />
+              </button>
+            </div>
           </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-slate-700 mb-2 font-sans">Description</label>
-            <textarea v-model="taskForm.description" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-sans" rows="2" maxlength="300"></textarea>
+        
+          <!-- Scrollable Content -->
+          <div class="flex-1 overflow-y-auto p-6">
+            <form id="task-form" @submit.prevent="saveTask" class="space-y-6">
+          <!-- Task Title (Full Width) -->
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-2">
+              <Icon name="i-heroicons-document-text" class="w-4 h-4 inline mr-1" />
+              Task Title
+            </label>
+            <input 
+              v-model="taskForm.title" 
+              class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg" 
+              placeholder="Enter task title..."
+              required 
+              maxlength="100" 
+            />
           </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-slate-700 mb-2 font-sans">Due Date</label>
-            <input v-model="taskForm.due_date" type="date" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-sans" />
+
+          <!-- Description (Full Width) -->
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-2">
+              <Icon name="i-heroicons-bars-3-bottom-left" class="w-4 h-4 inline mr-1" />
+              Description
+            </label>
+            <textarea 
+              v-model="taskForm.description" 
+              class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+              rows="3" 
+              placeholder="Describe the task details..."
+              maxlength="300"
+            ></textarea>
           </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-slate-700 mb-2 font-sans">Status</label>
-            <select v-model="taskForm.status" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-sans">
-              <option value="todo">To Do</option>
-              <option value="in_progress">In Progress</option>
-              <option value="done">Done</option>
-              <option value="archived">Archived</option>
-            </select>
+
+          <!-- Category and Quarter (Two Columns) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-2">
+                <Icon name="i-heroicons-folder" class="w-4 h-4 inline mr-1" />
+                Category
+              </label>
+              <select v-model="taskForm.category" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Select Category</option>
+                <option value="leadership">Leadership</option>
+                <option value="domain_knowledge">Domain Knowledge</option>
+                <option value="technical_skills">Technical Skills</option>
+                <option value="networking_marketing">Networking / Marketing</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-2">
+                <Icon name="i-heroicons-calendar" class="w-4 h-4 inline mr-1" />
+                Quarter
+              </label>
+              <input 
+                v-model="taskForm.quarter" 
+                type="text" 
+                class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                placeholder="e.g., 2024-Q4" 
+              />
+            </div>
           </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-slate-700 mb-2 font-sans">Category</label>
-            <select v-model="taskForm.category" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-sans">
-              <option value="leadership">Leadership</option>
-              <option value="domain_knowledge">Domain Knowledge</option>
-              <option value="technical_skills">Technical Skills</option>
-              <option value="networking_marketing">Networking / Marketing</option>
-            </select>
+
+          <!-- Due Date and Status (Two Columns) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-2">
+                <Icon name="i-heroicons-calendar-days" class="w-4 h-4 inline mr-1" />
+                Due Date
+              </label>
+              <input 
+                v-model="taskForm.due_date" 
+                type="date" 
+                class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+              />
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-2">
+                <Icon name="i-heroicons-flag" class="w-4 h-4 inline mr-1" />
+                Status
+              </label>
+              <select v-model="taskForm.status" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="todo">To Do</option>
+                <option value="in_progress">In Progress</option>
+                <option value="done">Done</option>
+                <option value="archived">Archived</option>
+              </select>
+            </div>
           </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-slate-700 mb-2 font-sans">Quarter</label>
-            <input v-model="taskForm.quarter" type="text" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-sans" placeholder="e.g., 2024-Q4" />
+
+              <!-- Error Message -->
+              <div v-if="taskModalError" class="bg-red-50 border border-red-200 rounded-lg p-3">
+                <div class="flex items-center">
+                  <Icon name="i-heroicons-exclamation-circle" class="w-5 h-5 text-red-600 mr-2" />
+                  <span class="text-red-800 text-sm">{{ taskModalError }}</span>
+                </div>
+              </div>
+            </form>
           </div>
-          <div v-if="taskModalError" class="text-red-600 text-sm mb-4 font-sans">{{ taskModalError }}</div>
-          <div class="flex gap-3 mt-6">
-            <button type="submit" :disabled="taskModalLoading" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-60 font-sans transition-all">
-              {{ taskModalMode === 'edit' ? 'Save Changes' : 'Add Task' }}
-            </button>
-            <button type="button" @click="showTaskModal = false" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 font-sans transition-all">
-              Cancel
-            </button>
-            <button v-if="taskModalMode === 'edit'" type="button" @click="deleteTask(taskForm)" :disabled="taskModalLoading" class="ml-auto px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-sans transition-all">
-              Delete
-            </button>
+
+          <!-- Footer - Fixed -->
+          <div class="flex-shrink-0 p-6 border-t border-slate-200 bg-slate-50 rounded-b-2xl">
+            <div class="flex gap-3">
+              <button 
+                type="submit" 
+                form="task-form"
+                :disabled="taskModalLoading" 
+                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-60 transition-all flex items-center gap-2"
+              >
+                <Icon name="i-heroicons-check" class="w-4 h-4" />
+                {{ taskModalMode === 'edit' ? 'Save Changes' : 'Create Task' }}
+              </button>
+              <button 
+                type="button" 
+                @click="showTaskModal = false" 
+                class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition-all"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-        </form>
+        </div>
+
+        <!-- Loading Overlay -->
         <div v-if="taskModalLoading" class="absolute inset-0 bg-white bg-opacity-60 flex items-center justify-center rounded-2xl">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <div class="flex items-center gap-3">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <span class="text-slate-600">{{ taskModalMode === 'edit' ? 'Saving changes...' : 'Creating task...' }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -116,6 +288,7 @@ import { navigateTo } from 'nuxt/app'
 import { useAuth } from '~/composables/useAuth'
 import { useSupabaseClient } from '#imports'
 import KanbanBoard from '~/components/KanbanBoard.vue'
+import TaskTable from '~/components/TaskTable.vue'
 
 const focusAreaTitles = {
   leadership: 'Leadership',
@@ -149,6 +322,7 @@ const taskForm = ref({
 })
 const rowField = ref('category')
 const colField = ref('status')
+const currentView = ref('kanban') // 'kanban' or 'table'
 
 const rowFieldLabel = computed(() => {
   if (rowField.value === 'category') return 'Category'
@@ -281,6 +455,21 @@ function openEditTaskModal(task) {
   showTaskModal.value = true
 }
 
+function openAddTaskModal() {
+  taskModalMode.value = 'create'
+  taskForm.value = {
+    id: null,
+    title: '',
+    description: '',
+    due_date: '',
+    status: 'todo',
+    category: '',
+    quarter: ''
+  }
+  taskModalError.value = ''
+  showTaskModal.value = true
+}
+
 async function saveTask() {
   taskModalLoading.value = true
   taskModalError.value = ''
@@ -347,6 +536,34 @@ async function deleteTask(task) {
     taskModalError.value = err.message || 'Failed to delete task.'
   } finally {
     taskModalLoading.value = false
+  }
+}
+
+async function updateTaskPosition(updatedTask) {
+  try {
+    const { error } = await supabase
+      .from('user_tasks')
+      .update({
+        category: updatedTask.category,
+        quarter: updatedTask.quarter,
+        status: updatedTask.status,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', updatedTask.id)
+    
+    if (error) throw error
+    
+    // Update local state immediately for smooth UX
+    const taskIndex = userTasks.value.findIndex(t => t.id === updatedTask.id)
+    if (taskIndex !== -1) {
+      userTasks.value[taskIndex] = updatedTask
+    }
+    
+    showMessage('Task moved successfully!', 'success')
+  } catch (err) {
+    showMessage('Failed to move task: ' + err.message, 'error')
+    // Refresh tasks to revert any optimistic updates
+    await fetchUserTasks()
   }
 }
 
