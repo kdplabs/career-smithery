@@ -205,9 +205,9 @@ const supabase = useSupabaseClient()
 const { user } = useAuth()
 
 const STRIPE_LINKS = {
-  buyCredits: 'https://buy.stripe.com/test_dRm7sL709cM4ekO8xNabK02',
-  pro: 'https://buy.stripe.com/test_6oU4gzckth2k1y229pabK00',
-  superHero: 'https://buy.stripe.com/test_28E9AT0BL6nG5Oi6pFabK01'
+  buyCredits: 'https://buy.stripe.com/28E9AT0BL6nG5Oi6pFabK01',
+  pro: 'https://buy.stripe.com/6oUcN53NX5jCfoSbJZabK03',
+  superHero: 'https://buy.stripe.com/dRm7sL709cM4ekO8xNabK02'
 }
 
 const props = defineProps({

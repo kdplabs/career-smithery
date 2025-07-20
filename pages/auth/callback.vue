@@ -20,6 +20,46 @@ const supabase = useSupabaseClient()
 const isLoading = ref(true)
 const error = ref(null)
 
+// Function to process and store consent data
+async function processConsentData(userId) {
+  try {
+    const pendingConsent = localStorage.getItem('pendingConsent')
+    if (!pendingConsent) {
+      console.log('No pending consent data found')
+      return
+    }
+
+    const consentData = JSON.parse(pendingConsent)
+    console.log('Processing consent data:', consentData)
+
+    // Update user metadata with consent information
+    const { error: updateError } = await supabase.auth.updateUser({
+      data: {
+        consent: {
+          privacy: consentData.privacy,
+          contact: consentData.contact,
+          terms: consentData.terms,
+          timestamp: consentData.timestamp,
+          version: '1.0'
+        }
+      }
+    })
+
+    if (updateError) {
+      console.error('Error updating user metadata with consent:', updateError)
+      throw new Error('Failed to store consent data: ' + updateError.message)
+    }
+
+    console.log('Consent data stored successfully in user metadata')
+    
+    // Clear pending consent from localStorage
+    localStorage.removeItem('pendingConsent')
+  } catch (err) {
+    console.error('Error processing consent data:', err)
+    // Don't throw error here as it shouldn't block the login process
+  }
+}
+
 // Function to ensure pay-as-you-go subscription and credits
 async function ensurePayAsYouGoSubscription(userId) {
   try {
@@ -116,6 +156,10 @@ watch(
     if (newUser && newUser.email) {
       try {
         console.log('Starting setup process for user:', newUser.id)
+        
+        // Process consent data first
+        await processConsentData(newUser.id)
+        
         // Ensure subscription and credits are set up
         await ensurePayAsYouGoSubscription(newUser.id)
         

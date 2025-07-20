@@ -56,9 +56,27 @@ export const useAuth = () => {
     }
   }
 
+  const hasConsent = () => {
+    if (!user.value) return false
+    
+    const consent = user.value.user_metadata?.consent
+    if (!consent) return false
+    
+    // Check if required consents are present and true (privacy and terms are required, contact is optional)
+    return consent.privacy === true && consent.terms === true
+  }
+
+  const getConsentData = () => {
+    if (!user.value) return null
+    
+    return user.value.user_metadata?.consent || null
+  }
+
   return {
     user,
     signInWithGoogle,
-    signOut
+    signOut,
+    hasConsent,
+    getConsentData
   }
 } 
