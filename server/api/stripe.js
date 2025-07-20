@@ -8,6 +8,45 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
 
 export default defineEventHandler(async (event) => {
+  // Handle creating checkout sessions for credit purchases
+  if (event.node.req.method === 'POST' && event.node.req.url === '/api/stripe') {
+    try {
+      const body = await readBody(event)
+      const { planId, planName, priceCents, billingPeriod } = body
+
+      // Create checkout session
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: planName,
+                description: billingPeriod === 'payg' ? 'Pay as you go credits' : `${billingPeriod} subscription`,
+              },
+              unit_amount: priceCents,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: billingPeriod === 'payg' ? 'payment' : 'subscription',
+        success_url: `${process.env.NUXT_PUBLIC_SITE_URL}/credits?success=true`,
+        cancel_url: `${process.env.NUXT_PUBLIC_SITE_URL}/credits?canceled=true`,
+        customer_email: body.customerEmail, // Optional: pre-fill customer email
+      })
+
+      return { url: session.url }
+    } catch (error) {
+      console.error('Error creating checkout session:', error)
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Failed to create checkout session'
+      })
+    }
+  }
+
+  // Handle webhook events (existing code)
   if (event.node.req.method !== 'POST') {
     console.info('Request method not allowed:', event.node.req.method)
     event.node.res.writeHead(405)

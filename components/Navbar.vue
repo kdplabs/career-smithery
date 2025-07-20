@@ -72,13 +72,19 @@
                     <span>Credits</span>
                     <span class="font-semibold text-blue-600">{{ userCredits }}</span>
                   </NuxtLink>
+                  <div class="px-4 py-2 text-xs text-slate-500 border-t border-slate-100">
+                    <div class="flex items-center gap-2">
+                      <Icon name="i-heroicons-shield-check" class="w-3 h-3" />
+                      <span>Consent: {{ hasConsent() ? 'Given' : 'Pending' }}</span>
+                    </div>
+                  </div>
                   <button @click="signOut" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-lg">Logout</button>
                 </div>
               </div>
             </div>
           </template>
           <template v-else>
-            <button @click="signInWithGoogle" class="ml-4 px-5 py-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-pink-600 shadow-lg transition-all" aria-label="Login or Register">
+            <button @click="showLoginPrompt" class="ml-4 px-5 py-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-pink-600 shadow-lg transition-all" aria-label="Login or Register">
               Login / Register
             </button>
           </template>
@@ -129,23 +135,33 @@
             <button @click="signOut" class="block w-full text-left px-3 py-2 rounded-lg text-base font-semibold text-gray-700 hover:bg-blue-50 transition-all">Logout</button>
           </template>
           <template v-else>
-            <button @click="signInWithGoogle" class="block w-full text-left px-3 py-2 rounded-lg text-base font-semibold text-blue-700 hover:bg-blue-50 transition-all">Login / Register</button>
+            <button @click="showLoginPrompt" class="block w-full text-left px-3 py-2 rounded-lg text-base font-semibold text-blue-700 hover:bg-blue-50 transition-all">Login / Register</button>
           </template>
         </div>
       </div>
     </div>
   </nav>
+  
+  <!-- Register Prompt Modal -->
+  <RegisterPrompt
+    v-if="showRegisterPrompt"
+    :message="registerPromptMessage"
+    @close="showRegisterPrompt = false"
+  />
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useAuth } from '~/composables/useAuth'
 import { useCredits } from '~/composables/useCredits'
+import RegisterPrompt from '~/components/RegisterPrompt.vue'
 
-const { user, signInWithGoogle, signOut } = useAuth()
+const { user, signInWithGoogle, signOut, hasConsent } = useAuth()
 const { userCredits } = useCredits()
 const showDropdown = ref(false)
 const mobileMenuOpen = ref(false)
+const showRegisterPrompt = ref(false)
+const registerPromptMessage = ref('Please log in to access all features.')
 
 function handleDropdownClick(e) {
   e.stopPropagation()
@@ -154,6 +170,11 @@ function handleDropdownClick(e) {
 
 function handleDocumentClick() {
   showDropdown.value = false
+}
+
+function showLoginPrompt() {
+  // Show consent popup for new users
+  showRegisterPrompt.value = true
 }
 
 onMounted(() => {

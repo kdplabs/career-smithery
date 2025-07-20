@@ -187,7 +187,7 @@
                     </div>
                     <!-- Path Content -->
                     <div class="flex-1 p-4 rounded-xl shadow-lg bg-white border border-slate-200 hover:shadow-md transition-shadow">
-                      <p class="text-md font-semibold text-blue-700 mb-3 ">Suggested Path {{ index + 1 }}</p>
+                      <p class="text-md font-semibold text-blue-700 mb-3 ">Potential Path {{ index + 1 }}</p>
                       <div class="flex space-x-3 items-stretch">
                         <!-- Future Role Card -->
                         <div class="flex-1 p-3 rounded-lg border border-slate-200 bg-slate-50 min-w-[150px]">
