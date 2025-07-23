@@ -169,7 +169,10 @@ export default defineEventHandler(async (event) => {
   // --- 2. Handle Subscription Products ---
   // Get customer email from event
   let customerEmail = null
-  if (body.data?.object?.customer_email) {
+  if (body.data?.object?.customer_details?.email) {
+    customerEmail = body.data.object.customer_details.email
+    console.info('Customer email from customer_details:', customerEmail)
+  } else if (body.data?.object?.customer_email) {
     customerEmail = body.data.object.customer_email
     console.info('Customer email from event object:', customerEmail)
   } else if (body.data?.object?.customer) {
