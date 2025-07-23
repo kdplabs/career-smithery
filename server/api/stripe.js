@@ -31,8 +31,6 @@ export default defineEventHandler(async (event) => {
           },
         ],
         mode: billingPeriod === 'payg' ? 'payment' : 'subscription',
-        success_url: `${process.env.NUXT_PUBLIC_SITE_URL}/credits?success=true`,
-        cancel_url: `${process.env.NUXT_PUBLIC_SITE_URL}/credits?canceled=true`,
         customer_email: body.customerEmail, // Optional: pre-fill customer email
       })
 
