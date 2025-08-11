@@ -205,19 +205,45 @@ async function getStripeSubscriptionDetails(stripeEvent) {
 }
 
 /**
- * Finds plan in database by name
+ * Finds plan in database by name (case insensitive, trimmed)
  */
 async function findPlanByName(planName) {
-  const { data: plan, error: planError } = await supabase
+  // Clean the plan name: trim spaces and convert to lowercase
+  const cleanPlanName = planName.trim().toLowerCase()
+  console.info('Looking for plan with cleaned name:', cleanPlanName)
+  
+  // First try exact match with cleaned name
+  let { data: plan, error: planError } = await supabase
     .from('subscription_plans')
-    .select('id, credits_per_month')
-    .eq('name', planName.toLowerCase())
+    .select('id, credits_per_month, name, display_name')
+    .eq('name', cleanPlanName)
     .single()
   
-  console.info('Plan lookup:', plan, 'Error:', planError)
+  // If not found, try case-insensitive search using ilike
+  if (planError || !plan) {
+    console.info('Exact match not found, trying case-insensitive search...')
+    const { data: plans, error: searchError } = await supabase
+      .from('subscription_plans')
+      .select('id, credits_per_month, name, display_name')
+      .ilike('name', cleanPlanName)
+    
+    if (!searchError && plans && plans.length > 0) {
+      plan = plans[0] // Take the first match
+      planError = null
+    } else {
+      planError = searchError
+    }
+  }
+  
+  console.info('Plan lookup result:', plan, 'Error:', planError)
   
   if (planError || !plan) {
-    throw new Error('Plan not found in subscription_plans')
+    // Log available plans for debugging
+    const { data: allPlans } = await supabase
+      .from('subscription_plans')
+      .select('name, display_name')
+    console.info('Available plans in database:', allPlans)
+    throw new Error(`Plan not found in subscription_plans. Looking for: "${cleanPlanName}"`)
   }
   
   return plan
