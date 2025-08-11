@@ -298,10 +298,29 @@ async function handleOneTimeCreditPurchase(stripeEvent) {
   const lineItems = await getCheckoutLineItems(sessionId)
   const userId = await findUserByEmail(customerEmail)
 
-  // Calculate credits to add (assuming 50 credits per item)
+  // Calculate credits to add based on subscription_plans table
   let totalCredits = 0
   for (const item of lineItems) {
-    totalCredits += (item.quantity || 0) * 50
+    // Get the product from the line item
+    const productId = typeof item.price.product === 'string' ? item.price.product : item.price.product.id
+    
+    try {
+      // Fetch product details from Stripe
+      const product = await stripe.products.retrieve(productId)
+      console.info('Product for credit calculation:', product)
+      
+      // Find corresponding plan in our database
+      const plan = await findPlanByName(product.name)
+      console.info('Found plan for credit purchase:', plan)
+      
+      // Calculate credits based on plan's credits_per_month and quantity
+      const creditsPerItem = plan.credits_per_month || 0
+      totalCredits += (item.quantity || 0) * creditsPerItem
+      
+    } catch (err) {
+      console.error(`Error processing product ${productId}:`, err.message)
+      throw new Error(`Failed to calculate credits for product: ${err.message}`)
+    }
   }
   console.info('Total credits to add:', totalCredits)
   
