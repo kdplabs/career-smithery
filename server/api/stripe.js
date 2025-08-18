@@ -365,6 +365,39 @@ async function handleOneTimeCreditPurchase(stripeEvent) {
 }
 
 /**
+ * Handles subscription checkout sessions (checkout.session.completed for subscriptions)
+ */
+async function handleSubscriptionCheckout(stripeEvent) {
+  const session = stripeEvent.data.object
+  console.info('Subscription checkout session:', session)
+  
+  // Only process if this IS a subscription session
+  if (session.mode !== 'subscription') {
+    console.info('Checkout session is not for a subscription, skipping subscription logic.')
+    return { ignored: true, reason: 'non-subscription session handled elsewhere' }
+  }
+  
+  const customerEmail = session.customer_details?.email
+  console.info('Customer email from subscription session:', customerEmail)
+  
+  if (!customerEmail) {
+    throw new Error('No customer email found in subscription session')
+  }
+
+  const userId = await findUserByEmail(customerEmail)
+  
+  // For subscription checkouts, we'll let the subscription events handle the credit allocation
+  // This is just to ensure the user exists and log the subscription creation
+  console.info('Subscription checkout completed for user:', userId, 'Subscription ID:', session.subscription)
+  
+  return { 
+    success: true, 
+    result: 'Subscription checkout processed, credits will be added via subscription events',
+    subscription_id: session.subscription
+  }
+}
+
+/**
  * Handles subscription cancellation (customer.subscription.deleted)
  */
 async function handleSubscriptionCancellation(stripeEvent) {
@@ -400,25 +433,33 @@ async function handleSubscriptionPaymentAndUpdates(stripeEvent) {
   // Determine subscription status
   const isActive = subscription.status === 'active'
   const isCancelled = subscription.status === 'canceled' || subscription.cancel_at_period_end === true
-  const availableCredit = isActive ? plan.credits_per_month : 0
-  console.info('Subscription status:', subscription.status, 'isActive:', isActive, 'isCancelled:', isCancelled, 'availableCredit:', availableCredit)
+  const creditsToAdd = isActive ? plan.credits_per_month : 0
+  console.info('Subscription status:', subscription.status, 'isActive:', isActive, 'isCancelled:', isCancelled, 'creditsToAdd:', creditsToAdd)
 
-  // Update user subscription in database
+  // Update user subscription in database (without overwriting credits)
   const updateData = {
     plan_id: plan.id,
     is_active: isActive,
     auto_renew: !isCancelled,
     end_date: isCancelled ? new Date().toISOString() : null,
     start_date: new Date().toISOString(),
-    available_credit: availableCredit,
   }
   
   await updateUserSubscription(userId, updateData)
   
+  // Add credits to existing balance if subscription is active
+  let newTotal = 0
+  if (isActive && creditsToAdd > 0) {
+    newTotal = await updateUserCredits(userId, creditsToAdd)
+    console.info('Added subscription credits. New total:', newTotal)
+  }
+  
   return { 
     success: true, 
     result: 'Subscription updated', 
-    plan: planName 
+    plan: planName,
+    credits_added: creditsToAdd,
+    new_total: newTotal
   }
 }
 
@@ -464,7 +505,13 @@ export default defineEventHandler(async (event) => {
     
     switch (eventType) {
       case 'checkout.session.completed':
-        result = await handleOneTimeCreditPurchase(stripeEvent)
+        // Check if this is a subscription or one-time purchase
+        const session = stripeEvent.data.object
+        if (session.mode === 'subscription') {
+          result = await handleSubscriptionCheckout(stripeEvent)
+        } else {
+          result = await handleOneTimeCreditPurchase(stripeEvent)
+        }
         break
         
       case 'customer.subscription.deleted':
