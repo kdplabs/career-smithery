@@ -6,6 +6,8 @@
 .cache
 .cursor
 dist
+resumebuilder
+
 
 # Node dependencies
 node_modules
