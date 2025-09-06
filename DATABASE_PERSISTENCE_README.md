@@ -1,32 +1,56 @@
--- Add missing subscription plans to match Stripe products
--- Run this in your Supabase SQL editor
+# Database Persistence Implementation
 
--- Pro Plan ($4.99/month, 100 credits)
-INSERT INTO subscription_plans (name, display_name, price_cents, billing_period, credits_per_month)
-VALUES ('pro', 'Pro', 499, 'monthly', 100)
-ON CONFLICT (name) DO UPDATE SET
-  price_cents = EXCLUDED.price_cents,
-  credits_per_month = EXCLUDED.credits_per_month;
+## Overview
+This implementation moves the resume and cover letter data storage from localStorage to the database for better persistence across devices and improved data management.
 
--- Super Hero Plan ($9.99/month, 500 credits)  
-INSERT INTO subscription_plans (name, display_name, price_cents, billing_period, credits_per_month)
-VALUES ('super hero', 'Super Hero', 999, 'monthly', 500)
-ON CONFLICT (name) DO UPDATE SET
-  price_cents = EXCLUDED.price_cents,
-  credits_per_month = EXCLUDED.credits_per_month;
+## Changes Made
 
--- Buy Credit Plan ($5.00 one-time, 50 credits)
-INSERT INTO subscription_plans (name, display_name, price_cents, billing_period, credits_per_month)
-VALUES ('buy credit', 'Buy Credit', 500, 'one-time', 50)
-ON CONFLICT (name) DO UPDATE SET
-  price_cents = EXCLUDED.price_cents,
-  credits_per_month = EXCLUDED.credits_per_month;
+### 1. New Database Composable (`composables/useDatabase.js`)
+Created a new composable that handles all database operations for resume and cover letter data:
 
--- Verify the plans were added
-SELECT name, display_name, price_cents, credits_per_month 
-FROM subscription_plans 
-ORDER BY created_at;
+- `saveResumeToDatabase(jobId, resumeData)` - Saves resume data to database
+- `getResumeFromDatabase(jobId)` - Retrieves resume data from database
+- `saveCoverLetterToDatabase(jobId, coverLetterData)` - Saves cover letter data to database
+- `getCoverLetterFromDatabase(jobId)` - Retrieves cover letter data from database
+- `updateJobStatus(jobId, status)` - Updates job status
+- `getJobWithData(jobId)` - Gets complete job data including resume and cover letter
 
+### 2. Updated Cover Letter Page (`pages/cover-letter.vue`)
+- Replaced localStorage operations with database operations
+- Updated data loading to fetch from database on mount
+- Modified save operations to persist to database
+- Added proper error handling for database operations
+
+### 3. Updated Resume Summary Page (`pages/resume-summary.vue`)
+- Replaced localStorage operations with database operations
+- Updated cover letter generation to save to database
+- Modified data loading to use database persistence
+- Added success message handling from resume wizard
+
+### 4. Updated Resume Wizard (`pages/resume-wizard.vue`)
+- Enhanced to handle both new job creation and existing job updates
+- Added logic to update existing jobs with resume data when jobId is provided
+- Updated redirect logic to go to resume summary page for existing jobs
+
+### 5. Updated Jobs Page (`pages/jobs/index.vue`)
+- Added cover letter viewing functionality
+- Updated to check for cover letter data in database
+- Added navigation to cover letter page
+
+## Database Schema
+
+The implementation uses the existing `user_jobs` table with the following key columns:
+
+- `resume_data` (JSONB) - Stores complete resume wizard data and generated resume
+- `cover_letter_data` (JSONB) - Stores cover letter generation data and final letter
+- `status` - Tracks job status (saved, resume_created, cover_letter_created, etc.)
+- `match_score` (INTEGER) - Resume-job match score
+
+## Migration Required
+
+Run the following SQL migration in your Supabase database to ensure proper table structure:
+
+```sql
 -- Migration to ensure user_jobs table has proper structure for resume and cover letter data
 -- This migration ensures the table exists with the correct columns
 
@@ -123,3 +147,25 @@ CREATE TRIGGER update_user_jobs_updated_at
   BEFORE UPDATE ON user_jobs
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
+```
+
+## Benefits
+
+1. **Cross-Device Persistence**: Data is now stored in the database and accessible from any device
+2. **Better Data Management**: Centralized storage with proper indexing and relationships
+3. **Improved Security**: Row-level security policies ensure users can only access their own data
+4. **Scalability**: Database storage is more scalable than localStorage
+5. **Data Integrity**: Proper constraints and validation at the database level
+
+## Usage
+
+The implementation maintains the same user experience while providing better data persistence:
+
+1. **Creating a Resume**: Data is automatically saved to the database when generated
+2. **Generating a Cover Letter**: Data is saved to the database and linked to the specific job
+3. **Editing**: All edits are persisted to the database in real-time
+4. **Viewing**: Data is loaded from the database when viewing resumes or cover letters
+
+## Migration from localStorage
+
+Existing users with data in localStorage will need to regenerate their resumes and cover letters, as the data will be stored in the database going forward. The system will automatically handle new data storage in the database.

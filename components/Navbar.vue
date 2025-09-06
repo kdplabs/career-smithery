@@ -45,6 +45,14 @@
             >
               Tasks
             </NuxtLink>
+            <NuxtLink
+              v-if="user"
+              to="/jobs"
+              class="border-transparent text-gray-500 hover:border-blue-300 hover:text-blue-700 inline-flex items-center px-1 pt-1 border-b-2 text-base font-semibold transition-all duration-200"
+              active-class="nav-gradient-active"
+            >
+              Jobs
+            </NuxtLink>
           </div>
         </div>
         <!-- Mobile menu button -->
@@ -67,7 +75,7 @@
                 <div class="py-1">
                   <NuxtLink 
                     to="/credits" 
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 flex items-center justify-between rounded-lg"
+                    class="flex items-center justify-between rounded-lg px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
                   >
                     <span>Credits</span>
                     <span class="font-semibold text-blue-600">{{ userCredits }}</span>
@@ -124,9 +132,15 @@
               active-class="!bg-gradient-to-r !from-blue-50 !via-purple-50 !to-pink-50 !text-blue-700"
               @click="mobileMenuOpen = false"
             >Tasks</NuxtLink>
+            <NuxtLink
+              to="/jobs"
+              class="block px-3 py-2 rounded-lg text-base font-semibold text-gray-700 hover:bg-blue-50 transition-all"
+              active-class="!bg-gradient-to-r !from-blue-50 !via-purple-50 !to-pink-50 !text-blue-700"
+              @click="mobileMenuOpen = false"
+            >Jobs</NuxtLink>
             <NuxtLink 
               to="/credits" 
-              class="block px-3 py-2 rounded-lg text-base font-semibold text-gray-700 hover:bg-blue-50 flex items-center justify-between transition-all"
+              class="flex items-center justify-between rounded-lg px-3 py-2 text-base font-semibold text-gray-700 hover:bg-blue-50 transition-all"
               @click="mobileMenuOpen = false"
             >
               <span>Credits</span>

@@ -225,3 +225,55 @@ CREATE TRIGGER update_support_requests_updated_at
   BEFORE UPDATE ON support_requests
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();npm 
+
+-- Jobs table for application tracking
+CREATE TABLE IF NOT EXISTS user_jobs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  job_title VARCHAR(255) NOT NULL,
+  company_name VARCHAR(255) NOT NULL,
+  job_description TEXT,
+  job_url VARCHAR(500),
+  location VARCHAR(255),
+  salary_range VARCHAR(100),
+  status VARCHAR(50) DEFAULT 'saved' CHECK (status IN ('saved', 'resume_created', 'cover_letter_created', 'applied', 'interviewing', 'offered', 'rejected', 'withdrawn')),
+  priority VARCHAR(20) DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high')),
+  resume_data JSONB, -- Complete resume wizard data + generated resume
+  cover_letter_data JSONB, -- Cover letter generation data + final letter
+  match_score INTEGER, -- Resume-job match score
+  notes TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Indexes for performance
+CREATE INDEX IF NOT EXISTS idx_user_jobs_user_id ON user_jobs(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_jobs_status ON user_jobs(status);
+CREATE INDEX IF NOT EXISTS idx_user_jobs_created_at ON user_jobs(created_at);
+
+-- Enable RLS
+ALTER TABLE user_jobs ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies
+-- Users can only see their own jobs
+CREATE POLICY "Users can view own jobs" ON user_jobs
+  FOR SELECT USING (auth.uid() = user_id);
+
+-- Users can insert their own jobs
+CREATE POLICY "Users can create jobs" ON user_jobs
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- Users can update their own jobs
+CREATE POLICY "Users can update own jobs" ON user_jobs
+  FOR UPDATE USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- Users can delete their own jobs
+CREATE POLICY "Users can delete own jobs" ON user_jobs
+  FOR DELETE USING (auth.uid() = user_id);
+
+-- Trigger to automatically update updated_at
+CREATE TRIGGER update_user_jobs_updated_at
+  BEFORE UPDATE ON user_jobs
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column(); 

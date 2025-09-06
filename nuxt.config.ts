@@ -4,6 +4,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', '@nuxt/icon', '@nuxtjs/supabase'],
   css: ['~/assets/css/main.css'],
+  runtimeConfig: {
+    geminiApiKey: process.env.GEMINI_API_KEY || '',
+    public: {
+      geminiApiKey: process.env.GEMINI_API_KEY || ''
+    }
+  },
   googleFonts: {
     families: {
       Quicksand: [300, 400, 500, 600, 700],
