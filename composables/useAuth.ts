@@ -24,13 +24,10 @@ export const useAuth = () => {
   const user = useSupabaseUser()
   const router = useRouter()
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = async (redirectTo?: string) => {
     try {
-      // Get intended destination from localStorage
-      const intendedDestination = localStorage.getItem('intendedDestination')
-      const redirectUrl = intendedDestination 
-        ? `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(intendedDestination)}`
-        : `${window.location.origin}/auth/callback`
+      // Use the provided redirect URL or default to auth callback
+      const redirectUrl = redirectTo || `${window.location.origin}/auth/callback`
       
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -48,7 +45,9 @@ export const useAuth = () => {
   const signOut = async () => {
     try {
       // Clear personalized report and other sensitive data from localStorage
-      localStorage.removeItem('personalizedReport')
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('personalizedReport')
+      }
       // Optionally clear other related items if needed
       // localStorage.removeItem('assessmentData')
       // localStorage.removeItem('assessmentSummary')

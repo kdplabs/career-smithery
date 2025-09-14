@@ -237,12 +237,13 @@
   <RegisterPrompt
     v-if="showRegisterPrompt"
     :message="registerPromptMessage"
+    :redirect-to="currentPageUrl"
     @close="showRegisterPrompt = false"
   />
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useAuth } from '~/composables/useAuth'
 import { useCredits } from '~/composables/useCredits'
 import RegisterPrompt from '~/components/RegisterPrompt.vue'
@@ -255,6 +256,14 @@ const mobileMenuOpen = ref(false)
 const showRegisterPrompt = ref(false)
 const registerPromptMessage = ref('Please log in to access all features.')
 
+// Get current page URL for redirect
+const currentPageUrl = computed(() => {
+  if (typeof window !== 'undefined') {
+    return window.location.origin + window.location.pathname + window.location.search
+  }
+  return null
+})
+
 function handleDropdownClick(e) {
   e.stopPropagation()
   showDropdown.value = !showDropdown.value
@@ -265,10 +274,6 @@ function handleDocumentClick() {
 }
 
 function showLoginPrompt() {
-  // Store the current page as the intended destination
-  const currentPath = window.location.pathname + window.location.search
-  localStorage.setItem('intendedDestination', currentPath)
-  
   // Show consent popup for new users
   showRegisterPrompt.value = true
 }

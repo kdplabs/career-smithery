@@ -66,7 +66,8 @@
           :disabled="!allConsentGiven"
           class="w-full flex items-center justify-center gap-3 px-4 py-3 border border-slate-300 rounded-xl hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5" />
+          <img src="
+          https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5" />
           <span class="font-medium text-slate-700">Continue with Google</span>
         </button>
         
@@ -90,6 +91,10 @@ const props = defineProps({
   message: {
     type: String,
     required: true
+  },
+  redirectTo: {
+    type: String,
+    default: null
   }
 })
 
@@ -120,19 +125,24 @@ const handleGoogleSignIn = async () => {
   
   try {
     // Store consent data in localStorage temporarily
-    localStorage.setItem('pendingConsent', JSON.stringify({
-      privacy: consent.value.privacy,
-      contact: consent.value.contact,
-      terms: consent.value.terms,
-      timestamp: new Date().toISOString()
-    }))
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('pendingConsent', JSON.stringify({
+        privacy: consent.value.privacy,
+        contact: consent.value.contact,
+        terms: consent.value.terms,
+        timestamp: new Date().toISOString()
+      }))
+    }
     
-    await signInWithGoogle()
+    // Pass the redirect URL to the sign-in function
+    await signInWithGoogle(props.redirectTo)
   } catch (error) {
     console.error('Error signing in with Google:', error)
     consentError.value = 'Failed to sign in. Please try again.'
     // Clear pending consent on error
-    localStorage.removeItem('pendingConsent')
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('pendingConsent')
+    }
   }
 }
 </script> 

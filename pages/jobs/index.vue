@@ -304,6 +304,7 @@
     <RegisterPrompt
       v-if="showLoginModal"
       message="Please log in to view and manage your job applications."
+      :redirect-to="currentPageUrl"
       @close="showLoginModal = false"
     />
 
@@ -436,6 +437,14 @@ const newJob = ref({
 const defaultResumeData = ref({
   currentResume: '',
   metrics: ''
+})
+
+// Get current page URL for redirect
+const currentPageUrl = computed(() => {
+  if (typeof window !== 'undefined') {
+    return window.location.origin + window.location.pathname + window.location.search
+  }
+  return null
 })
 
 // Computed properties
@@ -744,10 +753,6 @@ function loadDefaultResumeData() {
 }
 
 function handleLoginClick() {
-  // Store the current page as the intended destination
-  const currentPath = window.location.pathname + window.location.search
-  localStorage.setItem('intendedDestination', currentPath)
-  
   // Show login modal
   showLoginModal.value = true
 }

@@ -13,6 +13,12 @@
 
 <script setup>
 import { watch, ref, onMounted } from 'vue'
+
+// Prevent SSR for this page since it requires localStorage
+definePageMeta({
+  ssr: false
+})
+
 const router = useRouter()
 const route = useRoute()
 const user = useSupabaseUser()
@@ -23,6 +29,9 @@ const error = ref(null)
 // Function to process and store consent data
 async function processConsentData(userId) {
   try {
+    // Check if we're on the client side
+    if (typeof window === 'undefined') return
+    
     const pendingConsent = localStorage.getItem('pendingConsent')
     if (!pendingConsent) {
       console.log('No pending consent data found')
@@ -53,7 +62,9 @@ async function processConsentData(userId) {
     console.log('Consent data stored successfully in user metadata')
     
     // Clear pending consent from localStorage
-    localStorage.removeItem('pendingConsent')
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('pendingConsent')
+    }
   } catch (err) {
     console.error('Error processing consent data:', err)
     // Don't throw error here as it shouldn't block the login process
@@ -153,7 +164,6 @@ watch(
   () => user.value,
   async (newUser) => {
     console.log('User watch triggered:', { newUser })
-    console.log('Current localStorage intendedDestination:', localStorage.getItem('intendedDestination'))
     if (newUser && newUser.email) {
       try {
         console.log('Starting setup process for user:', newUser.id)
@@ -178,7 +188,7 @@ watch(
         }
 
         // Check if we have local assessment data
-        const savedData = localStorage.getItem('assessmentData')
+        const savedData = typeof window !== 'undefined' ? localStorage.getItem('assessmentData') : null
         
         if (existingPlan) {
           // User has existing plan - check if it has assessment data
@@ -190,8 +200,10 @@ watch(
             // Database has data - prioritize database over local data
             console.log('Found existing assessment data in database, using database data')
             // Clear local data since database is the source of truth
-            localStorage.removeItem('assessmentData')
-            localStorage.removeItem('assessmentSummary')
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem('assessmentData')
+              localStorage.removeItem('assessmentSummary')
+            }
           } else if (savedData) {
             // Database plan exists but no assessment data - update with local data
             console.log('Found local assessment data, updating existing plan')
@@ -243,31 +255,17 @@ watch(
           console.log('Assessment data saved successfully')
         }
 
-        // Check for intended destination first (from URL parameter or localStorage)
-        const redirectParam = route.query.redirect
-        const intendedDestination = redirectParam ? decodeURIComponent(redirectParam) : localStorage.getItem('intendedDestination')
-        console.log('Auth callback - intendedDestination from URL:', redirectParam)
-        console.log('Auth callback - intendedDestination from localStorage:', localStorage.getItem('intendedDestination'))
-        console.log('Auth callback - final intendedDestination:', intendedDestination)
-        if (intendedDestination) {
-          console.log('Redirecting to intended destination:', intendedDestination)
-          // Clear the intended destination from localStorage
-          localStorage.removeItem('intendedDestination')
-          // Redirect to the intended destination
-          router.push(intendedDestination)
+        // Check if we have LinkedIn/resume text
+        const linkedinText = typeof window !== 'undefined' ? localStorage.getItem('linkedinOrResumeText') : null
+        if (linkedinText) {
+          // If we have LinkedIn text, redirect to summary with the text
+          router.push({
+            path: '/summary',
+            query: { linkedinText: encodeURIComponent(linkedinText) }
+          })
         } else {
-          // Check if we have LinkedIn/resume text
-          const linkedinText = localStorage.getItem('linkedinOrResumeText')
-          if (linkedinText) {
-            // If we have LinkedIn text, redirect to summary with the text
-            router.push({
-              path: '/summary',
-              query: { linkedinText: encodeURIComponent(linkedinText) }
-            })
-          } else {
-            // If no LinkedIn text, just redirect to summary
-            router.push('/summary')
-          }
+          // If no LinkedIn text, just redirect to summary
+          router.push('/summary')
         }
       } catch (err) {
         console.error('Error during setup:', err)
