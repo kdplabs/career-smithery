@@ -20,7 +20,7 @@
           <Icon name="i-heroicons-lock-closed" class="w-12 h-12 mx-auto mb-4 text-gray-400" />
           <h3 class="text-lg font-semibold mb-2">Authentication Required</h3>
           <p class="text-gray-600 mb-6">Please log in to view and manage your job applications</p>
-          <button @click="showLoginModal = true" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          <button @click="handleLoginClick" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
             Login / Register
           </button>
         </div>
@@ -741,6 +741,15 @@ function loadDefaultResumeData() {
   } catch (err) {
     console.error('Error loading default resume data:', err)
   }
+}
+
+function handleLoginClick() {
+  // Store the current page as the intended destination
+  const currentPath = window.location.pathname + window.location.search
+  localStorage.setItem('intendedDestination', currentPath)
+  
+  // Show login modal
+  showLoginModal.value = true
 }
 
 // Load jobs on mount

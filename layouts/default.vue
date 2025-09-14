@@ -31,6 +31,23 @@
           
           <!-- Quick Links -->
           <div>
+            <h3 class="text-sm font-semibold text-slate-800 uppercase tracking-wider mb-4">Solutions</h3>
+            <ul class="space-y-2">
+              <li>
+                <NuxtLink to="/solutions/career-planner" class="text-slate-600 hover:text-blue-600 transition-colors">
+                  Career Planner
+                </NuxtLink>
+              </li>
+              <li>
+                <NuxtLink to="/solutions/resume-builder" class="text-slate-600 hover:text-blue-600 transition-colors">
+                  Resume Builder
+                </NuxtLink>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- Services -->
+          <div>
             <h3 class="text-sm font-semibold text-slate-800 uppercase tracking-wider mb-4">Services</h3>
             <ul class="space-y-2">
               <li>

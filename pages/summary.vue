@@ -1369,6 +1369,10 @@ const isNineBoxSelected = (row, col) => {
 
 const handleSave = async () => {
   if (!user.value) {
+    // Store the current page as the intended destination
+    const currentPath = window.location.pathname + window.location.search
+    localStorage.setItem('intendedDestination', currentPath)
+    
     registerPromptMessage.value = 'Please log in to save your assessment results.'
     showRegisterPrompt.value = true
     return
@@ -1809,6 +1813,10 @@ const getThreeMetricsRecommendations = () => {
 // Toggle input form visibility
 const togglePersonalizedPlanInput = (show) => {
   if (!user.value) {
+    // Store the current page as the intended destination
+    const currentPath = window.location.pathname + window.location.search
+    localStorage.setItem('intendedDestination', currentPath)
+    
     // If user is not logged in, show register prompt instead of the input form
     registerPromptMessage.value = 'Please log in to generate your personalized report.'
     showRegisterPrompt.value = true
@@ -1916,6 +1924,10 @@ async function saveAssessmentData(linkedinText = null, personalizedReport = null
 // Modify the submitForPersonalizedPlan function
 const submitForPersonalizedPlan = async () => {
   if (!user.value) {
+    // Store the current page as the intended destination
+    const currentPath = window.location.pathname + window.location.search
+    localStorage.setItem('intendedDestination', currentPath)
+    
     // Save LinkedIn text to localStorage before showing register prompt
     localStorage.setItem('linkedinOrResumeText', linkedinOrResumeText.value)
     registerPromptMessage.value = 'Please log in to generate your personalized report.'

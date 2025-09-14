@@ -153,6 +153,7 @@ watch(
   () => user.value,
   async (newUser) => {
     console.log('User watch triggered:', { newUser })
+    console.log('Current localStorage intendedDestination:', localStorage.getItem('intendedDestination'))
     if (newUser && newUser.email) {
       try {
         console.log('Starting setup process for user:', newUser.id)
@@ -242,17 +243,31 @@ watch(
           console.log('Assessment data saved successfully')
         }
 
-        // Check if we have LinkedIn/resume text
-        const linkedinText = localStorage.getItem('linkedinOrResumeText')
-        if (linkedinText) {
-          // If we have LinkedIn text, redirect to summary with the text
-          router.push({
-            path: '/summary',
-            query: { linkedinText: encodeURIComponent(linkedinText) }
-          })
+        // Check for intended destination first (from URL parameter or localStorage)
+        const redirectParam = route.query.redirect
+        const intendedDestination = redirectParam ? decodeURIComponent(redirectParam) : localStorage.getItem('intendedDestination')
+        console.log('Auth callback - intendedDestination from URL:', redirectParam)
+        console.log('Auth callback - intendedDestination from localStorage:', localStorage.getItem('intendedDestination'))
+        console.log('Auth callback - final intendedDestination:', intendedDestination)
+        if (intendedDestination) {
+          console.log('Redirecting to intended destination:', intendedDestination)
+          // Clear the intended destination from localStorage
+          localStorage.removeItem('intendedDestination')
+          // Redirect to the intended destination
+          router.push(intendedDestination)
         } else {
-          // If no LinkedIn text, just redirect to summary
-          router.push('/summary')
+          // Check if we have LinkedIn/resume text
+          const linkedinText = localStorage.getItem('linkedinOrResumeText')
+          if (linkedinText) {
+            // If we have LinkedIn text, redirect to summary with the text
+            router.push({
+              path: '/summary',
+              query: { linkedinText: encodeURIComponent(linkedinText) }
+            })
+          } else {
+            // If no LinkedIn text, just redirect to summary
+            router.push('/summary')
+          }
         }
       } catch (err) {
         console.error('Error during setup:', err)

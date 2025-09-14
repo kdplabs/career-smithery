@@ -31,8 +31,133 @@
       </div>
     </div>
 
-    <!-- Features Section -->
+    <!-- Solutions Section -->
     <div class="py-20 bg-transparent">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">
+            <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">Complete Career Solutions</span>
+          </h2>
+          <p class="text-xl text-gray-600">Two powerful tools to manage every aspect of your professional journey</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
+          <!-- Career Planner Solution -->
+          <div class="solution-card group">
+            <div class="flex items-center mb-6">
+              <div class="flex items-center justify-center h-16 w-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 text-white mr-4 shadow-lg">
+                <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold text-gray-900">Career Planner</h3>
+                <p class="text-gray-600">Strategic career development & planning</p>
+              </div>
+            </div>
+            <p class="text-gray-600 mb-6">Comprehensive career assessment and planning tool that helps you understand your current position, identify growth opportunities, and create a strategic roadmap for your professional development.</p>
+            <div class="space-y-3 mb-8">
+              <div class="flex items-center">
+                <svg class="h-5 w-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-700">Career stage assessment using Super's theory</span>
+              </div>
+              <div class="flex items-center">
+                <svg class="h-5 w-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-700">Leadership pipeline analysis</span>
+              </div>
+              <div class="flex items-center">
+                <svg class="h-5 w-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-700">Personalized development roadmap</span>
+              </div>
+              <div class="flex items-center">
+                <svg class="h-5 w-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-700">Skills gap analysis & recommendations</span>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <NuxtLink
+                to="/solutions/career-planner"
+                class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold text-center hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                Learn More
+              </NuxtLink>
+              <NuxtLink
+                to="/assessment"
+                class="flex-1 border-2 border-blue-600 text-blue-600 px-6 py-3 rounded-xl font-semibold text-center hover:bg-blue-50 transition-all duration-300"
+              >
+                Start Assessment
+              </NuxtLink>
+            </div>
+          </div>
+
+          <!-- Resume Builder Solution -->
+          <div class="solution-card group">
+            <div class="flex items-center mb-6">
+              <div class="flex items-center justify-center h-16 w-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 text-white mr-4 shadow-lg">
+                <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold text-gray-900">Resume Builder</h3>
+                <p class="text-gray-600">AI-powered resume creation & optimization</p>
+              </div>
+            </div>
+            <p class="text-gray-600 mb-6">Advanced resume building tool that creates professional, ATS-optimized resumes tailored to your career goals and target positions using AI technology.</p>
+            <div class="space-y-3 mb-8">
+              <div class="flex items-center">
+                <svg class="h-5 w-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-700">AI-powered content generation</span>
+              </div>
+              <div class="flex items-center">
+                <svg class="h-5 w-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-700">ATS-optimized formatting</span>
+              </div>
+              <div class="flex items-center">
+                <svg class="h-5 w-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-700">Multiple professional templates</span>
+              </div>
+              <div class="flex items-center">
+                <svg class="h-5 w-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-700">Job-specific customization</span>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <NuxtLink
+                to="/solutions/resume-builder"
+                class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold text-center hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                Learn More
+              </NuxtLink>
+              <NuxtLink
+                to="/jobs"
+                class="flex-1 border-2 border-purple-600 text-purple-600 px-6 py-3 rounded-xl font-semibold text-center hover:bg-purple-50 transition-all duration-300"
+              >
+                Build Resume
+              </NuxtLink>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-100">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">
@@ -179,6 +304,10 @@
   animation: slide-down 1.1s cubic-bezier(0.4,0,0.2,1) both;
 }
 
+.solution-card {
+  @apply bg-white/90 rounded-3xl shadow-xl border border-gray-100 p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:bg-white/95 cursor-pointer;
+  backdrop-filter: blur(8px);
+}
 .feature-card {
   @apply bg-white/80 rounded-2xl shadow-xl border border-gray-100 p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:bg-white/90 cursor-pointer;
   backdrop-filter: blur(6px);

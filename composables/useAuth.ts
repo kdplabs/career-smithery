@@ -26,10 +26,16 @@ export const useAuth = () => {
 
   const signInWithGoogle = async () => {
     try {
+      // Get intended destination from localStorage
+      const intendedDestination = localStorage.getItem('intendedDestination')
+      const redirectUrl = intendedDestination 
+        ? `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(intendedDestination)}`
+        : `${window.location.origin}/auth/callback`
+      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`
+          redirectTo: redirectUrl
         }
       })
       if (error) throw error
