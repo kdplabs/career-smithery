@@ -48,14 +48,15 @@ export default defineEventHandler(async (event) => {
   const systemPrompt = `You are an expert resume writer and career consultant specializing in creating ATS-friendly resumes. Your task is to generate a professional resume based on the provided job description and user's current background.
 
 INSTRUCTIONS:
-1. Analyze the job description to identify key requirements, skills, and qualifications
-2. Tailor the user's experience to match the job requirements while maintaining honesty
-3. Use ATS-friendly formatting with clear section headers
-4. Quantify achievements where possible
-5. Include relevant keywords from the job description naturally
-6. Maintain a professional tone throughout
-7. Incorporate any provided metrics and quantifiable achievements to make the resume more compelling
-8. Use a professional, classic format that works well with ATS systems
+1. First, analyze the job description to extract the job title and company name
+2. Analyze the job description to identify key requirements, skills, and qualifications
+3. Tailor the user's experience to match the job requirements while maintaining honesty
+4. Use ATS-friendly formatting with clear section headers
+5. Quantify achievements where possible
+6. Include relevant keywords from the job description naturally
+7. Maintain a professional tone throughout
+8. Incorporate any provided metrics and quantifiable achievements to make the resume more compelling
+9. Use a professional, classic format that works well with ATS systems
 
 Generate a structured resume with the specified sections. Make the resume compelling, professional, and tailored specifically to the target role.`
 
@@ -72,12 +73,14 @@ ${metrics}` : ''}
 ${additionalInstructions ? `ADDITIONAL INSTRUCTIONS:
 ${additionalInstructions}` : ''}
 
-Please generate an optimized resume for this job opportunity.`
+Please generate an optimized resume for this job opportunity. Make sure to extract the job title and company name from the job description and include them in your response.`
 
   // 3. Define the structured schema for resume output
   const resumeSchema = {
     type: "OBJECT",
     properties: {
+      jobTitle: { type: "STRING" },
+      companyName: { type: "STRING" },
       personalInfo: {
         type: "OBJECT",
         properties: {
@@ -203,8 +206,8 @@ Please generate an optimized resume for this job opportunity.`
         maxItems: 6
       }
     },
-    required: ["personalInfo", "professionalSummary", "workExperience", "education", "skills", "matchScore", "matchAnalysis", "interviewQuestions", "studyTopics", "improvements"],
-    propertyOrdering: ["personalInfo", "professionalSummary", "workExperience", "education", "skills", "certifications", "projects", "matchScore", "matchAnalysis", "interviewQuestions", "studyTopics", "improvements"]
+    required: ["jobTitle", "companyName", "personalInfo", "professionalSummary", "workExperience", "education", "skills", "matchScore", "matchAnalysis", "interviewQuestions", "studyTopics", "improvements"],
+    propertyOrdering: ["jobTitle", "companyName", "personalInfo", "professionalSummary", "workExperience", "education", "skills", "certifications", "projects", "matchScore", "matchAnalysis", "interviewQuestions", "studyTopics", "improvements"]
   }
 
   // 4. Call Gemini API

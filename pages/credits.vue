@@ -45,36 +45,14 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useSupabaseClient, navigateTo } from '#imports'
 import { useAuth } from '~/composables/useAuth'
+import { useCredits } from '~/composables/useCredits'
 import PricingModal from '~/components/PricingModal.vue'
 
-const supabase = useSupabaseClient()
 const { user } = useAuth()
-const userCredits = ref(0)
+const { userCredits, fetchUserCredits } = useCredits()
 const showPricingModal = ref(false)
 const showSuccessMessage = ref(false)
-
-async function fetchUserCredits() {
-  if (!user.value) return
-  
-  try {
-    const { data: subscription, error } = await supabase
-      .from('user_subscriptions')
-      .select('available_credit')
-      .eq('user_id', user.value.id)
-      .eq('is_active', true)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single()
-
-    if (error && error.code !== 'PGRST116') throw error // PGRST116 is "not found"
-    userCredits.value = subscription?.available_credit || 0
-  } catch (err) {
-    console.error('Error fetching credits:', err)
-    userCredits.value = 0
-  }
-}
 
 
 

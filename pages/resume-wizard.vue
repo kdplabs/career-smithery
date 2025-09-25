@@ -252,12 +252,15 @@ const submitForm = async () => {
     
     // Save resume data to database
     const supabase = useSupabaseClient()
+    let jobId = null
     
     if (jobData.value.id) {
       // Update existing job with resume data
       const { data, error: updateError } = await supabase
         .from('user_jobs')
         .update({
+          job_title: apiResponse.resume.jobTitle || 'Resume Generated',
+          company_name: apiResponse.resume.companyName || 'Career Smithery',
           job_description: formData.value.jobDescription,
           status: 'resume_created',
           resume_data: apiResponse.resume,
@@ -269,11 +272,12 @@ const submitForm = async () => {
         .single()
       
       if (updateError) throw updateError
+      jobId = jobData.value.id
     } else {
       // Create new job entry with the generated resume data
       const newJob = {
-        job_title: 'Resume Generated',
-        company_name: 'Career Smithery',
+        job_title: apiResponse.resume.jobTitle || 'Resume Generated',
+        company_name: apiResponse.resume.companyName || 'Career Smithery',
         job_description: formData.value.jobDescription,
         status: 'resume_created',
         resume_data: apiResponse.resume,
@@ -290,32 +294,22 @@ const submitForm = async () => {
         .single()
       
       if (insertError) throw insertError
+      jobId = data.id
     }
     
     stopProgressAnimation()
     
     // Wait for final progress animation
     setTimeout(async () => {
-      if (jobData.value.id) {
-        // Redirect to resume summary page for the specific job
-        await router.push({
-          path: '/resume-summary',
-          query: { 
-            jobId: jobData.value.id,
-            success: 'true',
-            message: 'Resume generated successfully! Credits used: ' + apiResponse.creditsUsed
-          }
-        })
-      } else {
-        // Redirect to jobs page with success message
-        await router.push({
-          path: '/jobs',
-          query: { 
-            success: 'true',
-            message: 'Resume generated successfully! Credits used: ' + apiResponse.creditsUsed
-          }
-        })
-      }
+      // Redirect to resume summary page
+      await router.push({
+        path: '/resume-summary',
+        query: { 
+          jobId: jobId,
+          success: 'true',
+          message: 'Resume generated successfully! Credits used: ' + apiResponse.creditsUsed
+        }
+      })
     }, 500)
     
   } catch (error) {

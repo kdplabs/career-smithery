@@ -1,10 +1,32 @@
 <template>
   <div class="min-h-screen bg-gray-50 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Header -->
-      <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Job Applications</h1>
-        <p class="text-gray-600">Track your job applications and manage your career opportunities</p>
+      <!-- Instructions Banner -->
+      <div class="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6">
+        <div class="text-center">
+          <h1 class="text-2xl font-bold text-gray-900 mb-2">Create Tailored Applications</h1>
+          <p class="text-gray-700 mb-6 max-w-3xl mx-auto">Create a new job to generate a tailored resume and cover letter that matches the specific requirements and highlights your relevant experience.</p>
+          <div class="flex items-center justify-center gap-6 text-sm text-gray-600 mb-6">
+            <div class="flex items-center gap-2">
+              <Icon name="i-heroicons-document-text" class="w-4 h-4 text-blue-600" />
+              <span>Custom Resume</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <Icon name="i-heroicons-envelope" class="w-4 h-4 text-purple-600" />
+              <span>Personalized Cover Letter</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <Icon name="i-heroicons-chart-bar" class="w-4 h-4 text-green-600" />
+              <span>ATS Optimized</span>
+            </div>
+          </div>
+          <div class="flex justify-center">
+            <NuxtLink to="/resume-wizard" class="inline-flex items-center px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg">
+              <Icon name="i-heroicons-rocket-launch" class="w-5 h-5 mr-2" />
+              Get Started
+            </NuxtLink>
+          </div>
+        </div>
       </div>
 
              <!-- Loading State -->
@@ -59,6 +81,30 @@
         <!-- Controls -->
         <div class="flex items-center justify-between mb-6">
           <div class="flex items-center gap-4">
+            <!-- View Toggle -->
+            <div class="flex bg-gray-100 rounded-lg p-1">
+              <button 
+                @click="viewMode = 'kanban'"
+                :class="[
+                  'px-3 py-2 text-sm font-medium rounded-md transition-colors',
+                  viewMode === 'kanban' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                ]"
+              >
+                <Icon name="i-heroicons-squares-2x2" class="w-4 h-4 mr-2 inline" />
+                Kanban
+              </button>
+              <button 
+                @click="viewMode = 'table'"
+                :class="[
+                  'px-3 py-2 text-sm font-medium rounded-md transition-colors',
+                  viewMode === 'table' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                ]"
+              >
+                <Icon name="i-heroicons-table-cells" class="w-4 h-4 mr-2 inline" />
+                Table
+              </button>
+            </div>
+
             <!-- Search -->
             <div class="relative">
               <Icon name="i-heroicons-magnifying-glass" class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -105,8 +151,23 @@
                    </div>
         </div>
 
-        <!-- Jobs Table -->
-        <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <!-- Kanban View -->
+        <div v-if="viewMode === 'kanban'">
+          <KanbanBoard
+            :tasks="jobsAsTasks"
+            :kanban-loading="loading"
+            :kanban-error="error"
+            row-field="priority"
+            col-field="status"
+            @update-task="updateJobStatus"
+            @edit-task="editJob"
+            @delete-task="deleteJob"
+            @view-task="viewJob"
+          />
+        </div>
+
+        <!-- Table View -->
+        <div v-else class="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <table class="min-w-full divide-y divide-gray-200">
             <!-- Table Header -->
             <thead class="bg-gray-50">
@@ -215,12 +276,6 @@
                 <!-- Actions -->
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" @click.stop>
                   <div class="flex items-center justify-end gap-2">
-                    <button v-if="job.resume_data" @click="viewResume(job)" class="text-green-600 hover:text-green-800 transition-colors" title="View resume">
-                      <Icon name="i-heroicons-document-text" class="w-4 h-4" />
-                    </button>
-                    <button v-if="job.cover_letter_data" @click="viewCoverLetter(job)" class="text-purple-600 hover:text-purple-800 transition-colors" title="View cover letter">
-                      <Icon name="i-heroicons-envelope" class="w-4 h-4" />
-                    </button>
                     <button @click="viewJob(job)" class="text-blue-600 hover:text-blue-800 transition-colors" title="View job">
                       <Icon name="i-heroicons-eye" class="w-4 h-4" />
                     </button>
@@ -249,54 +304,221 @@
       </div>
     </div>
 
-    <!-- Add Job Modal -->
-    <div v-if="showAddJobModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-        <h3 class="text-lg font-semibold mb-4">Add New Job</h3>
-        <form @submit.prevent="addJob">
-          <div class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Job Title *</label>
-              <input v-model="newJob.job_title" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Company *</label>
-              <input v-model="newJob.company_name" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-              <input v-model="newJob.location" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Job URL</label>
-              <input v-model="newJob.job_url" type="url" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Salary Range</label>
-              <input v-model="newJob.salary_range" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
-              <select v-model="newJob.priority" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Job Description</label>
-              <textarea v-model="newJob.job_description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+    <!-- Add/Edit Job Modal -->
+    <div v-if="showAddJobModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4 overflow-y-auto">
+      <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl relative border border-slate-100 my-8 max-h-[calc(100vh-4rem)]">
+        <div class="flex flex-col h-full max-h-[calc(100vh-4rem)]">
+          <!-- Header - Fixed -->
+          <div class="flex-shrink-0 p-6 border-b border-slate-200">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <h3 class="text-xl font-bold text-slate-800">{{ editingJob ? 'Edit Job' : 'Add New Job' }}</h3>
+                <!-- Delete button close to heading for edit mode -->
+                <button 
+                  v-if="editingJob" 
+                  type="button" 
+                  @click="deleteJob(editingJob)" 
+                  :disabled="jobModalLoading" 
+                  class="px-3 py-1.5 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all flex items-center gap-2 disabled:opacity-60"
+                >
+                  <Icon name="i-heroicons-trash" class="w-4 h-4" />
+                  Delete
+                </button>
+              </div>
+              <button @click="closeJobModal" class="text-slate-400 hover:text-slate-600 transition-colors">
+                <Icon name="i-heroicons-x-mark" class="w-6 h-6" />
+              </button>
             </div>
           </div>
-          <div class="flex justify-end gap-3 mt-6">
-            <button type="button" @click="showAddJobModal = false" class="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors">
-              Cancel
-            </button>
-            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-              Add Job
-            </button>
+        
+          <!-- Scrollable Content -->
+          <div class="flex-1 overflow-y-auto p-6">
+            <form id="job-form" @submit.prevent="editingJob ? updateJob() : addJob()" class="space-y-6">
+              <!-- Job Title (Full Width) -->
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">
+                  <Icon name="i-heroicons-briefcase" class="w-4 h-4 inline mr-1" />
+                  Job Title *
+                </label>
+                <input 
+                  v-model="newJob.job_title" 
+                  type="text" 
+                  required 
+                  class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg" 
+                  placeholder="Enter job title..."
+                  maxlength="100"
+                />
+              </div>
+
+              <!-- Company (Full Width) -->
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">
+                  <Icon name="i-heroicons-building-office" class="w-4 h-4 inline mr-1" />
+                  Company *
+                </label>
+                <input 
+                  v-model="newJob.company_name" 
+                  type="text" 
+                  required 
+                  class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                  placeholder="Enter company name..."
+                  maxlength="100"
+                />
+              </div>
+
+              <!-- Location and Priority (Two Columns) -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    <Icon name="i-heroicons-map-pin" class="w-4 h-4 inline mr-1" />
+                    Location
+                  </label>
+                  <input 
+                    v-model="newJob.location" 
+                    type="text" 
+                    class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                    placeholder="e.g., San Francisco, CA"
+                    maxlength="100"
+                  />
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    <Icon name="i-heroicons-flag" class="w-4 h-4 inline mr-1" />
+                    Priority
+                  </label>
+                  <select v-model="newJob.priority" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Status (Full Width) -->
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">
+                  <Icon name="i-heroicons-flag" class="w-4 h-4 inline mr-1" />
+                  Status
+                </label>
+                <select v-model="newJob.status" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <option value="saved">Saved</option>
+                  <option value="resume_created">Resume Created</option>
+                  <option value="cover_letter_created">Cover Letter Created</option>
+                  <option value="applied">Applied</option>
+                  <option value="interviewing">Interviewing</option>
+                  <option value="offered">Offered</option>
+                  <option value="rejected">Rejected</option>
+                  <option value="withdrawn">Withdrawn</option>
+                </select>
+              </div>
+
+              <!-- Job URL and Salary Range (Two Columns) -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    <Icon name="i-heroicons-link" class="w-4 h-4 inline mr-1" />
+                    Job URL
+                  </label>
+                  <input 
+                    v-model="newJob.job_url" 
+                    type="url" 
+                    class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                    placeholder="https://..."
+                  />
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    <Icon name="i-heroicons-currency-dollar" class="w-4 h-4 inline mr-1" />
+                    Salary Range
+                  </label>
+                  <input 
+                    v-model="newJob.salary_range" 
+                    type="text" 
+                    class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                    placeholder="e.g., $80,000 - $120,000"
+                    maxlength="50"
+                  />
+                </div>
+              </div>
+
+              <!-- Job Description (Full Width) -->
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <label class="block text-sm font-medium text-slate-700">
+                    <Icon name="i-heroicons-document-text" class="w-4 h-4 inline mr-1" />
+                    Job Description
+                  </label>
+                  <button 
+                    type="button"
+                    @click="autoPopulateJobFields"
+                    :disabled="autoPopulateLoading || !newJob.job_description.trim()"
+                    class="px-3 py-1.5 text-xs bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-1"
+                  >
+                    <Icon name="i-heroicons-sparkles" class="w-3 h-3" />
+                    <span v-if="autoPopulateLoading">Analyzing...</span>
+                    <span v-else>Auto-fill</span>
+                  </button>
+                </div>
+                <textarea 
+                  v-model="newJob.job_description" 
+                  rows="4" 
+                  class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                  placeholder="Paste the job description here, then click 'Auto-fill' to extract the job title and company..."
+                  maxlength="1000"
+                ></textarea>
+                <p class="mt-1 text-xs text-slate-500">Paste the job description and click "Auto-fill" to automatically extract the job title and company name.</p>
+              </div>
+
+              <!-- Success Message -->
+              <div v-if="jobModalSuccess" class="bg-green-50 border border-green-200 rounded-lg p-3">
+                <div class="flex items-center">
+                  <Icon name="i-heroicons-check-circle" class="w-5 h-5 text-green-600 mr-2" />
+                  <span class="text-green-800 text-sm">{{ jobModalSuccess }}</span>
+                </div>
+              </div>
+
+              <!-- Error Message -->
+              <div v-if="jobModalError" class="bg-red-50 border border-red-200 rounded-lg p-3">
+                <div class="flex items-center">
+                  <Icon name="i-heroicons-exclamation-circle" class="w-5 h-5 text-red-600 mr-2" />
+                  <span class="text-red-800 text-sm">{{ jobModalError }}</span>
+                </div>
+              </div>
+            </form>
           </div>
-        </form>
+
+          <!-- Footer - Fixed -->
+          <div class="flex-shrink-0 p-6 border-t border-slate-200 bg-slate-50 rounded-b-2xl">
+            <div class="flex gap-3">
+              <button 
+                type="submit" 
+                form="job-form"
+                :disabled="jobModalLoading" 
+                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-60 transition-all flex items-center gap-2"
+              >
+                <Icon name="i-heroicons-check" class="w-4 h-4" />
+                {{ editingJob ? 'Save Changes' : 'Create Job' }}
+              </button>
+              <button 
+                type="button" 
+                @click="closeJobModal" 
+                class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition-all"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div v-if="jobModalLoading" class="absolute inset-0 bg-white bg-opacity-60 flex items-center justify-center rounded-2xl">
+          <div class="flex items-center gap-3">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <span class="text-slate-600">{{ editingJob ? 'Saving changes...' : 'Creating job...' }}</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -391,6 +613,7 @@
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import RegisterPrompt from '~/components/RegisterPrompt.vue'
 import ResumeDisplay from '~/components/ResumeDisplay.vue'
+import KanbanBoard from '~/components/KanbanBoard.vue'
 
 // Prevent SSR for this page since it requires authentication
 definePageMeta({
@@ -414,6 +637,12 @@ const showDefaultResumeModal = ref(false)
 const selectedResume = ref({})
 const loadingTimeout = ref(null)
 const downloadLoading = ref(false)
+const viewMode = ref('kanban') // Default to kanban view
+const editingJob = ref(null)
+const jobModalLoading = ref(false)
+const jobModalError = ref('')
+const jobModalSuccess = ref('')
+const autoPopulateLoading = ref(false)
 
 // Search and filter state
 const searchQuery = ref('')
@@ -430,6 +659,7 @@ const newJob = ref({
   job_url: '',
   salary_range: '',
   priority: 'medium',
+  status: 'saved',
   job_description: ''
 })
 
@@ -491,6 +721,26 @@ const filteredAndSortedJobs = computed(() => {
     if (valueA > valueB) return sortDirection.value === 'asc' ? 1 : -1
     return 0
   })
+})
+
+// Convert jobs to tasks format for Kanban board
+const jobsAsTasks = computed(() => {
+  return filteredAndSortedJobs.value.map(job => ({
+    id: job.id,
+    title: job.job_title,
+    description: `${job.company_name}${job.location ? ` • ${job.location}` : ''}${job.salary_range ? ` • ${job.salary_range}` : ''}`,
+    status: job.status,
+    priority: job.priority,
+    category: job.priority, // Use priority as category for Kanban
+    due_date: job.created_at,
+    company_name: job.company_name,
+    location: job.location,
+    salary_range: job.salary_range,
+    job_url: job.job_url,
+    job_description: job.job_description,
+    resume_data: job.resume_data,
+    cover_letter_data: job.cover_letter_data
+  }))
 })
 
 // Functions
@@ -618,6 +868,9 @@ async function fetchJobs() {
 async function addJob() {
   if (!user.value) return
   
+  jobModalLoading.value = true
+  jobModalError.value = ''
+  
   try {
     const { data, error: insertError } = await supabase
       .from('user_jobs')
@@ -631,21 +884,15 @@ async function addJob() {
     if (insertError) throw insertError
     
     jobs.value.unshift(data)
-    showAddJobModal.value = false
+    closeJobModal()
     
-    // Reset form
-    newJob.value = {
-      job_title: '',
-      company_name: '',
-      location: '',
-      job_url: '',
-      salary_range: '',
-      priority: 'medium',
-      job_description: ''
-    }
+    // Navigate to resume wizard with the new job ID
+    router.push(`/resume-wizard?jobId=${data.id}`)
   } catch (err) {
     console.error('Error adding job:', err)
-    error.value = 'Failed to add job'
+    jobModalError.value = 'Failed to add job: ' + err.message
+  } finally {
+    jobModalLoading.value = false
   }
 }
 
@@ -654,16 +901,6 @@ function viewJob(job) {
   router.push(`/resume-summary?jobId=${job.id}`)
 }
 
-function viewResume(job) {
-  if (job.resume_data) {
-    selectedResume.value = job.resume_data
-    showResumeModal.value = true
-  }
-}
-
-function viewCoverLetter(job) {
-  router.push(`/cover-letter?jobId=${job.id}`)
-}
 
 async function downloadResumeFromModal() {
   downloadLoading.value = true
@@ -679,9 +916,148 @@ async function downloadResumeFromModal() {
   }
 }
 
+async function updateJobStatus(updatedTask) {
+  if (!user.value) return
+  
+  try {
+    const { error: updateError } = await supabase
+      .from('user_jobs')
+      .update({
+        status: updatedTask.status,
+        priority: updatedTask.priority
+      })
+      .eq('id', updatedTask.id)
+    
+    if (updateError) throw updateError
+    
+    // Update local state
+    const jobIndex = jobs.value.findIndex(j => j.id === updatedTask.id)
+    if (jobIndex !== -1) {
+      jobs.value[jobIndex] = { ...jobs.value[jobIndex], ...updatedTask }
+    }
+  } catch (err) {
+    console.error('Error updating job status:', err)
+    error.value = 'Failed to update job status'
+  }
+}
+
 function editJob(job) {
-  // TODO: Open edit modal or navigate to edit page
-  console.log('Edit job:', job)
+  // Set the job being edited
+  editingJob.value = job
+  // Open the add job modal with pre-filled data
+  newJob.value = {
+    job_title: job.job_title || job.title,
+    company_name: job.company_name,
+    location: job.location,
+    job_url: job.job_url,
+    salary_range: job.salary_range,
+    priority: job.priority,
+    status: job.status || 'saved',
+    job_description: job.job_description
+  }
+  showAddJobModal.value = true
+}
+
+async function updateJob() {
+  if (!user.value || !editingJob.value) return
+  
+  jobModalLoading.value = true
+  jobModalError.value = ''
+  
+  try {
+    const { error: updateError } = await supabase
+      .from('user_jobs')
+      .update({
+        job_title: newJob.value.job_title,
+        company_name: newJob.value.company_name,
+        location: newJob.value.location,
+        job_url: newJob.value.job_url,
+        salary_range: newJob.value.salary_range,
+        priority: newJob.value.priority,
+        status: newJob.value.status,
+        job_description: newJob.value.job_description
+      })
+      .eq('id', editingJob.value.id)
+    
+    if (updateError) throw updateError
+    
+    // Update local state
+    const jobIndex = jobs.value.findIndex(j => j.id === editingJob.value.id)
+    if (jobIndex !== -1) {
+      jobs.value[jobIndex] = { ...jobs.value[jobIndex], ...newJob.value }
+    }
+    
+    closeJobModal()
+  } catch (err) {
+    console.error('Error updating job:', err)
+    jobModalError.value = 'Failed to update job: ' + err.message
+  } finally {
+    jobModalLoading.value = false
+  }
+}
+
+async function autoPopulateJobFields() {
+  if (!newJob.value.job_description.trim()) {
+    jobModalError.value = 'Please enter a job description first'
+    return
+  }
+
+  autoPopulateLoading.value = true
+  jobModalError.value = ''
+
+  try {
+    const response = await $fetch('/api/parse-job-description', {
+      method: 'POST',
+      body: {
+        jobDescription: newJob.value.job_description
+      }
+    })
+
+    console.log('Auto-populate response:', response)
+
+    if (response.jobTitle) {
+      newJob.value.job_title = response.jobTitle
+    }
+    if (response.companyName) {
+      newJob.value.company_name = response.companyName
+    }
+
+    // Show success message if fields were populated
+    if (response.jobTitle || response.companyName) {
+      jobModalError.value = '' // Clear any previous errors
+      jobModalSuccess.value = 'Successfully extracted job information!'
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        jobModalSuccess.value = ''
+      }, 3000)
+    } else {
+      jobModalError.value = 'Could not extract job title or company from the description. Please fill them manually.'
+    }
+  } catch (err) {
+    console.error('Error auto-populating job fields:', err)
+    jobModalError.value = 'Failed to auto-populate fields. Please fill them manually.'
+  } finally {
+    autoPopulateLoading.value = false
+  }
+}
+
+function closeJobModal() {
+  showAddJobModal.value = false
+  editingJob.value = null
+  jobModalError.value = ''
+  jobModalSuccess.value = ''
+  autoPopulateLoading.value = false
+  // Reset form
+  newJob.value = {
+    job_title: '',
+    company_name: '',
+    location: '',
+    job_url: '',
+    salary_range: '',
+    priority: 'medium',
+    status: 'saved',
+    job_description: ''
+  }
 }
 
 async function deleteJob(job) {

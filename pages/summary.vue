@@ -1838,16 +1838,17 @@ const togglePersonalizedPlanInput = (show) => {
 // Add this function to check user credits
 async function checkUserCredits() {
   try {
-    const { data: credits, error } = await supabase
-      .from('user_credits')
-      .select('balance_after')
+    const { data: subscription, error } = await supabase
+      .from('user_subscriptions')
+      .select('available_credit')
       .eq('user_id', user.value.id)
+      .eq('is_active', true)
       .order('created_at', { ascending: false })
       .limit(1)
       .single()
 
     if (error) throw error
-    userCredits.value = credits?.balance_after || 0
+    userCredits.value = subscription?.available_credit || 0
     return userCredits.value
   } catch (err) {
     console.error('Error checking credits:', err)

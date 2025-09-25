@@ -90,7 +90,6 @@
                      <!-- Task Header -->
                      <div class="flex items-start justify-between mb-2">
                        <div class="flex items-center gap-2">
-                         <span class="text-xs text-slate-500 font-medium">#{{ task.id }}</span>
                          <div class="w-2 h-2 rounded-full" :class="getTaskStatusColor(task.status)"></div>
                        </div>
                        <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -142,7 +141,7 @@ const props = defineProps({
   focusAreaTitles: { type: Object, default: () => ({}) }
 })
 
-const emit = defineEmits(['add-task', 'edit-task', 'delete-task', 'update-task'])
+const emit = defineEmits(['add-task', 'edit-task', 'delete-task', 'update-task', 'view-task'])
 const rowFieldLocal = ref(props.rowField)
 const colFieldLocal = ref(props.colField)
 
@@ -172,29 +171,62 @@ const rowValues = computed(() => {
   const values = Array.from(new Set(props.tasks.map(t => t[rowFieldLocal.value])))
   
   if (rowFieldLocal.value === 'status') {
-    const statusOrder = ['todo', 'in_progress', 'done', 'archived']
-    return values.sort((a, b) => {
-      const indexA = statusOrder.indexOf(a)
-      const indexB = statusOrder.indexOf(b)
-      return indexA - indexB
-    })
+    // Check if we're dealing with job statuses or task statuses
+    const jobStatuses = ['saved', 'resume_created', 'cover_letter_created', 'applied', 'interviewing', 'offered', 'rejected', 'withdrawn']
+    const hasJobStatuses = values.some(val => jobStatuses.includes(val))
+    
+    if (hasJobStatuses) {
+      // This is a jobs kanban - use job status order
+      return values.sort((a, b) => {
+        const indexA = jobStatuses.indexOf(a)
+        const indexB = jobStatuses.indexOf(b)
+        return indexA - indexB
+      })
+    } else {
+      // This is a tasks kanban - use task status order
+      const taskStatuses = ['todo', 'in_progress', 'done', 'archived']
+      return values.sort((a, b) => {
+        const indexA = taskStatuses.indexOf(a)
+        const indexB = taskStatuses.indexOf(b)
+        return indexA - indexB
+      })
+    }
   }
   
   return values.sort()
 })
 
 const colValues = computed(() => {
-  const values = Array.from(new Set(props.tasks.map(t => t[colFieldLocal.value])))
-  
   if (colFieldLocal.value === 'status') {
-    const statusOrder = ['todo', 'in_progress', 'done', 'archived']
-    return values.sort((a, b) => {
-      const indexA = statusOrder.indexOf(a)
-      const indexB = statusOrder.indexOf(b)
-      return indexA - indexB
-    })
+    // Check if we're dealing with job statuses or task statuses
+    const existingValues = Array.from(new Set(props.tasks.map(t => t[colFieldLocal.value])))
+    
+    // If we have job statuses (from jobs page), show all job status values
+    const jobStatuses = ['saved', 'resume_created', 'cover_letter_created', 'applied', 'interviewing', 'offered', 'rejected', 'withdrawn']
+    const hasJobStatuses = existingValues.some(val => jobStatuses.includes(val))
+    
+    if (hasJobStatuses) {
+      // This is a jobs kanban - show all job status values
+      const allValues = [...new Set([...existingValues, ...jobStatuses])]
+      return allValues.sort((a, b) => {
+        const indexA = jobStatuses.indexOf(a)
+        const indexB = jobStatuses.indexOf(b)
+        return indexA - indexB
+      })
+    } else {
+      // This is a tasks kanban - show task status values
+      const taskStatuses = ['todo', 'in_progress', 'done', 'archived']
+      const allValues = [...new Set([...existingValues, ...taskStatuses])]
+      return allValues.sort((a, b) => {
+        const indexA = taskStatuses.indexOf(a)
+        const indexB = taskStatuses.indexOf(b)
+        return indexA - indexB
+      })
+    }
   }
   
+  // For other fields, show only existing values
+  const values = Array.from(new Set(props.tasks.map(t => t[colFieldLocal.value])))
   return values.sort()
 })
 
@@ -212,10 +244,20 @@ function getColumnLabel(col) {
 
 function getStatusLabel(status) {
   const statusLabels = {
+    // Task status labels
     todo: 'To Do',
     in_progress: 'In Progress',
     done: 'Done',
-    archived: 'Archived'
+    archived: 'Archived',
+    // Job status labels
+    saved: 'Saved',
+    resume_created: 'Resume Created',
+    cover_letter_created: 'Cover Letter Created',
+    applied: 'Applied',
+    interviewing: 'Interviewing',
+    offered: 'Offered',
+    rejected: 'Rejected',
+    withdrawn: 'Withdrawn'
   }
   return statusLabels[status] || status
 }
@@ -232,10 +274,20 @@ function getRowHeaderClass(row) {
   
   if (rowFieldLocal.value === 'status') {
     const statusClasses = {
+      // Task status classes
       todo: 'bg-blue-100',
       in_progress: 'bg-yellow-100',
       done: 'bg-green-100',
-      archived: 'bg-gray-100'
+      archived: 'bg-gray-100',
+      // Job status classes
+      saved: 'bg-gray-100',
+      resume_created: 'bg-blue-100',
+      cover_letter_created: 'bg-purple-100',
+      applied: 'bg-yellow-100',
+      interviewing: 'bg-orange-100',
+      offered: 'bg-green-100',
+      rejected: 'bg-red-100',
+      withdrawn: 'bg-gray-100'
     }
     return statusClasses[row] || 'bg-slate-100'
   }
@@ -254,10 +306,20 @@ function getRowHeaderClass(row) {
 function getRowDotClass(row) {
   if (rowFieldLocal.value === 'status') {
     const statusClasses = {
+      // Task status classes
       todo: 'bg-blue-500',
       in_progress: 'bg-yellow-500',
       done: 'bg-green-500',
-      archived: 'bg-gray-500'
+      archived: 'bg-gray-500',
+      // Job status classes
+      saved: 'bg-gray-500',
+      resume_created: 'bg-blue-500',
+      cover_letter_created: 'bg-purple-500',
+      applied: 'bg-yellow-500',
+      interviewing: 'bg-orange-500',
+      offered: 'bg-green-500',
+      rejected: 'bg-red-500',
+      withdrawn: 'bg-gray-500'
     }
     return statusClasses[row] || 'bg-slate-500'
   }
@@ -277,10 +339,20 @@ function getRowDotClass(row) {
 function getColumnHeaderClass(col) {
   if (colFieldLocal.value === 'status') {
     const statusClasses = {
+      // Task status classes
       todo: 'bg-blue-100',
       in_progress: 'bg-yellow-100',
       done: 'bg-green-100',
-      archived: 'bg-gray-100'
+      archived: 'bg-gray-100',
+      // Job status classes
+      saved: 'bg-gray-100',
+      resume_created: 'bg-blue-100',
+      cover_letter_created: 'bg-purple-100',
+      applied: 'bg-yellow-100',
+      interviewing: 'bg-orange-100',
+      offered: 'bg-green-100',
+      rejected: 'bg-red-100',
+      withdrawn: 'bg-gray-100'
     }
     return statusClasses[col] || 'bg-slate-100'
   }
@@ -299,10 +371,20 @@ function getColumnHeaderClass(col) {
 function getColumnDotClass(col) {
   if (colFieldLocal.value === 'status') {
     const statusClasses = {
+      // Task status classes
       todo: 'bg-blue-500',
       in_progress: 'bg-yellow-500',
       done: 'bg-green-500',
-      archived: 'bg-gray-500'
+      archived: 'bg-gray-500',
+      // Job status classes
+      saved: 'bg-gray-500',
+      resume_created: 'bg-blue-500',
+      cover_letter_created: 'bg-purple-500',
+      applied: 'bg-yellow-500',
+      interviewing: 'bg-orange-500',
+      offered: 'bg-green-500',
+      rejected: 'bg-red-500',
+      withdrawn: 'bg-gray-500'
     }
     return statusClasses[col] || 'bg-slate-500'
   }
@@ -326,10 +408,20 @@ function getCellBackgroundClass(row, col) {
   // Add slight tint based on row/column combinations
   if (rowFieldLocal.value === 'status') {
     const statusBg = {
+      // Task status backgrounds
       todo: 'bg-blue-25',
       in_progress: 'bg-yellow-25', 
       done: 'bg-green-25',
-      archived: 'bg-gray-25'
+      archived: 'bg-gray-25',
+      // Job status backgrounds
+      saved: 'bg-gray-25',
+      resume_created: 'bg-blue-25',
+      cover_letter_created: 'bg-purple-25',
+      applied: 'bg-yellow-25',
+      interviewing: 'bg-orange-25',
+      offered: 'bg-green-25',
+      rejected: 'bg-red-25',
+      withdrawn: 'bg-gray-25'
     }
     return `${statusBg[row] || 'bg-slate-50'} hover:bg-slate-100`
   }
@@ -459,23 +551,23 @@ function handleDrop(event, row, col) {
 }
 
 function handleTaskClick(event, task) {
-  // Don't open edit modal if user was dragging
+  // Don't navigate if user was dragging
   if (isDragging.value) {
     return
   }
   
-  // Don't open edit modal if clicked on a button
+  // Don't navigate if clicked on a button
   if (event.target.tagName === 'BUTTON' || event.target.tagName === 'svg' || event.target.tagName === 'path') {
     return
   }
   
-  // Don't open edit modal if clicked on a button parent element
+  // Don't navigate if clicked on a button parent element
   if (event.target.closest('button')) {
     return
   }
   
-  // Emit edit event to parent
-  emit('edit-task', task)
+  // Emit view event to parent (for navigation to resume page)
+  emit('view-task', task)
 }
 </script>
 
@@ -510,5 +602,9 @@ function handleTaskClick(event, task) {
 
 .bg-orange-25 {
   background-color: rgb(255 247 237 / 0.5);
+}
+
+.bg-red-25 {
+  background-color: rgb(254 242 242 / 0.5);
 }
 </style> 
