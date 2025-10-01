@@ -406,7 +406,7 @@ const downloadCoverLetter = async () => {
       return;
     }
     
-    const { generateCoverLetterPDF } = await import('~/utils/coverLetterPdfGenerator.js');
+    const { generateCoverLetterPDF } = await import('../utils/coverLetterPdfGenerator.js');
     const { pdf, filename } = await generateCoverLetterPDF(coverLetterData.value, resumeData, selectedTemplate.value);
     pdf.save(filename);
   } catch (error) {

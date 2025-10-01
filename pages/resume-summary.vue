@@ -299,7 +299,7 @@ function getScoreDescription(score) {
 async function downloadResume() {
   downloadLoading.value = true
   try {
-    const { generatePdfForTemplate } = await import('~/utils/pdfGenerator.js')
+    const { generatePdfForTemplate } = await import('../utils/pdfGenerator.js')
     await generatePdfForTemplate(resumeData.value, selectedTemplate.value)
   } catch (error) {
     console.error('Error downloading resume:', error)

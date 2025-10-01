@@ -906,7 +906,7 @@ async function downloadResumeFromModal() {
   downloadLoading.value = true
   try {
     // Use structured PDF generation for ATS compatibility
-    const { generateStructuredPDF } = await import('~/utils/pdfGenerator.js')
+    const { generateStructuredPDF } = await import('../utils/pdfGenerator.js')
     await generateStructuredPDF(selectedResume.value, 'classic')
   } catch (error) {
     console.error('Error downloading resume:', error)
