@@ -1,5 +1,3 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
-
 export default defineEventHandler(async (event) => {
   try {
     const { jobDescription } = await readBody(event)
@@ -10,10 +8,6 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Job description is required'
       })
     }
-
-    // Initialize Gemini AI
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' })
 
     const prompt = `
 You are a job parsing expert. Analyze the following job description and extract ONLY the job title and company name.
@@ -36,45 +30,66 @@ ${jobDescription}
 
 JSON Response:`
 
-    const result = await model.generateContent(prompt)
-    const response = await result.response
-    const text = response.text()
-
-    // Parse the JSON response
-    let parsedResponse
-    try {
-      // Clean up the response text to extract JSON
-      const cleanedText = text.trim()
-      
-      // Try to find JSON object in the response
-      let jsonMatch = cleanedText.match(/\{[\s\S]*\}/)
-      
-      if (!jsonMatch) {
-        // If no JSON found, try to extract from markdown code blocks
-        jsonMatch = cleanedText.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/)
-        if (jsonMatch) {
-          jsonMatch = [jsonMatch[1]]
+    const geminiRes = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
+      method: 'POST',
+      headers: {
+        'x-goog-api-key': process.env.GEMINI_API_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [
+          { parts: [ { text: prompt } ] }
+        ],
+        generationConfig: {
+          temperature: 0.3,
+          topP: 0.8,
+          topK: 40,
+          maxOutputTokens: 1024,
+          responseMimeType: 'application/json'
         }
-      }
-      
-      if (jsonMatch) {
-        const jsonString = jsonMatch[0]
-        parsedResponse = JSON.parse(jsonString)
-        
-        // Validate that we have the expected structure
-        if (typeof parsedResponse !== 'object' || parsedResponse === null) {
-          throw new Error('Invalid JSON structure')
-        }
-      } else {
-        throw new Error('No JSON found in response')
-      }
-    } catch (parseError) {
-      console.error('Error parsing AI response:', parseError)
-      console.error('Raw response:', text)
-      throw createError({
-        statusCode: 500,
-        statusMessage: 'Failed to parse AI response'
       })
+    });
+    
+    if (!geminiRes.ok) {
+      throw new Error('Gemini API error');
+    }
+    
+    const geminiData = await geminiRes.json();
+    let raw = geminiData?.candidates?.[0]?.content?.parts?.[0] || geminiData;
+    let parsedResponse;
+    
+    if (raw && typeof raw.text === 'string') {
+      try {
+        parsedResponse = JSON.parse(raw.text);
+      } catch (e) {
+        // If parsing fails, try to clean up the text and parse again
+        const cleanedText = raw.text.trim();
+        
+        // Try to find JSON object in the response
+        let jsonMatch = cleanedText.match(/\{[\s\S]*\}/);
+        
+        if (!jsonMatch) {
+          // If no JSON found, try to extract from markdown code blocks
+          jsonMatch = cleanedText.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
+          if (jsonMatch) {
+            jsonMatch = [jsonMatch[1]];
+          }
+        }
+        
+        if (jsonMatch) {
+          const jsonString = jsonMatch[0];
+          parsedResponse = JSON.parse(jsonString);
+        } else {
+          throw new Error('No JSON found in response');
+        }
+      }
+    } else {
+      parsedResponse = raw;
+    }
+    
+    // Validate that we have the expected structure
+    if (typeof parsedResponse !== 'object' || parsedResponse === null) {
+      throw new Error('Invalid JSON structure');
     }
 
     return {

@@ -1,5 +1,4 @@
 import { defineEventHandler, readBody, createError } from 'h3';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
@@ -8,9 +7,6 @@ export default defineEventHandler(async (event) => {
   if (!GEMINI_API_KEY) {
     throw new Error('GEMINI_API_KEY is not configured');
   }
-
-  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
   const { resumeData, jobDescription, additionalPrompt } = await readBody(event);
 
@@ -78,10 +74,45 @@ INSTRUCTIONS:
 Respond ONLY with valid JSON. Make the content specific, relevant, and professional.`;
 
   try {
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const jsonString = response.text().replace(/```json/g, '').replace(/```/g, '').trim();
-    const coverLetterResult = JSON.parse(jsonString);
+    const geminiRes = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
+      method: 'POST',
+      headers: {
+        'x-goog-api-key': GEMINI_API_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [
+          { parts: [ { text: prompt } ] }
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          topP: 0.8,
+          topK: 40,
+          maxOutputTokens: 4096,
+          responseMimeType: 'application/json'
+        }
+      })
+    });
+    
+    if (!geminiRes.ok) {
+      throw new Error('Gemini API error');
+    }
+    
+    const geminiData = await geminiRes.json();
+    let raw = geminiData?.candidates?.[0]?.content?.parts?.[0] || geminiData;
+    let coverLetterResult;
+    
+    if (raw && typeof raw.text === 'string') {
+      try {
+        coverLetterResult = JSON.parse(raw.text);
+      } catch (e) {
+        // If parsing fails, try to clean up the text and parse again
+        const jsonString = raw.text.replace(/```json/g, '').replace(/```/g, '').trim();
+        coverLetterResult = JSON.parse(jsonString);
+      }
+    } else {
+      coverLetterResult = raw;
+    }
 
     const processedResult = {
         coverLetterText: coverLetterResult.coverLetterText,
