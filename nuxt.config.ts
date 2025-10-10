@@ -7,7 +7,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     geminiApiKey: process.env.GEMINI_API_KEY || '',
     public: {
-      geminiApiKey: process.env.GEMINI_API_KEY || ''
+      geminiApiKey: process.env.GEMINI_API_KEY || '',
+      gtmId: process.env.GTM_ID || ''
     }
   },
   googleFonts: {
