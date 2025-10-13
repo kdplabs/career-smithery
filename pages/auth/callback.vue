@@ -274,11 +274,14 @@ watch(
             router.push(storedRedirectUrl)
           }, 200)
         } else if (linkedinText) {
-          // If we have LinkedIn text, redirect to summary with the text
+          // If we have LinkedIn text, redirect to summary with the text and focus on input section
           console.log('Redirecting to summary with LinkedIn text')
           router.push({
             path: '/summary',
-            query: { linkedinText: encodeURIComponent(linkedinText) }
+            query: { 
+              linkedinText: encodeURIComponent(linkedinText),
+              focusInput: 'true' // Add flag to focus on input section
+            }
           })
         } else {
           // If no LinkedIn text, just redirect to summary

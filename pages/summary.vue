@@ -737,6 +737,7 @@ import { useRouter, useRoute, navigateTo } from 'nuxt/app'
 
 const assessmentSummary = ref(null)
 const router = useRouter()
+const route = useRoute()
 const chevronContainer = ref(null)
 const careerStages = ['Exploration', 'Establishment', 'Mid-Career', 'Late Career']
 const chartType = ref('radar')
@@ -770,6 +771,9 @@ const userCredits = ref(0)
 
 // Add this ref for tracking pending input form display
 const pendingShowInputForm = ref(false)
+
+// Add ref to track if we need to focus on LinkedIn input section
+const shouldFocusOnInput = ref(false)
 
 // Floating CTA variables
 const linkedinInputSection = ref(null)
@@ -842,8 +846,21 @@ function checkFloatingCTAVisibility() {
 }
 
 function scrollToLinkedInInput() {
+  console.log('Attempting to scroll to LinkedIn input section...')
   if (linkedinInputSection.value) {
+    console.log('LinkedIn input section found, scrolling...')
     linkedinInputSection.value.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  } else {
+    console.log('LinkedIn input section not found, retrying in 500ms...')
+    // Retry if element not found
+    setTimeout(() => {
+      if (linkedinInputSection.value) {
+        console.log('LinkedIn input section found on retry, scrolling...')
+        linkedinInputSection.value.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      } else {
+        console.log('LinkedIn input section still not found after retry')
+      }
+    }, 500)
   }
 }
 
@@ -1326,6 +1343,20 @@ onMounted(async () => {
       if (savedLinkedInText) {
         linkedinOrResumeText.value = savedLinkedInText
       }
+      
+      // Check for LinkedIn text in URL query params (from auth callback)
+      if (route.query.linkedinText) {
+        linkedinOrResumeText.value = decodeURIComponent(route.query.linkedinText)
+        // Clear the query param to avoid confusion
+        router.replace({ path: '/summary', query: {} })
+      }
+      
+      // Check if we should focus on the input section (from auth callback)
+      // Don't clear the query param here - wait until user is logged in
+      if (route.query.focusInput === 'true') {
+        console.log('FocusInput flag detected, will scroll after user login')
+        shouldFocusOnInput.value = true
+      }
     } catch (error) {
       console.error('Error processing assessment data:', error)
       router.push('/assessment')
@@ -1467,6 +1498,19 @@ watch(
       await saveAssessmentData()
       // Check for existing personalized report when user logs in
       await checkForExistingReport()
+      
+      // Check if we need to scroll to LinkedIn input section after login
+      if (shouldFocusOnInput.value) {
+        console.log('User logged in with focusInput flag, clearing query param and scrolling')
+        shouldFocusOnInput.value = false // Clear the flag
+        // Clear the query param
+        router.replace({ path: '/summary', query: {} })
+        // Wait for the page to update and then scroll
+        await nextTick()
+        setTimeout(() => {
+          scrollToLinkedInInput()
+        }, 1000) // Increased delay to ensure everything is loaded
+      }
     }
   }
 )
@@ -1567,6 +1611,23 @@ watch(
   () => assessmentSummary.value?.careerStageResult || assessmentSummary.value?.careerStage,
   () => {
     if (assessmentSummary.value) drawChevrons()
+  }
+)
+
+// Watch for LinkedIn input section to become available and scroll if needed
+watch(
+  () => linkedinInputSection.value,
+  (newElement) => {
+    if (newElement && shouldFocusOnInput.value) {
+      console.log('LinkedIn input section became available with focusInput flag, scrolling')
+      shouldFocusOnInput.value = false // Clear the flag
+      // Clear the query param
+      router.replace({ path: '/summary', query: {} })
+      // Scroll to the section now that it's available
+      setTimeout(() => {
+        scrollToLinkedInInput()
+      }, 500)
+    }
   }
 )
 
