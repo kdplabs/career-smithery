@@ -21,10 +21,10 @@
             </div>
           </div>
           <div class="flex justify-center">
-            <NuxtLink to="/resume-wizard" class="inline-flex items-center px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg">
+            <button @click="handleGetStartedClick" class="inline-flex items-center px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg">
               <Icon name="i-heroicons-rocket-launch" class="w-5 h-5 mr-2" />
               Get Started
-            </NuxtLink>
+            </button>
           </div>
         </div>
       </div>
@@ -525,8 +525,8 @@
     <!-- Login Modal -->
     <RegisterPrompt
       v-if="showLoginModal"
-      message="Please log in to view and manage your job applications."
-      :redirect-to="currentPageUrl"
+      message="Please log in to create tailored resumes and cover letters."
+      :redirect-to="redirectUrl"
       @close="showLoginModal = false"
     />
 
@@ -673,6 +673,14 @@ const defaultResumeData = ref({
 const currentPageUrl = computed(() => {
   if (typeof window !== 'undefined') {
     return window.location.origin + window.location.pathname + window.location.search
+  }
+  return null
+})
+
+// Redirect URL for login - redirect to resume wizard after login
+const redirectUrl = computed(() => {
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}/resume-wizard`
   }
   return null
 })
@@ -1131,6 +1139,19 @@ function loadDefaultResumeData() {
 function handleLoginClick() {
   // Show login modal
   showLoginModal.value = true
+}
+
+function handleGetStartedClick() {
+  // Check if user is authenticated
+  if (!user.value) {
+    // Show login modal if not authenticated
+    console.log('User not authenticated, showing login modal')
+    showLoginModal.value = true
+  } else {
+    // Navigate to resume wizard if authenticated
+    console.log('User authenticated, navigating to resume wizard')
+    router.push('/resume-wizard')
+  }
 }
 
 // Load jobs on mount

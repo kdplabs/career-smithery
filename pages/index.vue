@@ -19,13 +19,13 @@
             to="/assessment"
             class="inline-flex items-center px-10 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 shadow-xl hover:scale-105 transition-all duration-300"
           >
-            Start Free Assessment
+            Plan Career
           </NuxtLink>
           <NuxtLink
-            to="/summary"
+            to="/jobs"
             class="inline-flex items-center px-10 py-4 border border-white/30 text-lg font-semibold rounded-xl text-white bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 backdrop-blur-md shadow-xl hover:scale-105 transition-all duration-300"
           >
-            View Sample Report
+            Build Resume
           </NuxtLink>
         </div>
       </div>

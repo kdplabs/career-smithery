@@ -163,7 +163,7 @@ onMounted(() => {
 watch(
   () => user.value,
   async (newUser) => {
-    console.log('User watch triggered:', { newUser })
+    console.log('Auth callback - User watch triggered:', { newUser, hasEmail: newUser?.email })
     if (newUser && newUser.email) {
       try {
         console.log('Starting setup process for user:', newUser.id)
@@ -255,16 +255,34 @@ watch(
           console.log('Assessment data saved successfully')
         }
 
+        // Check for redirect URL from localStorage (stored before OAuth)
+        const storedRedirectUrl = typeof window !== 'undefined' ? localStorage.getItem('authRedirectUrl') : null
+        console.log('Auth callback - storedRedirectUrl:', storedRedirectUrl)
+        
         // Check if we have LinkedIn/resume text
         const linkedinText = typeof window !== 'undefined' ? localStorage.getItem('linkedinOrResumeText') : null
-        if (linkedinText) {
+        console.log('Auth callback - linkedinText:', linkedinText)
+        
+        if (storedRedirectUrl) {
+          // If we have a stored redirect URL, use it and clear it
+          console.log('Redirecting to stored URL:', storedRedirectUrl)
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('authRedirectUrl')
+          }
+          // Add a small delay to ensure user state is fully established
+          setTimeout(() => {
+            router.push(storedRedirectUrl)
+          }, 200)
+        } else if (linkedinText) {
           // If we have LinkedIn text, redirect to summary with the text
+          console.log('Redirecting to summary with LinkedIn text')
           router.push({
             path: '/summary',
             query: { linkedinText: encodeURIComponent(linkedinText) }
           })
         } else {
           // If no LinkedIn text, just redirect to summary
+          console.log('Redirecting to summary (default)')
           router.push('/summary')
         }
       } catch (err) {

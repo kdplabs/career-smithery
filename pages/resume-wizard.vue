@@ -109,6 +109,7 @@
 </template>
 
 <script setup>
+import { watch } from 'vue'
 import StepJobDescription from '~/components/wizard/StepJobDescription.vue'
 import StepCurrentResume from '~/components/wizard/StepCurrentResume.vue'
 import StepMetrics from '~/components/wizard/StepMetrics.vue'
@@ -346,14 +347,10 @@ onMounted(() => {
   loadDefaultResumeData()
 })
 
-// Check authentication and fetch user credits
-onMounted(async () => {
-  if (!user.value) {
-    router.push('/jobs')
-    return
-  }
+// Function to fetch user credits
+async function fetchUserCredits() {
+  if (!user.value) return
   
-  // Fetch user credits
   try {
     const supabase = useSupabaseClient()
     const { data: sub, error } = await supabase
@@ -375,7 +372,28 @@ onMounted(async () => {
   } finally {
     loadingCredits.value = false
   }
-})
+}
+
+// Watch for user authentication changes
+watch(user, (newUser) => {
+  console.log('Resume wizard - User watch triggered:', { newUser, hasEmail: newUser?.email })
+  if (newUser) {
+    console.log('Resume wizard: User authenticated, fetching credits')
+    fetchUserCredits()
+  } else {
+    console.log('Resume wizard: No user found, will check again in 500ms')
+    // Wait a bit longer before redirecting to allow auth state to settle
+    setTimeout(() => {
+      if (!user.value) {
+        console.log('Resume wizard: Still no user after delay, redirecting to jobs')
+        router.push('/jobs')
+      } else {
+        console.log('Resume wizard: User found after delay, fetching credits')
+        fetchUserCredits()
+      }
+    }, 500)
+  }
+}, { immediate: true })
 
 // Cleanup on unmount
 onBeforeUnmount(() => {

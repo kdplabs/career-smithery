@@ -124,6 +124,8 @@ const handleGoogleSignIn = async () => {
   consentError.value = ''
   
   try {
+    console.log('RegisterPrompt - redirectTo prop:', props.redirectTo)
+    
     // Store consent data in localStorage temporarily
     if (typeof window !== 'undefined') {
       localStorage.setItem('pendingConsent', JSON.stringify({
