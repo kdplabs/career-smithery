@@ -21,14 +21,19 @@
       <!-- Service Description -->
       <div class="mb-8">
         <h2 class="text-2xl font-semibold text-slate-800 mb-4">2. Service Description</h2>
-        <p class="text-slate-700 mb-4">Career Planner provides:</p>
+        <p class="text-slate-700 mb-4">Career Planner provides AI-powered career development services including:</p>
         <ul class="list-disc pl-6 text-slate-700 mb-4 space-y-2">
+          <li>AI-powered resume building and optimization</li>
+          <li>AI-generated cover letters tailored to specific job applications</li>
           <li>Career assessment tools and questionnaires</li>
-          <li>Personalized career development reports</li>
-          <li>Task management and planning features</li>
-          <li>Professional development recommendations</li>
+          <li>AI-generated personalized career development reports</li>
+          <li>AI-powered task management and planning features</li>
+          <li>AI-generated professional development recommendations</li>
           <li>Career coaching and guidance resources</li>
         </ul>
+        <p class="text-slate-700">
+          <strong>Important:</strong> Our resume building and career planning features leverage artificial intelligence (AI) technology to generate content. All AI-generated content is provided for informational purposes only and should be reviewed, verified, and customized by you before use.
+        </p>
         <p class="text-slate-700">
           We reserve the right to modify, suspend, or discontinue any part of the Service at any time with reasonable notice.
         </p>
@@ -47,6 +52,32 @@
         </ul>
         <p class="text-slate-700">
           You must be at least 16 years old to create an account. If you are under 18, you must have parental consent.
+        </p>
+      </div>
+
+      <!-- AI-Generated Content Disclaimer -->
+      <div class="mb-8">
+        <h2 class="text-2xl font-semibold text-slate-800 mb-4">3.1. AI-Generated Content Disclaimer</h2>
+        <p class="text-slate-700 mb-4">
+          <strong>Artificial Intelligence Technology:</strong> Our Service utilizes artificial intelligence (AI) technology, including machine learning algorithms and natural language processing, to generate resumes, cover letters, career assessments, and other content.
+        </p>
+        <p class="text-slate-700 mb-4">
+          <strong>User Responsibility:</strong> You acknowledge and agree that:
+        </p>
+        <ul class="list-disc pl-6 text-slate-700 mb-4 space-y-2">
+          <li>All AI-generated content is provided for informational and assistance purposes only</li>
+          <li>You are solely responsible for reviewing, verifying, and validating all AI-generated content before use</li>
+          <li>You must ensure the accuracy, completeness, and appropriateness of any content you use</li>
+          <li>You are solely responsible for any misinformation, inaccuracies, or errors in content you submit or use</li>
+          <li>AI-generated content may contain errors, biases, or inaccuracies that require human review and correction</li>
+          <li>You should not rely solely on AI-generated content for important decisions without independent verification</li>
+          <li>You are responsible for ensuring all content complies with applicable laws, regulations, and professional standards</li>
+        </ul>
+        <p class="text-slate-700 mb-4">
+          <strong>No Guarantee of Accuracy:</strong> We do not guarantee the accuracy, completeness, or reliability of any AI-generated content. AI technology is inherently probabilistic and may produce results that are incorrect, incomplete, or inappropriate for your specific situation.
+        </p>
+        <p class="text-slate-700">
+          <strong>Professional Advice:</strong> AI-generated content is not a substitute for professional career counseling, legal advice, or other professional services. You should consult with qualified professionals for important career decisions.
         </p>
       </div>
 
@@ -113,11 +144,14 @@
         <h2 class="text-2xl font-semibold text-slate-800 mb-4">8. Disclaimers</h2>
         <p class="text-slate-700 mb-4">The Service is provided "as is" without warranties:</p>
         <ul class="list-disc pl-6 text-slate-700 mb-4 space-y-2">
-          <li>We do not guarantee the accuracy of assessments or recommendations</li>
+          <li>We do not guarantee the accuracy of AI-generated assessments, resumes, cover letters, or recommendations</li>
+          <li>AI-generated content may contain errors, biases, or inaccuracies that require human review</li>
           <li>Career outcomes depend on many factors beyond our control</li>
-          <li>We are not responsible for employment decisions or career changes</li>
-          <li>The Service is not a substitute for professional career counseling</li>
+          <li>We are not responsible for employment decisions, career changes, or consequences of using AI-generated content</li>
+          <li>The Service is not a substitute for professional career counseling, legal advice, or human expertise</li>
           <li>We do not guarantee uninterrupted or error-free service</li>
+          <li>AI technology limitations may result in content that is inappropriate, offensive, or factually incorrect</li>
+          <li>We are not responsible for any losses, damages, or negative consequences resulting from reliance on AI-generated content</li>
         </ul>
       </div>
 
@@ -129,6 +163,16 @@
           <li>We shall not be liable for indirect, incidental, or consequential damages</li>
           <li>Our total liability shall not exceed the amount you paid for the Service</li>
           <li>We are not liable for data loss or service interruptions</li>
+          <li>We are not liable for any damages resulting from AI-generated content, including but not limited to:
+            <ul class="list-disc pl-6 mt-2 space-y-1">
+              <li>Inaccurate, misleading, or false information in resumes, cover letters, or assessments</li>
+              <li>Employment rejections or missed opportunities due to AI-generated content</li>
+              <li>Professional reputation damage from AI-generated content</li>
+              <li>Legal or regulatory violations resulting from AI-generated content</li>
+              <li>Bias, discrimination, or inappropriate content in AI-generated materials</li>
+            </ul>
+          </li>
+          <li>You assume all risks associated with using AI-generated content</li>
           <li>Some jurisdictions do not allow liability limitations</li>
         </ul>
       </div>
@@ -137,8 +181,16 @@
       <div class="mb-8">
         <h2 class="text-2xl font-semibold text-slate-800 mb-4">10. Indemnification</h2>
         <p class="text-slate-700 mb-4">
-          You agree to indemnify and hold harmless Career Planner from any claims, damages, or expenses arising from your use of the Service or violation of these Terms.
+          You agree to indemnify and hold harmless Career Planner from any claims, damages, or expenses arising from your use of the Service or violation of these Terms, including but not limited to:
         </p>
+        <ul class="list-disc pl-6 text-slate-700 mb-4 space-y-2">
+          <li>Your use of AI-generated content without proper review and verification</li>
+          <li>Any misinformation, inaccuracies, or errors in content you submit or use</li>
+          <li>Employment-related issues resulting from AI-generated resumes, cover letters, or assessments</li>
+          <li>Legal or regulatory violations resulting from your use of AI-generated content</li>
+          <li>Professional reputation damage or other consequences from using AI-generated materials</li>
+          <li>Any third-party claims related to your use of the Service or AI-generated content</li>
+        </ul>
       </div>
 
       <!-- Termination -->
