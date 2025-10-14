@@ -476,7 +476,7 @@ export const useAssessment = () => {
 
     // Only try localStorage if user is not logged in or if no database data was found
     if (!user.value || !savedData) {
-      console.log('No database data found or user not logged in, trying localStorage')
+      // console.log('No database data found or user not logged in, trying localStorage')
       const localData = localStorage.getItem('assessmentData')
       if (localData) {
         try {

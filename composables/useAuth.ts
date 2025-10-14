@@ -26,22 +26,25 @@ export const useAuth = () => {
 
   const signInWithGoogle = async (redirectTo?: string) => {
     try {
-      console.log('signInWithGoogle called with redirectTo:', redirectTo)
+      // console.log('signInWithGoogle called with redirectTo:', redirectTo)
       
       // Store the redirect URL in localStorage before OAuth
       if (redirectTo && typeof window !== 'undefined') {
         localStorage.setItem('authRedirectUrl', redirectTo)
-        console.log('Stored authRedirectUrl in localStorage:', redirectTo)
+        // console.log('Stored authRedirectUrl in localStorage:', redirectTo)
       }
       
-      // Use the provided redirect URL or default to auth callback
-      const redirectUrl = redirectTo || `${window.location.origin}/auth/callback`
-      console.log('Using redirectUrl for OAuth:', redirectUrl)
+      // Always redirect to auth callback first, which will handle the final redirect
+      const redirectUrl = `${window.location.origin}/auth/callback`
+      // console.log('Using redirectUrl for OAuth:', redirectUrl)
       
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: redirectUrl
+          redirectTo: redirectUrl,
+          queryParams: {
+            prompt: 'select_account'
+          }
         }
       })
       if (error) throw error

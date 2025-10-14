@@ -34,12 +34,12 @@ async function processConsentData(userId) {
     
     const pendingConsent = localStorage.getItem('pendingConsent')
     if (!pendingConsent) {
-      console.log('No pending consent data found')
+      // console.log('No pending consent data found')
       return
     }
 
     const consentData = JSON.parse(pendingConsent)
-    console.log('Processing consent data:', consentData)
+    // console.log('Processing consent data:', consentData)
 
     // Update user metadata with consent information
     const { error: updateError } = await supabase.auth.updateUser({
@@ -59,7 +59,7 @@ async function processConsentData(userId) {
       throw new Error('Failed to store consent data: ' + updateError.message)
     }
 
-    console.log('Consent data stored successfully in user metadata')
+    // console.log('Consent data stored successfully in user metadata')
     
     // Clear pending consent from localStorage
     if (typeof window !== 'undefined') {
@@ -74,7 +74,7 @@ async function processConsentData(userId) {
 // Function to ensure pay-as-you-go subscription and credits
 async function ensurePayAsYouGoSubscription(userId) {
   try {
-    console.log('Starting ensurePayAsYouGoSubscription for user:', userId)
+    // console.log('Starting ensurePayAsYouGoSubscription for user:', userId)
     
     // Get the payg plan id
     const { data: plan, error: planError } = await supabase
@@ -84,7 +84,7 @@ async function ensurePayAsYouGoSubscription(userId) {
       .limit(1)
       .single()
     
-    console.log('Payg plan query result:', { plan, planError })
+    // console.log('Payg plan query result:', { plan, planError })
     
     if (planError || !plan) {
       throw new Error('Pay-as-you-go plan not found')
@@ -98,14 +98,14 @@ async function ensurePayAsYouGoSubscription(userId) {
       .eq('plan_id', plan.id)
       .maybeSingle()
     
-    console.log('Existing subscription check:', { sub, subError })
+    // console.log('Existing subscription check:', { sub, subError })
     
     if (subError) {
       throw subError
     }
 
     if (!sub) {
-      console.log('No existing subscription found, creating new one...')
+      // console.log('No existing subscription found, creating new one...')
       
       // Insert payg subscription
       const { data: newSub, error: insertError } = await supabase.from('user_subscriptions').insert([
@@ -118,13 +118,13 @@ async function ensurePayAsYouGoSubscription(userId) {
         }
       ]).select()
       
-      console.log('Subscription creation result:', { newSub, insertError })
+      // console.log('Subscription creation result:', { newSub, insertError })
       
       if (insertError) {
         throw new Error('Failed to create pay-as-you-go subscription: ' + insertError.message)
       }
 
-      console.log('Creating initial credit record...')
+      // console.log('Creating initial credit record...')
       
       // Create initial credit record for new user
       const { data: newCredit, error: creditError } = await supabase.from('user_credits').insert([
@@ -137,13 +137,13 @@ async function ensurePayAsYouGoSubscription(userId) {
         }
       ]).select()
       
-      console.log('Credit record creation result:', { newCredit, creditError })
+      // console.log('Credit record creation result:', { newCredit, creditError })
       
       if (creditError) {
         throw new Error('Failed to create initial credit record: ' + creditError.message)
       }
     } else {
-      console.log('Existing subscription found, skipping creation')
+      // console.log('Existing subscription found, skipping creation')
     }
   } catch (err) {
     console.error('Error in ensurePayAsYouGoSubscription:', err)
@@ -163,10 +163,10 @@ onMounted(() => {
 watch(
   () => user.value,
   async (newUser) => {
-    console.log('Auth callback - User watch triggered:', { newUser, hasEmail: newUser?.email })
+    // console.log('Auth callback - User watch triggered:', { newUser, hasEmail: newUser?.email })
     if (newUser && newUser.email) {
       try {
-        console.log('Starting setup process for user:', newUser.id)
+        // console.log('Starting setup process for user:', newUser.id)
         
         // Process consent data first
         await processConsentData(newUser.id)
@@ -181,7 +181,7 @@ watch(
           .eq('user_id', newUser.id)
           .single()
         
-        console.log('Existing plan check:', existingPlan); 
+        // console.log('Existing plan check:', existingPlan); 
         
         if (fetchError && fetchError.code !== 'PGRST116') {
           throw new Error('Error checking existing plan: ' + fetchError.message)
@@ -198,7 +198,7 @@ watch(
 
           if (hasExistingData) {
             // Database has data - prioritize database over local data
-            console.log('Found existing assessment data in database, using database data')
+            // console.log('Found existing assessment data in database, using database data')
             // Clear local data since database is the source of truth
             if (typeof window !== 'undefined') {
               localStorage.removeItem('assessmentData')
@@ -206,7 +206,7 @@ watch(
             }
           } else if (savedData) {
             // Database plan exists but no assessment data - update with local data
-            console.log('Found local assessment data, updating existing plan')
+            // console.log('Found local assessment data, updating existing plan')
             const assessmentData = JSON.parse(savedData)
             
             const { error: updateError } = await supabase
@@ -226,11 +226,11 @@ watch(
             if (updateError) {
               throw new Error('Failed to update assessment data: ' + updateError.message)
             }
-            console.log('Assessment data updated successfully')
+            // console.log('Assessment data updated successfully')
           }
         } else if (savedData) {
           // No existing plan - create new plan with local data
-          console.log('No existing plan found, creating new plan with local data')
+          // console.log('No existing plan found, creating new plan with local data')
           const assessmentData = JSON.parse(savedData)
           
           const { error: insertError } = await supabase
@@ -252,20 +252,20 @@ watch(
           if (insertError) {
             throw new Error('Failed to save assessment data: ' + insertError.message)
           }
-          console.log('Assessment data saved successfully')
+          // console.log('Assessment data saved successfully')
         }
 
         // Check for redirect URL from localStorage (stored before OAuth)
         const storedRedirectUrl = typeof window !== 'undefined' ? localStorage.getItem('authRedirectUrl') : null
-        console.log('Auth callback - storedRedirectUrl:', storedRedirectUrl)
+        // console.log('Auth callback - storedRedirectUrl:', storedRedirectUrl)
         
         // Check if we have LinkedIn/resume text
         const linkedinText = typeof window !== 'undefined' ? localStorage.getItem('linkedinOrResumeText') : null
-        console.log('Auth callback - linkedinText:', linkedinText)
+        // console.log('Auth callback - linkedinText:', linkedinText)
         
         if (storedRedirectUrl) {
-          // If we have a stored redirect URL, use it and clear it
-          console.log('Redirecting to stored URL:', storedRedirectUrl)
+          // If we have a stored redirect URL, use it and clear it (highest priority)
+          // console.log('Redirecting to stored URL:', storedRedirectUrl)
           if (typeof window !== 'undefined') {
             localStorage.removeItem('authRedirectUrl')
           }
@@ -274,8 +274,8 @@ watch(
             router.push(storedRedirectUrl)
           }, 200)
         } else if (linkedinText) {
-          // If we have LinkedIn text, redirect to summary with the text and focus on input section
-          console.log('Redirecting to summary with LinkedIn text')
+          // If we have LinkedIn text but no stored redirect, redirect to summary with the text and focus on input section
+          // console.log('Redirecting to summary with LinkedIn text')
           router.push({
             path: '/summary',
             query: { 
@@ -284,8 +284,8 @@ watch(
             }
           })
         } else {
-          // If no LinkedIn text, just redirect to summary
-          console.log('Redirecting to summary (default)')
+          // If no LinkedIn text and no stored redirect, just redirect to summary
+          // console.log('Redirecting to summary (default)')
           router.push('/summary')
         }
       } catch (err) {
@@ -294,7 +294,7 @@ watch(
         isLoading.value = false
       }
     } else {
-      console.log('No user or email found, skipping setup')
+      // console.log('No user or email found, skipping setup')
     }
   },
   { immediate: true }

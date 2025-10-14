@@ -376,19 +376,19 @@ async function fetchUserCredits() {
 
 // Watch for user authentication changes
 watch(user, (newUser) => {
-  console.log('Resume wizard - User watch triggered:', { newUser, hasEmail: newUser?.email })
+  // console.log('Resume wizard - User watch triggered:', { newUser, hasEmail: newUser?.email })
   if (newUser) {
-    console.log('Resume wizard: User authenticated, fetching credits')
+    // console.log('Resume wizard: User authenticated, fetching credits')
     fetchUserCredits()
   } else {
-    console.log('Resume wizard: No user found, will check again in 500ms')
+    // console.log('Resume wizard: No user found, will check again in 500ms')
     // Wait a bit longer before redirecting to allow auth state to settle
     setTimeout(() => {
       if (!user.value) {
-        console.log('Resume wizard: Still no user after delay, redirecting to jobs')
+        // console.log('Resume wizard: Still no user after delay, redirecting to jobs')
         router.push('/jobs')
       } else {
-        console.log('Resume wizard: User found after delay, fetching credits')
+        // console.log('Resume wizard: User found after delay, fetching credits')
         fetchUserCredits()
       }
     }, 500)

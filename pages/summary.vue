@@ -5,7 +5,7 @@
     <transition name="fade">
       <button
         v-if="showFloatingCTA"
-        @click="scrollToLinkedInInput"
+        @click="navigateToReportWizard"
         class="fixed bottom-8 right-8 z-50 px-6 py-3 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all flex items-center"
         style="box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);"
       >
@@ -21,6 +21,24 @@
     </div>
     
     <div v-else class="space-y-6">
+      <!-- Page Header with Assessment Button -->
+      <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold text-slate-800">Summary</h1>
+          </div>
+          <div class="flex gap-3">
+            <NuxtLink 
+              to="/assessment" 
+              class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg flex items-center gap-2"
+            >
+              <Icon name="i-heroicons-clipboard-document-list" class="w-5 h-5" />
+              Take Assessment
+            </NuxtLink>
+          </div>
+        </div>
+      </div>
+      
       <!-- First Row: 30:70 Split -->
       <div class="grid grid-cols-1 lg:grid-cols-10 gap-6">
         <!-- Profile Card (30%) -->
@@ -623,26 +641,16 @@
           </div>
         </div>
 
-        <!-- For logged-in users without existing report, show the LinkedIn input form -->
+        <!-- For logged-in users without existing report, show the wizard navigation -->
         <div v-else-if="user && !hasExistingReport && !isGeneratingPlan && !personalizedPlan">
           <h3 class="text-xl font-bold text-slate-800 mb-4 ">Generate Your Personalized Report</h3>
-          <p class="text-slate-600 mb-1">Please paste your LinkedIn profile summary or resume text below.</p>
-          <p class="text-xs text-slate-500 mb-4">This information, along with your assessment results, will be used to generate your personalized plan.</p>
-          <textarea
-            v-model="linkedinOrResumeText" 
-            class="w-full h-60 p-3 border border-slate-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500  text-sm"
-            placeholder="Paste your LinkedIn profile summary or resume text here..."
-          ></textarea>
-          <div v-if="planError" class="mt-3 text-red-600 text-sm font-medium">
-            {{ planError }}
-          </div>
-          <div class="mt-6 flex justify-end">
+          <p class="text-slate-600 mb-6">Leverage your assessment results and professional background to generate a personalized career action plan, including skill development strategies and targeted networking advice.</p>
+          <div class="text-center">
             <button 
-              @click="submitForPersonalizedPlan()"
-              :disabled="!linkedinOrResumeText.trim()"
-              class="px-6 py-2 text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-slate-400 transition-all  flex items-center"
+              @click="navigateToReportWizard()"
+              class="px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300 flex items-center justify-center mx-auto"
             >
-              <Icon name="i-mdi-brain" class="mr-2" /> Generate Report
+              <Icon name="i-mdi-sparkles" class="mr-2" /> Generate Personalized Report <span class="text-sm ml-2">(10 credit points, $3)</span>
             </button>
           </div>
         </div>
@@ -656,7 +664,7 @@
           </p>
           <div class="text-center flex flex-col sm:flex-row justify-center gap-4">
             <button
-              @click="submitForPersonalizedPlan()"
+              @click="navigateToReportWizard()"
               class="px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300  flex items-center justify-center"
             >
               <Icon name="i-mdi-sparkles" class="mr-2" /> Get Personalized Report <span class="text-sm ml-2">(10 credit points, $3)</span>
@@ -861,6 +869,30 @@ function scrollToLinkedInInput() {
         console.log('LinkedIn input section still not found after retry')
       }
     }, 500)
+  }
+}
+
+async function navigateToReportWizard() {
+  // Save LinkedIn text to localStorage if it exists
+  if (linkedinOrResumeText.value) {
+    localStorage.setItem('linkedinOrResumeText', linkedinOrResumeText.value)
+  }
+  
+  // If user is not logged in, use Google OAuth with redirect to report wizard
+  if (!user.value) {
+    try {
+      const { signInWithGoogle } = useAuth()
+      
+      // Use the proper Google OAuth flow with redirect to report wizard
+      await signInWithGoogle('/report-wizard')
+    } catch (error) {
+      console.error('Error signing in with Google:', error)
+      // Show error to user
+      planError.value = 'Failed to sign in. Please try again.'
+    }
+  } else {
+    // Navigate to the report wizard page
+    navigateTo('/report-wizard')
   }
 }
 
@@ -1222,7 +1254,7 @@ onMounted(async () => {
 
   // If no database data, try localStorage
   if (!assessmentData) {
-    console.log('No database data found or user not logged in, trying localStorage')
+    // console.log('No database data found or user not logged in, trying localStorage')
     const localData = localStorage.getItem('assessmentSummary')
     if (localData) {
       try {
@@ -1354,7 +1386,7 @@ onMounted(async () => {
       // Check if we should focus on the input section (from auth callback)
       // Don't clear the query param here - wait until user is logged in
       if (route.query.focusInput === 'true') {
-        console.log('FocusInput flag detected, will scroll after user login')
+        // console.log('FocusInput flag detected, will scroll after user login')
         shouldFocusOnInput.value = true
       }
     } catch (error) {
@@ -1436,7 +1468,7 @@ async function savePlanForUser() {
 // Ensure the user has a pay as you go subscription
 async function ensurePayAsYouGoSubscription(userId) {
   // Get the payg plan id
-  console.log('ensurePayAsYouGoSubscription', userId); 
+  // console.log('ensurePayAsYouGoSubscription', userId); 
   const { data: plan, error: planError } = await supabase
     .from('subscription_plans')
     .select('id')
@@ -1501,7 +1533,7 @@ watch(
       
       // Check if we need to scroll to LinkedIn input section after login
       if (shouldFocusOnInput.value) {
-        console.log('User logged in with focusInput flag, clearing query param and scrolling')
+        // console.log('User logged in with focusInput flag, clearing query param and scrolling')
         shouldFocusOnInput.value = false // Clear the flag
         // Clear the query param
         router.replace({ path: '/summary', query: {} })

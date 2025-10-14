@@ -38,25 +38,41 @@
       </div>
 
       <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Overall Score Card -->
-        <div class="modern-card lg:col-span-2 mb-4">
-          <div class="flex flex-col items-center mb-6">
-            <h2 class="text-4xl font-extrabold mb-6  tracking-tight">
-              <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">Overall Score</span>
-            </h2>
-            <GaugeChart :score="report.overall_score" />
-            <div class="text-xl font-semibold text-slate-700 mt-4 ">{{ report.overall_score }}/100</div>
-          </div>
+        <!-- Top Action Buttons -->
+        <div class="lg:col-span-2 flex justify-between mb-6">
+          <button @click="navigateTo('/summary')" class="px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:to-pink-600 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex items-center">
+            <Icon name="i-heroicons-arrow-left" class="w-4 h-4 mr-2" />
+            Back to Summary
+          </button>
+          <button @click="regenerateReport" :disabled="isRegenerating" class="px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-green-600 via-emerald-600 to-teal-500 hover:from-green-700 hover:to-teal-600 disabled:opacity-60 disabled:cursor-not-allowed rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex items-center">
+            <Icon v-if="isRegenerating" name="i-eos-icons:loading" class="w-4 h-4 mr-2 animate-spin" />
+            <Icon v-else name="i-mdi-refresh" class="w-4 h-4 mr-2" />
+            {{ isRegenerating ? 'Regenerating...' : 'Re-generate Report' }}
+          </button>
         </div>
 
-        <!-- Summary Card -->
-        <div class="modern-card lg:col-span-2 mb-4">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-4xl font-extrabold  tracking-tight">
-              <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">Summary</span>
-            </h2>
+        <!-- Summary and Overall Score Row -->
+        <div class="lg:col-span-2 flex flex-col lg:flex-row gap-6 mb-4">
+          <!-- Summary Card (70%) -->
+          <div class="modern-card flex-1 lg:w-[70%]">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-4xl font-extrabold  tracking-tight">
+                <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">Summary</span>
+              </h2>
+            </div>
+            <div class="prose max-w-none text-slate-700 " v-html="report.summary"></div>
           </div>
-          <div class="prose max-w-none text-slate-700 " v-html="report.summary"></div>
+
+          <!-- Overall Score Card (30%) -->
+          <div class="modern-card lg:w-[30%]">
+            <div class="flex flex-col items-center mb-6">
+              <h2 class="text-2xl font-extrabold mb-4  tracking-tight">
+                <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">Overall Score</span>
+              </h2>
+              <GaugeChart :score="report.overall_score" />
+              <div class="text-xl font-semibold text-slate-700 mt-4 ">{{ report.overall_score }}/100</div>
+            </div>
+          </div>
         </div>
 
         <!-- SWOT Analysis Cards -->
@@ -143,6 +159,11 @@
         <div class="lg:col-span-2 flex justify-between mt-6">
           <button @click="navigateTo('/summary')" class="px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:to-pink-600 rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all ">
             Back to Summary
+          </button>
+          <button @click="regenerateReport" :disabled="isRegenerating" class="px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-green-600 via-emerald-600 to-teal-500 hover:from-green-700 hover:to-teal-600 disabled:opacity-60 disabled:cursor-not-allowed rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all flex items-center">
+            <Icon v-if="isRegenerating" name="i-eos-icons:loading" class="w-5 h-5 mr-2 animate-spin" />
+            <Icon v-else name="i-mdi-refresh" class="w-5 h-5 mr-2" />
+            {{ isRegenerating ? 'Regenerating...' : 'Re-generate Report' }}
           </button>
         </div>
       </div>
@@ -240,6 +261,7 @@ import KanbanBoard from '~/components/KanbanBoard.vue'
 
 const report = ref(null)
 const isLoadingReport = ref(true)
+const isRegenerating = ref(false)
 const focusAreaList = ['leadership', 'domain_knowledge', 'technical_skills', 'networking_marketing']
 const focusAreaTitles = {
   leadership: 'Leadership',
@@ -644,6 +666,96 @@ onMounted(async () => {
   await fetchUserTasks()
   isLoadingReport.value = false
 })
+
+// Function to regenerate the report
+async function regenerateReport() {
+  if (!user.value) {
+    showMessage('Please log in to regenerate your report', 'error')
+    return
+  }
+
+  isRegenerating.value = true
+  
+  try {
+    // Get assessment data from database
+    let assessmentSummary = null
+    let linkedinText = null
+    
+    try {
+      const { data: userPlan, error: fetchError } = await supabase
+        .from('user_plans')
+        .select('assessment_data, personalized_report')
+        .eq('user_id', user.value.id)
+        .single()
+
+      if (!fetchError && userPlan?.assessment_data) {
+        assessmentSummary = userPlan.assessment_data
+        linkedinText = assessmentSummary.linkedinText
+      }
+    } catch (err) {
+      console.error('Error fetching assessment data from database:', err)
+    }
+
+    if (!assessmentSummary) {
+      throw new Error('No assessment data found. Please complete the assessment first.')
+    }
+
+    if (!linkedinText) {
+      throw new Error('No LinkedIn profile data found. Please generate a new report from the summary page.')
+    }
+
+    // Call the report generation API
+    const response = await fetch('/api/generate-report', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id: user.value.id,
+        assessmentSummary: assessmentSummary,
+        linkedinText: linkedinText
+      })
+    })
+
+    if (response.status === 402) {
+      showMessage('Insufficient credits to regenerate report', 'error')
+      return
+    }
+
+    if (!response.ok) {
+      throw new Error('Failed to regenerate report')
+    }
+
+    const result = await response.json()
+    
+    // Update the report in the database
+    const { error: updateError } = await supabase
+      .from('user_plans')
+      .update({ 
+        personalized_report: result.report,
+        updated_at: new Date().toISOString()
+      })
+      .eq('user_id', user.value.id)
+
+    if (updateError) {
+      throw new Error('Failed to save regenerated report')
+    }
+
+    // Update the local report data
+    report.value = result.report
+    
+    // Update localStorage
+    localStorage.setItem('personalizedReport', JSON.stringify(result.report))
+    
+    showMessage('Report regenerated successfully!', 'success')
+    
+  } catch (error) {
+    console.error('Error regenerating report:', error)
+    showMessage(error.message || 'Failed to regenerate report. Please try again.', 'error')
+  } finally {
+    isRegenerating.value = false
+  }
+}
 </script>
 
 <style scoped>

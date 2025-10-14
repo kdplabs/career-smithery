@@ -679,10 +679,7 @@ const currentPageUrl = computed(() => {
 
 // Redirect URL for login - redirect to resume wizard after login
 const redirectUrl = computed(() => {
-  if (typeof window !== 'undefined') {
-    return `${window.location.origin}/resume-wizard`
-  }
-  return null
+  return '/resume-wizard'
 })
 
 // Computed properties
@@ -1145,11 +1142,11 @@ function handleGetStartedClick() {
   // Check if user is authenticated
   if (!user.value) {
     // Show login modal if not authenticated
-    console.log('User not authenticated, showing login modal')
+    // console.log('User not authenticated, showing login modal')
     showLoginModal.value = true
   } else {
     // Navigate to resume wizard if authenticated
-    console.log('User authenticated, navigating to resume wizard')
+    // console.log('User authenticated, navigating to resume wizard')
     router.push('/resume-wizard')
   }
 }
