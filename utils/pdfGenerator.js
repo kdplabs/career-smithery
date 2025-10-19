@@ -133,6 +133,8 @@ const generateClassicPDF = (pdf, resumeData) => {
 // --- Template: Modern ---
 const generateModernPDF = (pdf, resumeData) => {
   const pageWidth = pdf.internal.pageSize.getWidth()
+  const margin = 20
+  const contentWidth = pageWidth - (margin * 2)
   let y = 0
   
   // Header
