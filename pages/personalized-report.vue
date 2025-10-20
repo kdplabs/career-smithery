@@ -256,7 +256,6 @@ import { navigateTo } from 'nuxt/app'
 import GaugeChart from '~/components/GaugeChart.vue'
 import FocusAreaCard from '~/components/FocusAreaCard.vue'
 import { useAuth } from '~/composables/useAuth'
-import { useSupabaseClient } from '#imports'
 import KanbanBoard from '~/components/KanbanBoard.vue'
 
 const report = ref(null)

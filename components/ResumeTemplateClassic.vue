@@ -69,11 +69,11 @@
             {{ job.startDate }} - {{ job.endDate || 'Present' }}
           </div>
         </div>
-        <ul class="list-disc list-inside ml-4 space-y-1">
+        <ul class="space-y-1">
           <li 
             v-for="(achievement, achievementIndex) in job.achievements" 
             :key="achievementIndex" 
-            class="text-sm text-gray-800 relative group"
+            class="text-sm text-gray-800 relative group flex items-start"
             :class="{ 'cursor-move bg-gray-50 rounded px-2 py-1': editMode }"
             :draggable="editMode"
             @dragstart="onDragStart($event, index, achievementIndex)"
@@ -81,16 +81,17 @@
             @drop="onDrop($event, index, achievementIndex)"
             @dragenter.prevent
           >
-            <div class="flex items-center">
+            <span class="text-gray-800 mr-2 mt-0.5 flex-shrink-0">•</span>
+            <div class="flex items-center flex-1">
               <svg 
                 v-if="editMode" 
-                class="w-3 h-3 text-gray-400 mr-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                class="w-3 h-3 text-gray-400 mr-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
                 fill="currentColor" 
                 viewBox="0 0 20 20"
               >
                 <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 16a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/>
               </svg>
-              <span>{{ achievement }}</span>
+              <span class="leading-relaxed">{{ achievement }}</span>
             </div>
           </li>
         </ul>

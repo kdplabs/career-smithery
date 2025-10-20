@@ -93,7 +93,15 @@
 
        <!-- Step Content -->
        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8">
+         <!-- Loading job data indicator -->
+         <div v-if="loadingJobData" class="text-center py-8">
+           <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+           <p class="text-gray-600">Loading previous resume data...</p>
+         </div>
+         
+         <!-- Step component -->
          <component 
+           v-else
            :is="currentStepComponent" 
            :data="formData"
            :job-data="jobData"
@@ -124,15 +132,9 @@ const route = useRoute()
 const router = useRouter()
 const { user } = useAuth()
 
-// Get job data from route query if available
-const jobData = computed(() => {
-  const jobId = route.query.jobId
-  if (jobId) {
-    // You could fetch job data here if needed
-    return { id: jobId }
-  }
-  return {}
-})
+// Job data state
+const jobData = ref({})
+const loadingJobData = ref(false)
 
 const currentStep = ref(1)
 const userCredits = ref(null)
@@ -203,6 +205,145 @@ const loadDefaultResumeData = () => {
     }
   } catch (err) {
     console.error('Error loading default resume data:', err)
+  }
+}
+
+// Load job data from database when jobId is provided
+const loadJobData = async () => {
+  const jobId = route.query.jobId
+  if (!jobId || !user.value) return
+  
+  loadingJobData.value = true
+  try {
+    const supabase = useSupabaseClient()
+    const { data: job, error } = await supabase
+      .from('user_jobs')
+      .select('*')
+      .eq('id', jobId)
+      .eq('user_id', user.value.id)
+      .single()
+
+    if (error || !job) {
+      console.error('Error fetching job data:', error)
+      return
+    }
+
+    jobData.value = job
+    
+    // Pre-populate form data with existing job data
+    if (job.job_description) {
+      formData.value.jobDescription = job.job_description
+    }
+    
+    // If there's existing resume data, extract the current resume and metrics
+    if (job.resume_data) {
+      let resumeData = job.resume_data
+      
+      // Parse if it's a string
+      if (typeof resumeData === 'string') {
+        try {
+          resumeData = JSON.parse(resumeData)
+        } catch (e) {
+          console.error('Error parsing resume_data:', e)
+          return
+        }
+      }
+      
+      // Extract current resume text from the structured data
+      if (resumeData.personalInfo && resumeData.workExperience && resumeData.education) {
+        // Reconstruct the resume text from the structured data
+        let currentResumeText = ''
+        
+        // Personal info
+        if (resumeData.personalInfo.name) {
+          currentResumeText += `Name: ${resumeData.personalInfo.name}\n`
+        }
+        if (resumeData.personalInfo.email) {
+          currentResumeText += `Email: ${resumeData.personalInfo.email}\n`
+        }
+        if (resumeData.personalInfo.phone) {
+          currentResumeText += `Phone: ${resumeData.personalInfo.phone}\n`
+        }
+        if (resumeData.personalInfo.location) {
+          currentResumeText += `Location: ${resumeData.personalInfo.location}\n`
+        }
+        if (resumeData.personalInfo.linkedin) {
+          currentResumeText += `LinkedIn: ${resumeData.personalInfo.linkedin}\n`
+        }
+        currentResumeText += '\n'
+        
+        // Professional summary
+        if (resumeData.professionalSummary) {
+          currentResumeText += `PROFESSIONAL SUMMARY\n${resumeData.professionalSummary}\n\n`
+        }
+        
+        // Work experience
+        if (resumeData.workExperience && resumeData.workExperience.length > 0) {
+          currentResumeText += 'WORK EXPERIENCE\n'
+          resumeData.workExperience.forEach(job => {
+            currentResumeText += `${job.title} at ${job.company}\n`
+            if (job.duration) currentResumeText += `${job.duration}\n`
+            if (job.location) currentResumeText += `${job.location}\n`
+            if (job.description) currentResumeText += `${job.description}\n`
+            if (job.achievements && job.achievements.length > 0) {
+              currentResumeText += 'Key Achievements:\n'
+              job.achievements.forEach(achievement => {
+                currentResumeText += `• ${achievement}\n`
+              })
+            }
+            currentResumeText += '\n'
+          })
+        }
+        
+        // Education
+        if (resumeData.education && resumeData.education.length > 0) {
+          currentResumeText += 'EDUCATION\n'
+          resumeData.education.forEach(edu => {
+            currentResumeText += `${edu.degree} in ${edu.field}\n`
+            if (edu.institution) currentResumeText += `${edu.institution}\n`
+            if (edu.graduationYear) currentResumeText += `Graduated: ${edu.graduationYear}\n`
+            if (edu.gpa) currentResumeText += `GPA: ${edu.gpa}\n`
+            currentResumeText += '\n'
+          })
+        }
+        
+        // Skills
+        if (resumeData.skills && resumeData.skills.length > 0) {
+          currentResumeText += 'SKILLS\n'
+          currentResumeText += resumeData.skills.join(', ') + '\n\n'
+        }
+        
+        // Certifications
+        if (resumeData.certifications && resumeData.certifications.length > 0) {
+          currentResumeText += 'CERTIFICATIONS\n'
+          resumeData.certifications.forEach(cert => {
+            currentResumeText += `• ${cert.name}`
+            if (cert.issuer) currentResumeText += ` - ${cert.issuer}`
+            if (cert.date) currentResumeText += ` (${cert.date})`
+            currentResumeText += '\n'
+          })
+          currentResumeText += '\n'
+        }
+        
+        // Projects
+        if (resumeData.projects && resumeData.projects.length > 0) {
+          currentResumeText += 'PROJECTS\n'
+          resumeData.projects.forEach(project => {
+            currentResumeText += `${project.name}\n`
+            if (project.description) currentResumeText += `${project.description}\n`
+            if (project.technologies) currentResumeText += `Technologies: ${project.technologies.join(', ')}\n`
+            currentResumeText += '\n'
+          })
+        }
+        
+        formData.value.currentResume = currentResumeText.trim()
+      }
+    }
+    
+  } catch (err) {
+    console.error('Error loading job data:', err)
+  } finally {
+    loadingJobData.value = false
   }
 }
 
@@ -337,13 +478,14 @@ const submitForm = async () => {
   }
 }
 
-// Pre-populate job description if available
-onMounted(() => {
-  if (jobData.value.job_description) {
-    formData.value.jobDescription = jobData.value.job_description
+// Load data on mount
+onMounted(async () => {
+  // Load job data if jobId is provided (for regeneration)
+  if (route.query.jobId) {
+    await loadJobData()
   }
   
-  // Load default resume data
+  // Load default resume data (fallback for new resumes)
   loadDefaultResumeData()
 })
 
@@ -375,21 +517,31 @@ async function fetchUserCredits() {
 }
 
 // Watch for user authentication changes
-watch(user, (newUser) => {
+watch(user, async (newUser) => {
   // console.log('Resume wizard - User watch triggered:', { newUser, hasEmail: newUser?.email })
   if (newUser) {
     // console.log('Resume wizard: User authenticated, fetching credits')
     fetchUserCredits()
+    
+    // Load job data if jobId is provided and we haven't loaded it yet
+    if (route.query.jobId && !jobData.value.id) {
+      await loadJobData()
+    }
   } else {
     // console.log('Resume wizard: No user found, will check again in 500ms')
     // Wait a bit longer before redirecting to allow auth state to settle
-    setTimeout(() => {
+    setTimeout(async () => {
       if (!user.value) {
         // console.log('Resume wizard: Still no user after delay, redirecting to jobs')
         router.push('/jobs')
       } else {
         // console.log('Resume wizard: User found after delay, fetching credits')
         fetchUserCredits()
+        
+        // Load job data if jobId is provided and we haven't loaded it yet
+        if (route.query.jobId && !jobData.value.id) {
+          await loadJobData()
+        }
       }
     }, 500)
   }

@@ -242,7 +242,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useSupabaseClient, navigateTo } from '#imports'
+import { navigateTo } from '#imports'
 import { useAuth } from '~/composables/useAuth'
 
 // Set page title

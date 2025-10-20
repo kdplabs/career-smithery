@@ -25,16 +25,10 @@
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <NuxtLink
-            to="/jobs"
+            to="/resume-wizard"
             class="inline-flex items-center px-10 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-gradient-to-r from-purple-600 via-pink-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-400 shadow-xl hover:scale-105 transition-all duration-300"
           >
             Start Building Resume
-          </NuxtLink>
-          <NuxtLink
-            to="/resume-wizard"
-            class="inline-flex items-center px-10 py-4 border border-purple-600 text-lg font-semibold rounded-xl text-purple-600 bg-white hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-400 shadow-xl hover:scale-105 transition-all duration-300"
-          >
-            Try Resume Wizard
           </NuxtLink>
         </div>
       </div>
@@ -220,18 +214,10 @@
         <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0">
           <div class="inline-flex rounded-xl shadow-lg">
             <NuxtLink
-              to="/jobs"
+              to="/resume-wizard"
               class="inline-flex items-center justify-center px-7 py-3 border border-transparent text-base font-semibold rounded-xl text-purple-700 bg-white hover:bg-purple-50 hover:scale-105 transition-all duration-300"
             >
               Start Building
-            </NuxtLink>
-          </div>
-          <div class="ml-3 inline-flex rounded-xl shadow-lg">
-            <NuxtLink
-              to="/resume-wizard"
-              class="inline-flex items-center justify-center px-7 py-3 border border-transparent text-base font-semibold rounded-xl text-white bg-purple-500 hover:bg-purple-400 hover:scale-105 transition-all duration-300"
-            >
-              Try Wizard
             </NuxtLink>
           </div>
         </div>

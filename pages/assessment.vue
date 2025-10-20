@@ -799,7 +799,6 @@
 </template>
 
 <script setup>
-import { useSupabaseClient } from '#imports'
 import { useAuth } from '#imports'
 import { useRouter } from 'vue-router'
 

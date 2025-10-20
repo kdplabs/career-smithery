@@ -1,4 +1,4 @@
-import { useSupabaseClient, useSupabaseUser } from '#imports'
+import { useSupabaseUser } from '#imports'
 
 // Add type declarations for Google's OAuth client
 declare global {

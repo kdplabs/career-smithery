@@ -739,7 +739,6 @@ import { ref, computed, onMounted, watch, nextTick, onUnmounted } from 'vue'
 import * as d3 from 'd3'
 import ThreeMetricsRadarChart from '~/components/charts/ThreeMetricsRadarChart.vue'
 import ThreeMetricsBarChart from '~/components/charts/ThreeMetricsBarChart.vue'
-import { useSupabaseClient } from '#imports'
 import PricingModal from '~/components/PricingModal.vue'
 import { useRouter, useRoute, navigateTo } from 'nuxt/app'
 

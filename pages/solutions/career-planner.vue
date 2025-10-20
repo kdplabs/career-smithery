@@ -30,12 +30,6 @@
           >
             Start Your Assessment
           </NuxtLink>
-          <NuxtLink
-            to="/summary"
-            class="inline-flex items-center px-10 py-4 border border-blue-600 text-lg font-semibold rounded-xl text-blue-600 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 shadow-xl hover:scale-105 transition-all duration-300"
-          >
-            View Sample Report
-          </NuxtLink>
         </div>
       </div>
     </div>
@@ -180,14 +174,6 @@
               class="inline-flex items-center justify-center px-7 py-3 border border-transparent text-base font-semibold rounded-xl text-blue-700 bg-white hover:bg-blue-50 hover:scale-105 transition-all duration-300"
             >
               Start Assessment
-            </NuxtLink>
-          </div>
-          <div class="ml-3 inline-flex rounded-xl shadow-lg">
-            <NuxtLink
-              to="/summary"
-              class="inline-flex items-center justify-center px-7 py-3 border border-transparent text-base font-semibold rounded-xl text-white bg-blue-500 hover:bg-blue-400 hover:scale-105 transition-all duration-300"
-            >
-              View Sample
             </NuxtLink>
           </div>
         </div>

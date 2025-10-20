@@ -286,7 +286,6 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { navigateTo } from 'nuxt/app'
 import { useAuth } from '~/composables/useAuth'
-import { useSupabaseClient } from '#imports'
 import KanbanBoard from '~/components/KanbanBoard.vue'
 import TaskTable from '~/components/TaskTable.vue'
 

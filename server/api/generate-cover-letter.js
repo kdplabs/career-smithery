@@ -1,4 +1,10 @@
 import { defineEventHandler, readBody, createError } from 'h3';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
@@ -8,12 +14,35 @@ export default defineEventHandler(async (event) => {
     throw new Error('GEMINI_API_KEY is not configured');
   }
 
-  const { resumeData, jobDescription, additionalPrompt } = await readBody(event);
+  const { resumeData, jobDescription, additionalPrompt, user_id } = await readBody(event);
 
-  if (!resumeData || !jobDescription) {
+  if (!resumeData || !jobDescription || !user_id) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: 'Missing resumeData or jobDescription' }),
+      body: JSON.stringify({ error: 'Missing resumeData, jobDescription, or user_id' }),
+    };
+  }
+
+  // 1. Check available_credit in user_subscriptions
+  const { data: sub, error: subError } = await supabase
+    .from('user_subscriptions')
+    .select('available_credit')
+    .eq('user_id', user_id)
+    .order('start_date', { ascending: false })
+    .limit(1)
+    .single();
+  
+  if (subError || !sub) {
+    return {
+      statusCode: 403,
+      body: JSON.stringify({ error: 'No active subscription or credit info found' }),
+    };
+  }
+  
+  if ((sub.available_credit || 0) < 1) {
+    return {
+      statusCode: 402,
+      body: JSON.stringify({ error: 'Not enough credits' }),
     };
   }
 
@@ -121,8 +150,26 @@ Respond ONLY with valid JSON. Make the content specific, relevant, and professio
         alignmentScore: Math.min(Math.max(coverLetterResult.alignmentScore || 0, 0), 100),
         generatedAt: new Date().toISOString()
     };
+
+    // 4. Deduct 1 credit from user_subscriptions
+    const { error: creditError } = await supabase
+      .from('user_subscriptions')
+      .update({ available_credit: (sub.available_credit || 1) - 1 })
+      .eq('user_id', user_id);
     
-    return processedResult;
+    if (creditError) {
+      console.error('Failed to deduct credit:', creditError);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: 'Failed to deduct credit' }),
+      };
+    }
+    
+    return {
+      ...processedResult,
+      creditsUsed: 1,
+      remainingCredits: (sub.available_credit || 1) - 1
+    };
   } catch (error) {
     console.error('Error generating cover letter:', error);
     throw createError({

@@ -32,10 +32,12 @@
         </div>
         
         <div v-else class="card mb-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-            <div class="w-2 h-8 bg-gradient-to-b from-indigo-500 to-purple-600 rounded-full mr-4"></div>
-            Job Description
-          </h2>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-900 flex items-center">
+              <div class="w-2 h-8 bg-gradient-to-b from-indigo-500 to-purple-600 rounded-full mr-4"></div>
+              Job Description
+            </h2>
+          </div>
           
           <textarea
             v-model="jobDescription"
@@ -57,6 +59,24 @@
               <span>{{ generatingCoverLetter ? 'Generating...' : 'Generate New' }}</span>
             </button>
           </div>
+
+          <!-- Credit Warning -->
+          <div v-if="userCredits < 1" class="bg-red-50 border border-red-200 rounded-lg p-4 mt-6">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+              </svg>
+              <div>
+                <h3 class="text-sm font-medium text-red-800">No Credits Available</h3>
+                <p class="text-sm text-red-700 mt-1">
+                  You need at least 1 credit to generate a cover letter. 
+                  <button @click="showPricingModal = true" class="font-medium underline hover:no-underline">
+                    Purchase credits here
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -65,7 +85,9 @@
         
         <!-- Header Actions -->
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center bg-white rounded-2xl p-6 border border-gray-200 shadow-sm gap-4">
-          <h2 class="text-2xl font-bold text-gray-900">Your Cover Letter</h2>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+            <h2 class="text-2xl font-bold text-gray-900">Your Cover Letter</h2>
+          </div>
           <div class="flex flex-wrap gap-3">
             <div v-if="jobId">
               <NuxtLink 
@@ -116,6 +138,25 @@
               </svg>
               <span>Regenerate</span>
             </button>
+          </div>
+
+        </div>
+
+        <!-- Credit Warning -->
+        <div v-if="userCredits < 1" class="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+            </svg>
+            <div>
+              <h3 class="text-sm font-medium text-red-800">No Credits Available</h3>
+              <p class="text-sm text-red-700 mt-1">
+                You need at least 1 credit to regenerate a cover letter. 
+                <button @click="showPricingModal = true" class="font-medium underline hover:no-underline">
+                  Purchase credits here
+                </button>
+              </p>
+            </div>
           </div>
         </div>
 
@@ -272,14 +313,23 @@
      @close="closeEditModal"
      @save="saveSection"
    />
+
+   <!-- Pricing Modal -->
+   <PricingModal
+     :show="showPricingModal"
+     @close="showPricingModal = false"
+     @purchase-complete="handlePurchaseComplete"
+   />
  </template>
 
  <script setup>
  import { ref, onMounted } from 'vue';
 import { useDatabase } from '~/composables/useDatabase';
+import { useCredits } from '~/composables/useCredits';
 import EditSectionModal from '~/components/EditSectionModal.vue';
 import CoverLetterTemplateClassic from '~/components/CoverLetterTemplateClassic.vue';
 import CoverLetterTemplateModern from '~/components/CoverLetterTemplateModern.vue';
+import PricingModal from '~/components/PricingModal.vue';
 
 // Prevent SSR for this page since it requires authentication
 definePageMeta({
@@ -289,6 +339,7 @@ definePageMeta({
 const route = useRoute();
 const router = useRouter();
 const { user } = useAuth();
+const { userCredits, fetchUserCredits } = useCredits();
 const supabase = useSupabaseClient();
 
 // Get jobId from route query
@@ -311,6 +362,7 @@ const selectedTemplate = ref('classic'); // Default to classic template
  const showEditModal = ref(false);
  const editingSection = ref('');
  const editingSectionData = ref(null);
+ const showPricingModal = ref(false);
 
 // Load job description if jobId is provided
 const loadJobDescription = async () => {
@@ -335,6 +387,12 @@ const loadJobDescription = async () => {
 const generateCoverLetter = async (additionalPrompt = '') => {
   generatingCoverLetter.value = true;
   try {
+    // Check if user has enough credits
+    if (userCredits.value < 1) {
+      showPricingModal.value = true;
+      return;
+    }
+
     // Get resume data from database
     const resumeData = await getResumeFromDatabase(jobId);
     if (!resumeData) {
@@ -351,11 +409,20 @@ const generateCoverLetter = async (additionalPrompt = '') => {
         resumeData,
         jobDescription: jobDescription.value,
         additionalPrompt: additionalPrompt,
+        user_id: user.value.id,
       }),
     });
 
     if (!response.ok) {
-      throw new Error('Failed to generate cover letter');
+      const errorData = await response.json();
+      if (response.status === 402) {
+        showPricingModal.value = true;
+        return;
+      } else if (response.status === 403) {
+        alert('No active subscription found. Please check your account.');
+        return;
+      }
+      throw new Error(errorData.error || 'Failed to generate cover letter');
     }
 
     const result = await response.json();
@@ -363,6 +430,14 @@ const generateCoverLetter = async (additionalPrompt = '') => {
     
     // Save to database instead of localStorage
     await saveCoverLetterToDatabase(jobId, result);
+
+    // Refresh user credits after successful generation
+    await fetchUserCredits();
+
+    // Show success message with credit info
+    if (result.creditsUsed && result.remainingCredits !== undefined) {
+      showNotification(`Cover letter generated! Used ${result.creditsUsed} credit. ${result.remainingCredits} credits remaining.`);
+    }
 
   } catch (error) {
     console.error(error);
@@ -474,6 +549,22 @@ const downloadCoverLetter = async () => {
        }
      }, 300);
    }, 2000);
+ };
+
+ // Handle purchase completion from PricingModal
+ const handlePurchaseComplete = async (purchase) => {
+   if (purchase.type === 'payg') {
+     userCredits.value += purchase.credits;
+   } else if (purchase.type === 'subscription') {
+     userCredits.value += purchase.credits;
+   }
+   showPricingModal.value = false;
+   
+   // Refresh credits to get the latest balance
+   await fetchUserCredits();
+   
+   // Show success notification
+   showNotification('Credits purchased successfully! You can now generate your cover letter.');
  };
 
 const getAlignmentDescription = (score) => {
