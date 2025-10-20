@@ -806,7 +806,7 @@ const checkForExistingReport = async () => {
         .from('user_plans')
         .select('personalized_report')
         .eq('user_id', user.value.id)
-        .single()
+        .maybeSingle()
 
       if (!error && userPlan?.personalized_report) {
         // Database has a report - this is the source of truth
@@ -1212,8 +1212,7 @@ onMounted(async () => {
         .from('user_plans')
         .select('assessment_data, personalized_report')
         .eq('user_id', user.value.id)
-        .single()
-        .throwOnError()
+        .maybeSingle()
 
       if (!error && dbPlan?.assessment_data) {
         console.log('Found data in database:', dbPlan.assessment_data)
@@ -1938,7 +1937,7 @@ async function checkUserCredits() {
       .eq('is_active', true)
       .order('created_at', { ascending: false })
       .limit(1)
-      .single()
+      .maybeSingle()
 
     if (error) throw error
     userCredits.value = subscription?.available_credit || 0
@@ -1960,9 +1959,9 @@ async function saveAssessmentData(linkedinText = null, personalizedReport = null
       .from('user_plans')
       .select('id, assessment_data, personalized_report')
       .eq('user_id', user.value.id)
-      .single()
+      .maybeSingle()
 
-    if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+    if (fetchError) {
       throw fetchError
     }
 
