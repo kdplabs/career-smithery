@@ -244,7 +244,7 @@ const submitForm = async () => {
           .from('user_plans')
           .select('assessment_data')
           .eq('user_id', user.value.id)
-          .single()
+          .maybeSingle()
 
         if (!fetchError && userPlan?.assessment_data) {
           assessmentSummary = userPlan.assessment_data
@@ -337,7 +337,7 @@ async function saveAssessmentData(linkedinText = null, personalizedReport = null
           .from('user_plans')
           .select('assessment_data')
           .eq('user_id', user.value.id)
-          .single()
+          .maybeSingle()
 
         if (!fetchError && userPlan?.assessment_data) {
           assessmentData = userPlan.assessment_data
@@ -368,9 +368,9 @@ async function saveAssessmentData(linkedinText = null, personalizedReport = null
       .from('user_plans')
       .select('id, assessment_data, personalized_report')
       .eq('user_id', user.value.id)
-      .single()
+      .maybeSingle()
 
-    if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+    if (fetchError) {
       throw fetchError
     }
 
@@ -434,7 +434,7 @@ async function fetchUserCredits() {
       .eq('user_id', user.value.id)
       .order('start_date', { ascending: false })
       .limit(1)
-      .single()
+      .maybeSingle()
     
     if (!error && sub) {
       userCredits.value = sub.available_credit || 0

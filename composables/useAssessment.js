@@ -450,8 +450,7 @@ export const useAssessment = () => {
           .from('user_plans')
           .select('assessment_data')
           .eq('user_id', user.value.id)
-          .single()
-          .throwOnError()
+          .maybeSingle()
 
         if (!error && dbPlan && dbPlan.assessment_data) {
           console.log('Found data in database:', dbPlan.assessment_data)
@@ -465,8 +464,8 @@ export const useAssessment = () => {
           } else {
             savedData = dbPlan.assessment_data
           }
-        } else if (error && error.code !== 'PGRST116') {
-          // Log any error that's not "no rows found"
+        } else if (error) {
+          // Log any error
           console.error('Error fetching data from database:', error)
         }
       } catch (err) {

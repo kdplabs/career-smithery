@@ -891,7 +891,7 @@ const handleNextStep = async () => {
         .from('user_plans')
         .select('id')
         .eq('user_id', user.value.id)
-        .single()
+        .maybeSingle()
 
       const dataToSave = {
         ...assessmentData.value,
@@ -956,7 +956,7 @@ const submitAssessment = async () => {
         .from('user_plans')
         .select('id')
         .eq('user_id', user.value.id)
-        .single()
+        .maybeSingle()
 
       const dataToSave = {
         ...assessmentData.value,
