@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cover Letter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="cover-letter-content-wrapper">
+        <div class="cover-letter-modern bg-white min-h-screen">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8">
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="text-3xl font-bold mb-2">{{ resumeData.personalInfo.fullName }}</h1>
+                            <p class="text-blue-100 text-lg">{{ resumeData.personalInfo.title }}</p>
+                            <div class="flex items-center space-x-4 mt-3 text-blue-100">
+                                {{#if resumeData.personalInfo.email}}
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    </svg>
+                                    {{ resumeData.personalInfo.email }}
+                                </div>
+                                {{/if}}
+                                {{#if resumeData.personalInfo.phone}}
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                    </svg>
+                                    {{ resumeData.personalInfo.phone }}
+                                </div>
+                                {{/if}}
+                                {{#if resumeData.personalInfo.location}}
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    {{ resumeData.personalInfo.location }}
+                                </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold">{{currentDate}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto p-8">
+                <div class="grid grid-cols-3 gap-8 mb-8">
+                    <div class="col-span-2">
+                        <div class="bg-gray-50 rounded-2xl p-6 border-l-4 border-blue-500">
+                            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                                <div class="w-2 h-6 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full mr-3"></div>
+                                Cover Letter
+                            </h2>
+                            <div class="prose prose-lg max-w-none">
+                                <div class="whitespace-pre-line text-gray-800 leading-relaxed">{{ coverLetterData.coverLetterText }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-200">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4 text-center">Role Alignment</h3>
+                            <div class="flex justify-center mb-4">
+                                <div class="relative inline-flex items-center justify-center w-24 h-24">
+                                    <svg class="w-24 h-24 transform -rotate-90" viewBox="0 0 36 36">
+                                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e5e7eb" stroke-width="2" />
+                                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-dasharray="{{coverLetterData.alignmentScore}}, 100" />
+                                    </svg>
+                                    <span class="absolute text-xl font-bold text-gray-900">{{coverLetterData.alignmentScore}}%</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 text-center">{{ getAlignmentDescription coverLetterData.alignmentScore }}</p>
+                        </div>
+
+                        {{#if coverLetterData.companyHighlights}}
+                        <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 border border-emerald-200">
+                            <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center">
+                                <div class="w-2 h-6 bg-gradient-to-b from-emerald-500 to-teal-600 rounded-full mr-3"></div>
+                                Experience Highlights
+                            </h3>
+                            <div class="space-y-4">
+                                {{#each coverLetterData.companyHighlights}}
+                                <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transform hover:scale-105 transition-all duration-300">
+                                    <h4 class="font-bold text-lg text-gray-900 mb-3 text-center">{{this.companyName}}</h4>
+                                    <p class="text-sm text-gray-700">{{this.keyAchievements.[0]}}</p>
+                                </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+
+                {{#if coverLetterData.alignedSkills}}
+                <div class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl p-6 border-l-4 border-indigo-500">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                        <div class="w-2 h-6 bg-gradient-to-b from-indigo-500 to-blue-600 rounded-full mr-3"></div>
+                        Key Skills Match
+                    </h2>
+                    <div class="grid grid-cols-3 gap-6">
+                        {{#each coverLetterData.alignedSkills}}
+                        <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-h-[80px]">
+                            <span class="font-semibold text-gray-900 text-center">{{this.skillName}}</span>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

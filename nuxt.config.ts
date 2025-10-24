@@ -27,6 +27,14 @@ export default defineNuxtConfig({
   supabase: {
     redirect: false
   },
+  build: {
+    transpile: ['puppeteer', 'handlebars'],
+  },
+  nitro: {
+    externals: {
+      inline: ['puppeteer', 'handlebars']
+    }
+  },
   // If you want to use Heroicons, you might need a Vite plugin.
   // For example, vite-plugin-heroicons-sg
   // You would then configure it in the vite section:

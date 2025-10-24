@@ -30,14 +30,15 @@
             
             <!-- Action Buttons -->
             <div class="flex flex-wrap gap-3">
-              <button 
-                @click="downloadResume"
-                :disabled="downloadLoading || editMode"
+              <button
+                @click="downloadResumeFromServer"
+                :disabled="downloadLoadingServer || editMode"
                 class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
                 :title="editMode ? 'Turn off edit mode to download' : ''"
               >
-                <Icon name="i-heroicons-arrow-down-tray" class="w-4 h-4" />
-                <span>{{ downloadLoading ? 'Generating...' : 'Download PDF' }}</span>
+                <Icon v-if="downloadLoadingServer" name="i-heroicons-arrow-path" class="w-4 h-4 animate-spin" />
+                <Icon v-else name="i-heroicons-arrow-down-tray" class="w-4 h-4" />
+                <span>{{ downloadLoadingServer ? 'Generating...' : 'Download PDF' }}</span>
               </button>
               
               <NuxtLink 
@@ -74,6 +75,22 @@
               </NuxtLink>
             </div>
                      </div>
+
+           <!-- Credit Warning -->
+           <div v-if="showCreditWarning" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+             <div class="flex items-center gap-3">
+               <Icon name="i-heroicons-exclamation-triangle" class="w-5 h-5 text-red-600" />
+               <div>
+                 <h3 class="text-sm font-medium text-red-800">No Credits Available</h3>
+                 <p class="text-sm text-red-700 mt-1">
+                   You need at least 1 credit to generate a cover letter. 
+                   <NuxtLink to="/credits" class="font-medium underline hover:no-underline">
+                     Purchase credits here
+                   </NuxtLink>
+                 </p>
+               </div>
+             </div>
+           </div>
 
            <!-- Template Selection -->
            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
@@ -223,6 +240,7 @@ import ResumeTemplateModern from '~/components/ResumeTemplateModern.vue'
 import ResumeTemplateMinimal from '~/components/ResumeTemplateMinimal.vue'
 import EditSectionModal from '~/components/EditSectionModal.vue'
 import { useDatabase } from '~/composables/useDatabase';
+import { useCredits } from '~/composables/useCredits';
 
 // Prevent SSR for this page since it requires authentication
 definePageMeta({
@@ -234,17 +252,19 @@ const router = useRouter()
 const { user } = useAuth()
 const supabase = useSupabaseClient()
 const { saveResumeToDatabase, getResumeFromDatabase } = useDatabase();
+const { userCredits, fetchUserCredits } = useCredits();
 
 // State
 const resumeData = ref(null)
 const jobData = ref({})
-const downloadLoading = ref(false)
+const downloadLoadingServer = ref(false)
 const generatingCoverLetter = ref(false)
 const selectedTemplate = ref('classic')
 const editMode = ref(false)
 const showEditModal = ref(false)
 const editingSection = ref('')
 const editingData = ref(null)
+const showCreditWarning = ref(false)
 
 // Template options
 const templates = [
@@ -294,18 +314,48 @@ function getScoreDescription(score) {
   return 'Needs improvement'
 }
 
-
-
-async function downloadResume() {
-  downloadLoading.value = true
+async function downloadResumeFromServer() {
+  downloadLoadingServer.value = true
   try {
-    const { generatePdfForTemplate } = await import('../utils/pdfGenerator.js')
-    await generatePdfForTemplate(resumeData.value, selectedTemplate.value)
+    const response = await fetch('/api/generate-resume-pdf', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        resumeData: resumeData.value,
+        template: selectedTemplate.value,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to generate PDF on the server.');
+    }
+
+    const blob = await response.blob();
+    const contentDisposition = response.headers.get('content-disposition');
+    let filename = 'resume.pdf';
+    if (contentDisposition) {
+      const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+      if (filenameMatch.length > 1) {
+        filename = filenameMatch[1];
+      }
+    }
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+
   } catch (error) {
-    console.error('Error downloading resume:', error)
-    alert('Failed to download resume. Please try again.')
+    console.error('Error downloading server-side generated resume:', error);
+    alert(`Failed to download resume: ${error.message || 'Unknown error'}`);
   } finally {
-    downloadLoading.value = false
+    downloadLoadingServer.value = false
   }
 }
 
@@ -315,6 +365,14 @@ async function generateCoverLetter() {
     return
   }
 
+  // Check if user has enough credits
+  if (userCredits.value < 1) {
+    showCreditWarning.value = true
+    return
+  }
+
+  // Hide credit warning if it was previously shown
+  showCreditWarning.value = false
   generatingCoverLetter.value = true
   try {
     const response = await fetch('/api/generate-cover-letter', {
@@ -432,6 +490,9 @@ onMounted(async () => {
     router.push('/jobs')
     return
   }
+
+  // Fetch user credits
+  await fetchUserCredits()
 
   const jobId = route.query.jobId
   if (!jobId) {

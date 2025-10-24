@@ -248,6 +248,13 @@
       </div>
     </div>
   </div>
+
+  <!-- Pricing Modal -->
+  <PricingModal
+    :show="showPricingModal"
+    @close="showPricingModal = false"
+    @purchase-complete="handlePurchaseComplete"
+  />
 </template>
 
 <script setup>
@@ -257,6 +264,7 @@ import GaugeChart from '~/components/GaugeChart.vue'
 import FocusAreaCard from '~/components/FocusAreaCard.vue'
 import { useAuth } from '~/composables/useAuth'
 import KanbanBoard from '~/components/KanbanBoard.vue'
+import PricingModal from '~/components/PricingModal.vue'
 
 const report = ref(null)
 const isLoadingReport = ref(true)
@@ -286,6 +294,7 @@ const taskModalLoading = ref(false)
 const taskModalError = ref('')
 const createTasksModalLoading = ref(false)
 const createTasksModalError = ref('')
+const showPricingModal = ref(false)
 const createTasksForm = ref({
   area: '',
   tasks: [],
@@ -471,6 +480,9 @@ async function submitCreateTasks() {
     })
     
     if (!res.ok) {
+      if (res.status === 402) {
+        throw new Error('Not enough credits')
+      }
       const errText = await res.text()
       throw new Error(errText)
     }
@@ -480,7 +492,13 @@ async function submitCreateTasks() {
     showCreateTasksModal.value = false
     await fetchUserTasks()
   } catch (err) {
-    createTasksModalError.value = 'Error creating tasks: ' + (err.message || err)
+    // Check if it's a credit error
+    if (err.message && err.message.includes('Not enough credits')) {
+      createTasksModalError.value = 'Insufficient credits to generate tasks. Please purchase more credits.'
+      showPricingModal.value = true
+    } else {
+      createTasksModalError.value = 'Error creating tasks: ' + (err.message || err)
+    }
     showMessage('Error creating tasks: ' + (err.message || err), 'error')
   } finally {
     createTasksModalLoading.value = false
@@ -584,6 +602,11 @@ function getQuarterFromDate(dateStr) {
   const month = d.getMonth() // 0-based
   const quarter = Math.floor(month / 3) + 1
   return `${year}-Q${quarter}`
+}
+
+function handlePurchaseComplete() {
+  showPricingModal.value = false
+  showMessage('Purchase completed! You can now generate tasks.', 'success')
 }
 
 // Watch for due_date changes in the task modal and update quarter

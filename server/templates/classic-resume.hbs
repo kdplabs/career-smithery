@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-white p-6 max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-6 border-b-2 border-gray-300 pb-4">
+            <h1 class="text-3xl font-bold mb-2 text-gray-900">{{ resumeData.personalInfo.fullName }}</h1>
+            <div class="text-sm text-gray-700 space-y-1">
+                <div class="flex justify-center items-center space-x-4 flex-wrap">
+                    <span>{{ resumeData.personalInfo.email }}</span>
+                    <span>•</span>
+                    <span>{{ resumeData.personalInfo.phone }}</span>
+                    {{#if resumeData.personalInfo.location}}
+                        <span>•</span>
+                        <span>{{ resumeData.personalInfo.location }}</span>
+                    {{/if}}
+                </div>
+                {{#if resumeData.personalInfo.linkedin}}
+                <div class="flex justify-center items-center space-x-4 flex-wrap">
+                    <span>{{ resumeData.personalInfo.linkedin }}</span>
+                    {{#if resumeData.personalInfo.website}}
+                        <span>•</span>
+                        <span>{{ resumeData.personalInfo.website }}</span>
+                    {{/if}}
+                </div>
+                {{else}}
+                    {{#if resumeData.personalInfo.website}}
+                    <div class="flex justify-center items-center space-x-4 flex-wrap">
+                        <span>{{ resumeData.personalInfo.website }}</span>
+                    </div>
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
+
+        <!-- Professional Summary -->
+        <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-900 border-b border-gray-400 pb-1">PROFESSIONAL SUMMARY</h2>
+            <p class="text-sm leading-relaxed text-gray-800 pt-2">{{ resumeData.professionalSummary }}</p>
+        </div>
+
+        <!-- Work Experience -->
+        <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-900 border-b border-gray-400 pb-1 mb-3">WORK EXPERIENCE</h2>
+            {{#each resumeData.workExperience}}
+            <div class="mb-4">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <h3 class="font-bold text-sm text-gray-900">{{ this.jobTitle }}</h3>
+                        <p class="text-sm text-gray-800">{{ this.company }}{{#if this.location}}, {{ this.location }}{{/if}}</p>
+                    </div>
+                    <div class="text-sm text-gray-700 text-right">
+                        {{ this.startDate }} - {{#if this.endDate}}{{ this.endDate }}{{else}}Present{{/if}}
+                    </div>
+                </div>
+                <ul class="space-y-1">
+                    {{#each this.achievements}}
+                    <li class="text-sm text-gray-800 flex items-start">
+                        <span class="text-gray-800 mr-2 mt-0.5 flex-shrink-0">•</span>
+                        <span class="leading-relaxed">{{ this }}</span>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+            {{/each}}
+        </div>
+
+        <!-- Education -->
+        <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-900 border-b border-gray-400 pb-1 mb-3">EDUCATION</h2>
+            {{#each resumeData.education}}
+            <div class="mb-3">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold text-sm text-gray-900">
+                            {{ this.degree }}{{#if this.field}}, {{ this.field }}{{/if}}
+                        </h3>
+                        <p class="text-sm text-gray-800">{{ this.institution }}</p>
+                        {{#if this.gpa}}
+                        <p class="text-sm text-gray-700">
+                            <span>GPA: {{ this.gpa }}</span>
+                            {{#if this.honors}}
+                                <span> • </span>
+                                <span>{{ this.honors }}</span>
+                            {{/if}}
+                        </p>
+                        {{else}}
+                            {{#if this.honors}}
+                            <p class="text-sm text-gray-700">
+                                <span>{{ this.honors }}</span>
+                            </p>
+                            {{/if}}
+                        {{/if}}
+                    </div>
+                    {{#if this.graduationYear}}
+                    <div class="text-sm text-gray-700">
+                        {{ this.graduationYear }}
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+
+        <!-- Skills -->
+        <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-900 border-b border-gray-400 pb-1 mb-3">SKILLS</h2>
+            <div class="grid grid-cols-1 gap-2">
+                {{#if resumeData.skills.technical}}
+                <div class="mb-2">
+                    <span class="font-semibold text-sm text-gray-900">Technical: </span>
+                    <span class="text-sm text-gray-800">{{#each resumeData.skills.technical}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}</span>
+                </div>
+                {{/if}}
+                {{#if resumeData.skills.tools}}
+                <div class="mb-2">
+                    <span class="font-semibold text-sm text-gray-900">Tools & Platforms: </span>
+                    <span class="text-sm text-gray-800">{{#each resumeData.skills.tools}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}</span>
+                </div>
+                {{/if}}
+                {{#if resumeData.skills.soft}}
+                <div class="mb-2">
+                    <span class="font-semibold text-sm text-gray-900">Core Competencies: </span>
+                    <span class="text-sm text-gray-800">{{#each resumeData.skills.soft}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}</span>
+                </div>
+                {{/if}}
+                {{#if resumeData.skills.languages}}
+                <div class="mb-2">
+                    <span class="font-semibold text-sm text-gray-900">Languages: </span>
+                    <span class="text-sm text-gray-800">{{#each resumeData.skills.languages}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}</span>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+
+        <!-- Certifications -->
+        {{#if resumeData.certifications}}
+        <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-900 border-b border-gray-400 pb-1 mb-3">CERTIFICATIONS</h2>
+            {{#each resumeData.certifications}}
+            <div class="mb-2">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold text-sm text-gray-900">{{ this.name }}</h3>
+                        <p class="text-sm text-gray-800">{{ this.issuer }}</p>
+                    </div>
+                    <div class="text-sm text-gray-700 text-right">
+                        {{#if this.date}}<div>{{ this.date }}</div>{{/if}}
+                        {{#if this.expirationDate}}<div class="text-xs">Expires: {{ this.expirationDate }}</div>{{/if}}
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}
+
+        <!-- Projects -->
+        {{#if resumeData.projects}}
+        <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-900 border-b border-gray-400 pb-1 mb-3">PROJECTS</h2>
+            {{#each resumeData.projects}}
+            <div class="mb-3">
+                <h3 class="font-bold text-sm text-gray-900">{{ this.name }}</h3>
+                <p class="text-sm text-gray-800 mb-1">{{ this.description }}</p>
+                {{#if this.technologies}}
+                <div class="text-sm text-gray-700 mb-1">
+                    <span class="font-semibold">Technologies: </span>{{#each this.technologies}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}
+                </div>
+                {{/if}}
+                {{#if this.link}}
+                <div class="text-sm text-gray-700">
+                    <span class="font-semibold">Link: </span>{{ this.link }}
+                </div>
+                {{/if}}
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}
+    </div>
+</body>
+</html>

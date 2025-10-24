@@ -57,8 +57,20 @@ INSTRUCTIONS:
 7. Maintain a professional tone throughout
 8. Incorporate any provided metrics and quantifiable achievements to make the resume more compelling
 9. Use a professional, classic format that works well with ATS systems
+10. Write in natural, human language that avoids AI-generated patterns and clichés
+11. Use varied sentence structures and authentic professional vocabulary
+12. Avoid overly formal or robotic phrasing
 
-Generate a structured resume with the specified sections. Make the resume compelling, professional, and tailored specifically to the target role.`
+PROFESSIONAL SUMMARY GUIDELINES:
+- Base the professional summary primarily on the actual experiences and achievements listed in the provided resume data
+- If there are direct matches between the user's experience and job requirements, highlight those connections
+- If there are no direct matches, create a compelling summary based solely on the user's actual background and achievements
+- Use specific examples and quantifiable results from their work history
+- Write in first person or third person consistently throughout
+- Keep the summary concise (3-4 sentences) but impactful
+- Focus on what the candidate has actually accomplished, not generic statements
+
+Generate a structured resume with the specified sections. Make the resume compelling, professional, and tailored specifically to the target role while ensuring the language sounds natural and human-written.`
 
   const userPrompt = `
 JOB DESCRIPTION:
@@ -73,7 +85,9 @@ ${metrics}` : ''}
 ${additionalInstructions ? `ADDITIONAL INSTRUCTIONS:
 ${additionalInstructions}` : ''}
 
-Please generate an optimized resume for this job opportunity. Make sure to extract the job title and company name from the job description and include them in your response.`
+Please generate an optimized resume for this job opportunity. Make sure to extract the job title and company name from the job description and include them in your response.
+
+IMPORTANT: For the professional summary, analyze the user's actual work experience and achievements from their current resume data. If their background directly aligns with the job requirements, emphasize those connections. If there are no direct matches, create a compelling summary based entirely on their actual accomplishments and experience. Use natural, conversational language that sounds human-written, not AI-generated.`
 
   // 3. Define the structured schema for resume output
   const resumeSchema = {

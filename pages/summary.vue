@@ -650,7 +650,7 @@
               @click="navigateToReportWizard()"
               class="px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300 flex items-center justify-center mx-auto"
             >
-              <Icon name="i-mdi-sparkles" class="mr-2" /> Generate Personalized Report <span class="text-sm ml-2">(10 credit points, $3)</span>
+              <Icon name="i-mdi-sparkles" class="mr-2" /> Generate Personalized Report
             </button>
           </div>
         </div>
@@ -667,7 +667,7 @@
               @click="navigateToReportWizard()"
               class="px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300  flex items-center justify-center"
             >
-              <Icon name="i-mdi-sparkles" class="mr-2" /> Get Personalized Report <span class="text-sm ml-2">(10 credit points, $3)</span>
+              <Icon name="i-mdi-sparkles" class="mr-2" /> Get Personalized Report
             </button>
             <button
               @click="handleSave()"

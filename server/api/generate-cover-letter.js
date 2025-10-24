@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const prompt = `
-As an expert cover letter writer and career coach, generate a comprehensive cover letter package based on the provided resume data and job description.
+As an expert cover letter writer and career coach, generate a comprehensive cover letter package based on the provided resume data and job description. Write in natural, human language that avoids AI-generated patterns and clichés.
 
 RESUME DATA:
 ${JSON.stringify(resumeData, null, 2)}
@@ -76,31 +76,52 @@ Generate a JSON response with the following structure:
 }
 
 INSTRUCTIONS:
-1. Cover Letter Text: Write in first person, address specific job requirements, highlight relevant achievements, show enthusiasm for the role and company.
+1. Cover Letter Text: 
+   - Write in first person using natural, conversational language
+   - Base the content primarily on actual experiences and achievements from the provided resume data
+   - If there are direct matches between the user's experience and job requirements, highlight those connections
+   - If there are no direct matches, create a compelling cover letter based solely on the user's actual background and achievements
+   - Use specific examples and quantifiable results from their work history
+   - Avoid generic statements and AI-generated clichés
+   - Show enthusiasm for the role while staying grounded in actual experience
 
-2. Company Highlights: Extract the last 3 companies from work experience. For each company, provide ONLY 1 key achievement that is most relevant to the target job description. Focus on the most impactful and relevant achievement per company.
+2. Company Highlights: 
+   - Extract the last 3 companies from work experience
+   - For each company, provide ONLY 1 key achievement that is most relevant to the target job description
+   - Base achievements solely on what's actually listed in the resume data
+   - Focus on the most impactful and relevant achievement per company that matches job requirements
+   - If no direct matches exist, use the most impressive achievement from their actual experience
 
-3. Aligned Skills: Identify 6-8 skills from the resume that best match the job requirements. Only include the skill name and icon - no descriptions or explanations. For iconName, choose from this list of available heroicons:
-   - code-bracket (for programming, development)
-   - cog (for technical skills, engineering)
-   - chart-bar (for analytics, data, reporting)
-   - user-group (for leadership, team management)
-   - light-bulb (for innovation, creativity)
-   - shield-check (for security, compliance)
-   - cloud (for cloud computing, infrastructure)
-   - device-phone-mobile (for mobile development)
-   - paint-brush (for design, UI/UX)
-   - currency-dollar (for sales, business, finance)
-   - chat-bubble-left-right (for communication, customer service)
-   - rocket-launch (for startup experience, growth)
-   - document-text (for documentation, writing)
-   - calculator (for accounting, mathematics)
-   - globe-alt (for international, web development)
-   - beaker (for research, experimentation)
+3. Aligned Skills: 
+   - Identify 6-8 skills from the resume that best match the job requirements
+   - Only include skills that are actually mentioned in the provided resume data
+   - Only include the skill name and icon - no descriptions or explanations
+   - For iconName, choose from this list of available heroicons:
+     - code-bracket (for programming, development)
+     - cog (for technical skills, engineering)
+     - chart-bar (for analytics, data, reporting)
+     - user-group (for leadership, team management)
+     - light-bulb (for innovation, creativity)
+     - shield-check (for security, compliance)
+     - cloud (for cloud computing, infrastructure)
+     - device-phone-mobile (for mobile development)
+     - paint-brush (for design, UI/UX)
+     - currency-dollar (for sales, business, finance)
+     - chat-bubble-left-right (for communication, customer service)
+     - rocket-launch (for startup experience, growth)
+     - document-text (for documentation, writing)
+     - calculator (for accounting, mathematics)
+     - globe-alt (for international, web development)
+     - beaker (for research, experimentation)
 
-4. Alignment Score: Calculate a percentage (0-100) based on how well the candidate's experience matches the job requirements.
+4. Alignment Score: 
+   - Calculate a percentage (0-100) based on how well the candidate's actual experience from the resume data matches the job requirements
+   - Only consider skills, experiences, and achievements that are explicitly mentioned in the provided resume data
+   - Do not assume or invent experiences not present in the resume
 
-Respond ONLY with valid JSON. Make the content specific, relevant, and professional.`;
+CRITICAL: All content must be based solely on the actual experiences, skills, and achievements listed in the provided resume data. Do not create or assume any experiences not explicitly mentioned in the resume data.
+
+Respond ONLY with valid JSON. Make the content specific, relevant, and professional while ensuring it sounds natural and human-written.`;
 
   try {
     const geminiRes = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {

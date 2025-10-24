@@ -115,9 +115,9 @@
               <span>{{ editMode ? 'Save Changes' : 'Edit Mode' }}</span>
             </button>
             <button
-              @click="downloadCoverLetter"
+              @click="downloadCoverLetterFromServer"
               :disabled="downloadingPDF"
-              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               <svg v-if="downloadingPDF" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -466,7 +466,7 @@ const regenerateCoverLetter = async () => {
    }
  };
 
-const downloadCoverLetter = async () => {
+const downloadCoverLetterFromServer = async () => {
   if (!coverLetterData.value) {
     alert('No cover letter data available to download.');
     return;
@@ -474,18 +474,49 @@ const downloadCoverLetter = async () => {
   
   downloadingPDF.value = true;
   try {
-    // Get resume data from database instead of localStorage
     const resumeData = await getResumeFromDatabase(jobId);
     if (!resumeData) {
       alert('No resume data found. Please generate a resume first.');
       return;
     }
     
-    const { generateCoverLetterPDF } = await import('../utils/coverLetterPdfGenerator.js');
-    const { pdf, filename } = await generateCoverLetterPDF(coverLetterData.value, resumeData, selectedTemplate.value);
-    pdf.save(filename);
+    const response = await fetch('/api/generate-cover-letter-pdf', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        coverLetterData: coverLetterData.value,
+        resumeData: resumeData,
+        template: selectedTemplate.value,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to generate PDF on the server.');
+    }
+
+    const blob = await response.blob();
+    const contentDisposition = response.headers.get('content-disposition');
+    let filename = 'cover-letter.pdf';
+    if (contentDisposition) {
+      const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+      if (filenameMatch.length > 1) {
+        filename = filenameMatch[1];
+      }
+    }
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+
   } catch (error) {
-    console.error('Error downloading cover letter:', error);
+    console.error('Error downloading server-side generated cover letter:', error);
     alert(`Failed to download cover letter: ${error.message || 'Unknown error'}`);
   } finally {
     downloadingPDF.value = false;

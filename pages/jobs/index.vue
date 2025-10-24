@@ -910,9 +910,40 @@ function viewJob(job) {
 async function downloadResumeFromModal() {
   downloadLoading.value = true
   try {
-    // Use structured PDF generation for ATS compatibility
-    const { generateStructuredPDF } = await import('../utils/pdfGenerator.js')
-    await generateStructuredPDF(selectedResume.value, 'classic')
+    const response = await fetch('/api/generate-resume-pdf', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        resumeData: selectedResume.value,
+        template: 'classic', // Or another default/selected template
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to generate PDF on the server.');
+    }
+
+    const blob = await response.blob();
+    const contentDisposition = response.headers.get('content-disposition');
+    let filename = 'resume.pdf';
+    if (contentDisposition) {
+      const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+      if (filenameMatch && filenameMatch.length > 1) {
+        filename = filenameMatch[1];
+      }
+    }
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+
   } catch (error) {
     console.error('Error downloading resume:', error)
     alert('Failed to download resume. Please try again.')

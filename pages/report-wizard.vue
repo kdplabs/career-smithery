@@ -146,7 +146,6 @@
                 >
                   <Icon name="i-mdi-brain" class="mr-2" />
                   Generate Report
-                  <span class="text-sm ml-2">(10 credits, $3)</span>
                 </button>
               </div>
             </form>
