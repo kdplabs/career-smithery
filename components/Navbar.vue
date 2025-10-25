@@ -68,6 +68,13 @@
               Assessment
             </NuxtLink>
             <NuxtLink
+              to="/blog"
+              class="border-transparent text-gray-500 hover:border-blue-300 hover:text-blue-700 inline-flex items-center px-1 pt-1 border-b-2 text-base font-semibold transition-all duration-200"
+              active-class="nav-gradient-active"
+            >
+              Blog
+            </NuxtLink>
+            <NuxtLink
               to="/summary"
               class="border-transparent text-gray-500 hover:border-blue-300 hover:text-blue-700 inline-flex items-center px-1 pt-1 border-b-2 text-base font-semibold transition-all duration-200"
               active-class="nav-gradient-active"
@@ -190,6 +197,12 @@
             active-class="!bg-gradient-to-r !from-blue-50 !via-purple-50 !to-pink-50 !text-blue-700"
             @click="mobileMenuOpen = false"
           >Assessment</NuxtLink>
+          <NuxtLink
+            to="/blog"
+            class="block px-3 py-2 rounded-lg text-base font-semibold text-gray-700 hover:bg-blue-50 transition-all"
+            active-class="!bg-gradient-to-r !from-blue-50 !via-purple-50 !to-pink-50 !text-blue-700"
+            @click="mobileMenuOpen = false"
+          >Blog</NuxtLink>
           <NuxtLink
             to="/summary"
             class="block px-3 py-2 rounded-lg text-base font-semibold text-gray-700 hover:bg-blue-50 transition-all"
