@@ -1,16 +1,42 @@
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
 import handlebars from 'handlebars';
 import { promises as fs } from 'fs';
 import path from 'path';
 
 export default defineEventHandler(async (event) => {
-  const { coverLetterData, resumeData, template = 'classic' } = await readBody(event);
+  let { coverLetterData, resumeData, template = 'classic' } = await readBody(event);
 
   if (!coverLetterData || !resumeData) {
     throw createError({
       statusCode: 400,
       statusMessage: 'Missing cover letter or resume data',
     });
+  }
+
+  // Handle case where data might be stringified JSON
+  if (typeof coverLetterData === 'string') {
+    try {
+      coverLetterData = JSON.parse(coverLetterData);
+    } catch (e) {
+      console.error('Failed to parse coverLetterData string:', e);
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Invalid cover letter data format',
+      });
+    }
+  }
+
+  if (typeof resumeData === 'string') {
+    try {
+      resumeData = JSON.parse(resumeData);
+    } catch (e) {
+      console.error('Failed to parse resumeData string:', e);
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Invalid resume data format',
+      });
+    }
   }
 
   // Path to the Handlebars template
@@ -42,11 +68,27 @@ export default defineEventHandler(async (event) => {
     // Render the HTML
     const html = compiledTemplate(templateData);
 
-    // Launch Puppeteer
-    browser = await puppeteer.launch({ 
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
+    // Launch Puppeteer with chromium for serverless
+    // Check if we're in a serverless environment (Netlify, Vercel, etc.)
+    const isServerless = process.env.NETLIFY || process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
+    
+    if (isServerless) {
+      // Use chromium for serverless environments
+      browser = await puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath(),
+        headless: chromium.headless,
+      });
+    } else {
+      // Use regular puppeteer for local development
+      const puppeteerRegular = await import('puppeteer');
+      browser = await puppeteerRegular.default.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+      });
+    }
+    
     const page = await browser.newPage();
 
     await page.setViewport({ width: 1280, height: 1024 });
@@ -76,9 +118,12 @@ export default defineEventHandler(async (event) => {
 
   } catch (error) {
     console.error('Puppeteer PDF generation error:', error);
+    console.error('Error stack:', error.stack);
+    console.error('Cover letter data structure:', JSON.stringify(coverLetterData, null, 2));
+    console.error('Resume data structure:', JSON.stringify(resumeData, null, 2));
     throw createError({
       statusCode: 500,
-      statusMessage: 'Failed to generate PDF cover letter',
+      statusMessage: `Failed to generate PDF cover letter: ${error.message}`,
     });
   } finally {
     if (browser) {

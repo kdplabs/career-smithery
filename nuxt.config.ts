@@ -28,11 +28,11 @@ export default defineNuxtConfig({
     redirect: false
   },
   build: {
-    transpile: ['puppeteer', 'handlebars'],
+    transpile: ['puppeteer-core', '@sparticuz/chromium', 'handlebars'],
   },
   nitro: {
     externals: {
-      inline: ['puppeteer', 'handlebars']
+      inline: ['puppeteer-core', 'handlebars']
     }
   },
   // If you want to use Heroicons, you might need a Vite plugin.

@@ -1,0 +1,27 @@
+[build]
+  command = "npm run build"
+  publish = ".output/public"
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/server/:splat"
+  status = 200
+
+[functions]
+  # Increase timeout for PDF generation functions
+  # Default is 10 seconds, we need more for Puppeteer
+  node_bundler = "esbuild"
+  
+  # Set memory size (max 1024MB on free tier, up to 3008MB on pro)
+  # PDF generation with Puppeteer needs more memory
+  [functions."server"]
+    node_bundler = "esbuild"
+    included_files = ["server/templates/**"]
+
+# Environment variables (set these in Netlify UI)
+# GEMINI_API_KEY
+# SUPABASE_URL
+# SUPABASE_KEY
+# STRIPE_SECRET_KEY
+# STRIPE_WEBHOOK_SECRET
+
