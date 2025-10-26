@@ -121,14 +121,15 @@ export default defineEventHandler(async (event) => {
     const isServerless = process.env.NETLIFY || process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
     
     if (isServerless) {
+      // Set the path for the chromium executable in a serverless environment.
+      // Netlify (and other serverless platforms) only allow writing to the /tmp directory.
+      chromium.setHeadless(true);
+      
       // Use chromium for serverless environments
       browser = await puppeteer.launch({
         args: chromium.args,
         defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath({
-          headless: true,
-          executablePath: '/tmp/chromium'
-        }),
+        executablePath: await chromium.executablePath(),
         headless: chromium.headless,
       });
     } else {
