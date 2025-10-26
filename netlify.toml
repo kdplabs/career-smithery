@@ -1,11 +1,13 @@
 # This file tells Netlify how to build and deploy your site.
 
 [functions]
+  # General function settings can go here.
+  # Specific per-function settings are below.
+
+[functions."*"]
   # Increase memory and timeout for the heavy PDF task
   memory = 2048
   timeout = 26
-
-[functions."*"]
   node_bundler = "esbuild"
   # Tell the bundler to treat these packages as "external".
   # This forces Netlify to upload the entire package contents to the function,
