@@ -33,12 +33,6 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'netlify',
     serveStatic: true,
-    rollupConfig: {
-      external: ['puppeteer-core', '@sparticuz/chromium']
-    },
-    externals: {
-      inline: ['handlebars']
-    },
     // Include template files in the deployment
     publicAssets: [
       {
@@ -53,7 +47,11 @@ export default defineNuxtConfig({
         baseName: 'templates',
         dir: './server/templates'
       }
-    ]
+    ],
+    // Let Netlify handle the bundling - don't externalize
+    externals: {
+      inline: ['handlebars']
+    }
   },
   // If you want to use Heroicons, you might need a Vite plugin.
   // For example, vite-plugin-heroicons-sg
