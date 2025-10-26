@@ -49,7 +49,8 @@ git commit -m "Fix PDF generation for Netlify with serverless chromium
 - Update PDF generation APIs to auto-detect environment
 - Add data normalization to handle existing user data
 - Improve error logging for debugging
-- Add netlify.toml configuration"
+- Add netlify.toml configuration
+- Externalize puppeteer-core and chromium in Nitro config to fix bundling"
 
 # Push to repository
 git push origin main

@@ -28,11 +28,14 @@ export default defineNuxtConfig({
     redirect: false
   },
   build: {
-    transpile: ['puppeteer-core', '@sparticuz/chromium', 'handlebars'],
+    transpile: ['@sparticuz/chromium', 'handlebars'],
   },
   nitro: {
+    rollupConfig: {
+      external: ['puppeteer-core', '@sparticuz/chromium']
+    },
     externals: {
-      inline: ['puppeteer-core', 'handlebars']
+      inline: ['handlebars']
     }
   },
   // If you want to use Heroicons, you might need a Vite plugin.
