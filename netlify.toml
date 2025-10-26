@@ -1,3 +1,13 @@
+# This file tells Netlify how to build and deploy your site.
+
 [functions]
+  # Increase memory and timeout for the heavy PDF task
+  memory = 2048
+  timeout = 26
+
+[functions."*"]
   node_bundler = "esbuild"
-  external_node_modules = ["@sparticuz/chromium"]
+  # Tell the bundler to treat these packages as "external".
+  # This forces Netlify to upload the entire package contents to the function,
+  # ensuring the 'chromium.br' file and puppeteer dependencies are present at runtime.
+  external_node_modules = ["@sparticuz/chromium", "puppeteer-core"]
