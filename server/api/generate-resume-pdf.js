@@ -121,11 +121,13 @@ export default defineEventHandler(async (event) => {
     const isServerless = process.env.NETLIFY || process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
     
     if (isServerless) {
-      // Use chromium for serverless environments
+      // Use chromium for serverless environments.
+      // Explicitly pass a writable path to executablePath to ensure chromium is unpacked
+      // in the correct directory within the serverless environment.
       browser = await puppeteer.launch({
         args: chromium.args,
         defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath(),
+        executablePath: await chromium.executablePath('/tmp/chromium'),
         headless: chromium.headless,
       });
     } else {
