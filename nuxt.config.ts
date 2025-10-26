@@ -31,6 +31,8 @@ export default defineNuxtConfig({
     transpile: ['@sparticuz/chromium', 'handlebars'],
   },
   nitro: {
+    preset: 'netlify',
+    serveStatic: true,
     rollupConfig: {
       external: ['puppeteer-core', '@sparticuz/chromium']
     },
