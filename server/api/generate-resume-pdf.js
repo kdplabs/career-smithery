@@ -121,13 +121,16 @@ export default defineEventHandler(async (event) => {
     const isServerless = process.env.NETLIFY || process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
     
     if (isServerless) {
+      // In serverless environments, the only writable directory is /tmp.
+      // We need to explicitly set the TMPDIR environment variable to ensure
+      // that @sparticuz/chromium unpacks the browser binary in the correct location.
+      process.env.TMPDIR = '/tmp';
+      
       // Use chromium for serverless environments.
-      // Explicitly pass a writable path to executablePath to ensure chromium is unpacked
-      // in the correct directory within the serverless environment.
       browser = await puppeteer.launch({
         args: chromium.args,
         defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath('/tmp/chromium'),
+        executablePath: await chromium.executablePath(),
         headless: chromium.headless,
       });
     } else {
