@@ -44,22 +44,35 @@ export default defineEventHandler(async (event) => {
   
   let browser = null;
   try {
-    // Read template from server assets (works in both dev and production)
+    // Read template - try multiple paths for different environments
     let templateFile;
-    try {
-      // Try to read from server assets first (production/Netlify)
-      const storage = useStorage('assets:templates');
-      templateFile = await storage.getItem(templateName);
-      console.log('Loaded template from server assets:', templateName);
-    } catch (e) {
-      // Fallback to file system (local development)
-      console.log('Loading template from filesystem:', templateName);
-      const templatePath = path.join(process.cwd(), 'server', 'templates', templateName);
-      templateFile = await fs.readFile(templatePath, 'utf-8');
+    const possiblePaths = [
+      // Try server assets first (Nitro's asset system)
+      path.join(process.cwd(), '.output', 'server', 'assets', 'templates', templateName),
+      // Try relative to current file (works in some builds)
+      path.join(process.cwd(), 'server', 'templates', templateName),
+      // Try from root (local development)
+      path.join(process.cwd(), '..', '..', 'server', 'templates', templateName),
+      // Try Netlify function path
+      path.join('/var/task/server/templates', templateName),
+    ];
+    
+    console.log('Attempting to load template:', templateName);
+    console.log('Current working directory:', process.cwd());
+    
+    for (const templatePath of possiblePaths) {
+      try {
+        console.log('Trying path:', templatePath);
+        templateFile = await fs.readFile(templatePath, 'utf-8');
+        console.log('✓ Successfully loaded template from:', templatePath);
+        break;
+      } catch (e) {
+        console.log('✗ Failed to load from:', templatePath, '-', e.message);
+      }
     }
     
     if (!templateFile) {
-      throw new Error(`Template file not found: ${templateName}`);
+      throw new Error(`Template file not found: ${templateName}. Tried paths: ${possiblePaths.join(', ')}`);
     }
     
     // Register a helper for the alignment description
