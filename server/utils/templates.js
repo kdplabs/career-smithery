@@ -1,36 +1,20 @@
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
+// Import templates as inline strings (generated at build time)
+import {
+  classic_resume_hbs,
+  modern_resume_hbs,
+  minimal_resume_hbs,
+  classic_cover_letter_hbs,
+  modern_cover_letter_hbs
+} from './template-strings.js';
 
-// Get the project root directory
-// During build, process.cwd() is the project root
-const projectRoot = process.cwd();
-const templatesDir = resolve(projectRoot, 'server', 'templates');
-
-console.log('Loading templates from:', templatesDir);
-
-function loadTemplate(templateName) {
-  try {
-    const templatePath = resolve(templatesDir, templateName);
-    console.log('Loading template:', templatePath);
-    const content = readFileSync(templatePath, 'utf-8');
-    console.log('✓ Successfully loaded:', templateName, `(${content.length} bytes)`);
-    return content;
-  } catch (error) {
-    console.error(`✗ Failed to load template ${templateName}:`, error.message);
-    console.error('Attempted path:', resolve(templatesDir, templateName));
-    throw new Error(`Template not found: ${templateName} - ${error.message}`);
-  }
-}
-
-// Pre-load all templates to ensure they're bundled
-// These are loaded at module initialization time (during build)
+// Export templates as an object for easy access
 export const templates = {
-  'classic-resume.hbs': loadTemplate('classic-resume.hbs'),
-  'modern-resume.hbs': loadTemplate('modern-resume.hbs'),
-  'minimal-resume.hbs': loadTemplate('minimal-resume.hbs'),
-  'classic-cover-letter.hbs': loadTemplate('classic-cover-letter.hbs'),
-  'modern-cover-letter.hbs': loadTemplate('modern-cover-letter.hbs'),
+  'classic-resume.hbs': classic_resume_hbs,
+  'modern-resume.hbs': modern_resume_hbs,
+  'minimal-resume.hbs': minimal_resume_hbs,
+  'classic-cover-letter.hbs': classic_cover_letter_hbs,
+  'modern-cover-letter.hbs': modern_cover_letter_hbs,
 };
 
-console.log('✓ All templates loaded successfully');
+console.log('✓ Templates loaded from inline strings');
 

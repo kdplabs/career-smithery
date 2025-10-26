@@ -11,8 +11,6 @@ import { detab } from 'detab';
 import { normalizeUri } from 'micromark-util-sanitize-uri';
 import { toString } from 'hast-util-to-string';
 import Slugger from 'github-slugger';
-import { readFileSync } from 'fs';
-import { resolve as resolve$2 } from 'path';
 import http from 'node:http';
 import https from 'node:https';
 import { EventEmitter } from 'node:events';
@@ -3504,27 +3502,27 @@ async function dispose(driver) {
 const _assets = {
   ["nitro:bundled:cache:content:content-index.json"]: {
     import: () => import('../raw/content-index.mjs').then(r => r.default || r),
-    meta: {"type":"application/json","etag":"\"157-2xp9UhnX810IAByPWOuJyMX50dU\"","mtime":"2025-10-26T05:45:20.823Z"}
+    meta: {"type":"application/json","etag":"\"157-2xp9UhnX810IAByPWOuJyMX50dU\"","mtime":"2025-10-26T05:51:06.554Z"}
   },
   ["nitro:bundled:cache:content:content-navigation.json"]: {
     import: () => import('../raw/content-navigation.mjs').then(r => r.default || r),
-    meta: {"type":"application/json","etag":"\"1a6-NYXltMbWnViQXvtVRE94+dClU+0\"","mtime":"2025-10-26T05:45:20.823Z"}
+    meta: {"type":"application/json","etag":"\"1a6-NYXltMbWnViQXvtVRE94+dClU+0\"","mtime":"2025-10-26T05:51:06.554Z"}
   },
   ["nitro:bundled:cache:content:parsed:content:blog:getting-started-with-career-planning.md"]: {
     import: () => import('../raw/getting-started-with-career-planning.mjs').then(r => r.default || r),
-    meta: {"type":"text/markdown; charset=utf-8","etag":"\"1b59-WuGspv7POcEzppCdkHrSS+nby5Q\"","mtime":"2025-10-26T05:45:20.823Z"}
+    meta: {"type":"text/markdown; charset=utf-8","etag":"\"1b59-WuGspv7POcEzppCdkHrSS+nby5Q\"","mtime":"2025-10-26T05:51:06.554Z"}
   },
   ["nitro:bundled:cache:content:parsed:content:blog:interview-prep-guide.md"]: {
     import: () => import('../raw/interview-prep-guide.mjs').then(r => r.default || r),
-    meta: {"type":"text/markdown; charset=utf-8","etag":"\"61e3-TavtNxIMJ0UIFWKwiaX1Jd/qcio\"","mtime":"2025-10-26T05:45:20.823Z"}
+    meta: {"type":"text/markdown; charset=utf-8","etag":"\"61e3-TavtNxIMJ0UIFWKwiaX1Jd/qcio\"","mtime":"2025-10-26T05:51:06.554Z"}
   },
   ["nitro:bundled:cache:content:parsed:content:blog:mastering-the-modern-job-search.md"]: {
     import: () => import('../raw/mastering-the-modern-job-search.mjs').then(r => r.default || r),
-    meta: {"type":"text/markdown; charset=utf-8","etag":"\"556a-WIx5zxwa63L7ViQA7/03J6RrR18\"","mtime":"2025-10-26T05:45:20.823Z"}
+    meta: {"type":"text/markdown; charset=utf-8","etag":"\"556a-WIx5zxwa63L7ViQA7/03J6RrR18\"","mtime":"2025-10-26T05:51:06.554Z"}
   },
   ["nitro:bundled:cache:content:parsed:content:blog:resume-optimization-tips.md"]: {
     import: () => import('../raw/resume-optimization-tips.mjs').then(r => r.default || r),
-    meta: {"type":"text/markdown; charset=utf-8","etag":"\"342b-hnUDmbjRunrrli41pwP7Eu7UZ9Y\"","mtime":"2025-10-26T05:45:20.823Z"}
+    meta: {"type":"text/markdown; charset=utf-8","etag":"\"342b-hnUDmbjRunrrli41pwP7Eu7UZ9Y\"","mtime":"2025-10-26T05:51:06.554Z"}
   }
 };
 
@@ -4765,7 +4763,7 @@ function _expandFromEnv(value) {
 const _inlineRuntimeConfig = {
   "app": {
     "baseURL": "/",
-    "buildId": "6bf98b81-c41e-4cd8-93b8-6da31a182c22",
+    "buildId": "9c5093da-9700-4d83-824b-a44bee87ca28",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
@@ -4860,7 +4858,7 @@ const _inlineRuntimeConfig = {
     "content": {
       "locales": [],
       "defaultLocale": "",
-      "integrity": 1761457492762,
+      "integrity": 1761457838326,
       "experimental": {
         "stripQueryParameters": false,
         "advanceQuery": false,
@@ -5409,1108 +5407,1108 @@ const assets = {
   "/favicon.ico": {
     "type": "image/vnd.microsoft.icon",
     "etag": "\"10be-n8egyE9tcb7sKGr/pYCaQ4uWqxI\"",
-    "mtime": "2025-10-26T05:45:20.803Z",
+    "mtime": "2025-10-26T05:51:06.537Z",
     "size": 4286,
     "path": "../../../dist/favicon.ico"
   },
   "/logo.png": {
     "type": "image/png",
     "etag": "\"15ae77-0laE9a22uUFdZj7zHOxBD6vH+/s\"",
-    "mtime": "2025-10-26T05:45:20.807Z",
+    "mtime": "2025-10-26T05:51:06.540Z",
     "size": 1420919,
     "path": "../../../dist/logo.png"
   },
   "/robots.txt": {
     "type": "text/plain; charset=utf-8",
     "etag": "\"18-j8OIsL9qGDmNZ+lHhp2tyH4XtaE\"",
-    "mtime": "2025-10-26T05:45:20.803Z",
+    "mtime": "2025-10-26T05:51:06.537Z",
     "size": 24,
     "path": "../../../dist/robots.txt"
   },
   "/_nuxt/-tSLFzRV.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"c558-rrJVQvZPkQgZ6srapE/mnp37BbQ\"",
-    "mtime": "2025-10-26T05:45:20.796Z",
+    "mtime": "2025-10-26T05:51:06.534Z",
     "size": 50520,
     "path": "../../../dist/_nuxt/-tSLFzRV.js"
   },
   "/_nuxt/0VKhgmjB.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"53-jI2IDuCG217dEvINXuamaDfTP1c\"",
-    "mtime": "2025-10-26T05:45:20.780Z",
+    "mtime": "2025-10-26T05:51:06.518Z",
     "size": 83,
     "path": "../../../dist/_nuxt/0VKhgmjB.js"
   },
   "/_nuxt/4F6OKfuE.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"d2-5AbioMnSfM3xnpwGFn8K16LAnag\"",
-    "mtime": "2025-10-26T05:45:20.780Z",
+    "mtime": "2025-10-26T05:51:06.517Z",
     "size": 210,
     "path": "../../../dist/_nuxt/4F6OKfuE.js"
   },
   "/_nuxt/5h8EMWpj.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"d74-qSyZLlpkbiUFStyCFiUh3/ZAeH0\"",
-    "mtime": "2025-10-26T05:45:20.780Z",
+    "mtime": "2025-10-26T05:51:06.517Z",
     "size": 3444,
     "path": "../../../dist/_nuxt/5h8EMWpj.js"
   },
   "/_nuxt/7091_6cD.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"589-/jv9EHic6euxChq6iO8H5bGnSBI\"",
-    "mtime": "2025-10-26T05:45:20.780Z",
+    "mtime": "2025-10-26T05:51:06.518Z",
     "size": 1417,
     "path": "../../../dist/_nuxt/7091_6cD.js"
   },
   "/_nuxt/93JOVmCu.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"243-CSOvscGzpBA0P2/mdx5a9rG+51o\"",
-    "mtime": "2025-10-26T05:45:20.780Z",
+    "mtime": "2025-10-26T05:51:06.518Z",
     "size": 579,
     "path": "../../../dist/_nuxt/93JOVmCu.js"
   },
   "/_nuxt/9FiFFw94.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"7e6-iMQDBpbiHTdlNhlaG15yPljYk4s\"",
-    "mtime": "2025-10-26T05:45:20.780Z",
+    "mtime": "2025-10-26T05:51:06.518Z",
     "size": 2022,
     "path": "../../../dist/_nuxt/9FiFFw94.js"
   },
   "/_nuxt/B-6Hklnh.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"243-ov7bzD8CkOS65sv8y8HhfLgvB14\"",
-    "mtime": "2025-10-26T05:45:20.780Z",
+    "mtime": "2025-10-26T05:51:06.518Z",
     "size": 579,
     "path": "../../../dist/_nuxt/B-6Hklnh.js"
   },
   "/_nuxt/B-Qk7fsF.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"66e-uSjEA3RalUd59LQgdTy70PenlWY\"",
-    "mtime": "2025-10-26T05:45:20.781Z",
+    "mtime": "2025-10-26T05:51:06.518Z",
     "size": 1646,
     "path": "../../../dist/_nuxt/B-Qk7fsF.js"
   },
   "/_nuxt/B1OBgM-t.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"13b-iwOxLlCa3DHzXvXH3ELK8MErLss\"",
-    "mtime": "2025-10-26T05:45:20.781Z",
+    "mtime": "2025-10-26T05:51:06.518Z",
     "size": 315,
     "path": "../../../dist/_nuxt/B1OBgM-t.js"
   },
   "/_nuxt/B3tJR4EY.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"9bd-+0drjaAdmvM2/Hhb+TvTBV26aH4\"",
-    "mtime": "2025-10-26T05:45:20.781Z",
+    "mtime": "2025-10-26T05:51:06.518Z",
     "size": 2493,
     "path": "../../../dist/_nuxt/B3tJR4EY.js"
   },
   "/_nuxt/B4MuUMEU.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"4374-Er/0qZ/i3sdvxCBqxYUA+Dfso3M\"",
-    "mtime": "2025-10-26T05:45:20.781Z",
+    "mtime": "2025-10-26T05:51:06.519Z",
     "size": 17268,
     "path": "../../../dist/_nuxt/B4MuUMEU.js"
   },
   "/_nuxt/B4nwmRlE.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"48bc-oiAOwOFNEqFplrc1zLJkmfJCtow\"",
-    "mtime": "2025-10-26T05:45:20.782Z",
+    "mtime": "2025-10-26T05:51:06.519Z",
     "size": 18620,
     "path": "../../../dist/_nuxt/B4nwmRlE.js"
   },
   "/_nuxt/B9anF7pc.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"7ae1-tbaP/i8FXacEckLEzy8GCUfyG4g\"",
-    "mtime": "2025-10-26T05:45:20.782Z",
+    "mtime": "2025-10-26T05:51:06.519Z",
     "size": 31457,
     "path": "../../../dist/_nuxt/B9anF7pc.js"
   },
   "/_nuxt/BCVx5FzQ.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"f2a-P0iTFwBdcJ8q4EQZzv1Koa5+Tv8\"",
-    "mtime": "2025-10-26T05:45:20.781Z",
+    "mtime": "2025-10-26T05:51:06.519Z",
     "size": 3882,
     "path": "../../../dist/_nuxt/BCVx5FzQ.js"
   },
   "/_nuxt/BDSml-3f.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"d7-mxlzkUpAq0/j15Q3DbY/lLaWjxI\"",
-    "mtime": "2025-10-26T05:45:20.782Z",
+    "mtime": "2025-10-26T05:51:06.519Z",
     "size": 215,
     "path": "../../../dist/_nuxt/BDSml-3f.js"
   },
   "/_nuxt/BFxk2ap8.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"4da-+CztosS62xQ4CXRhL8qm5fBlo0k\"",
-    "mtime": "2025-10-26T05:45:20.782Z",
+    "mtime": "2025-10-26T05:51:06.519Z",
     "size": 1242,
     "path": "../../../dist/_nuxt/BFxk2ap8.js"
   },
   "/_nuxt/BLrlDU5v.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"439-77+/GnhgRh4pClsjiaZ/p9clRHU\"",
-    "mtime": "2025-10-26T05:45:20.782Z",
+    "mtime": "2025-10-26T05:51:06.519Z",
     "size": 1081,
     "path": "../../../dist/_nuxt/BLrlDU5v.js"
   },
   "/_nuxt/BMLurBv7.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"1ea2-HCcv83Dxdg826rjMhi1Ka1NALjY\"",
-    "mtime": "2025-10-26T05:45:20.782Z",
+    "mtime": "2025-10-26T05:51:06.519Z",
     "size": 7842,
     "path": "../../../dist/_nuxt/BMLurBv7.js"
   },
   "/_nuxt/BQFAKuAp.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"40b-/TRYcRAJt0BzB8ULNyV8Rs9VKqc\"",
-    "mtime": "2025-10-26T05:45:20.782Z",
+    "mtime": "2025-10-26T05:51:06.519Z",
     "size": 1035,
     "path": "../../../dist/_nuxt/BQFAKuAp.js"
   },
   "/_nuxt/BQSq0hKM.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"965-eLCh5fmt2U3bFFrlonJbm2jaZFU\"",
-    "mtime": "2025-10-26T05:45:20.782Z",
+    "mtime": "2025-10-26T05:51:06.519Z",
     "size": 2405,
     "path": "../../../dist/_nuxt/BQSq0hKM.js"
   },
   "/_nuxt/BVVD8DOA.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"cf-MFd8w+//OB6ud2hauTiI5fdEDxk\"",
-    "mtime": "2025-10-26T05:45:20.782Z",
+    "mtime": "2025-10-26T05:51:06.519Z",
     "size": 207,
     "path": "../../../dist/_nuxt/BVVD8DOA.js"
   },
   "/_nuxt/BYuTL4Kv.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"fa2-GrfFriSrLjypmZ5CjZefA3wTiBY\"",
-    "mtime": "2025-10-26T05:45:20.782Z",
+    "mtime": "2025-10-26T05:51:06.520Z",
     "size": 4002,
     "path": "../../../dist/_nuxt/BYuTL4Kv.js"
   },
   "/_nuxt/BZmHB-y5.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"292b-vCajHpACSoeh+ARAg0McWS3taig\"",
-    "mtime": "2025-10-26T05:45:20.782Z",
+    "mtime": "2025-10-26T05:51:06.520Z",
     "size": 10539,
     "path": "../../../dist/_nuxt/BZmHB-y5.js"
   },
   "/_nuxt/BbJUP6h6.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"99-EeQJ1FvYTS+m+I7bkK5a45za1gg\"",
-    "mtime": "2025-10-26T05:45:20.782Z",
+    "mtime": "2025-10-26T05:51:06.520Z",
     "size": 153,
     "path": "../../../dist/_nuxt/BbJUP6h6.js"
   },
   "/_nuxt/BdBa0I__.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"cf-n4TwjuJRDtDFUfIe5GanscEucgU\"",
-    "mtime": "2025-10-26T05:45:20.783Z",
+    "mtime": "2025-10-26T05:51:06.520Z",
     "size": 207,
     "path": "../../../dist/_nuxt/BdBa0I__.js"
   },
   "/_nuxt/BeLgaWKQ.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"5d0a-OFSM3jre8Gtl9OkbYTNw/aRH3tU\"",
-    "mtime": "2025-10-26T05:45:20.783Z",
+    "mtime": "2025-10-26T05:51:06.520Z",
     "size": 23818,
     "path": "../../../dist/_nuxt/BeLgaWKQ.js"
   },
   "/_nuxt/Bet1ILSf.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"604a-gGZ/WlzQQwsmdebEgogHtpoGFyk\"",
-    "mtime": "2025-10-26T05:45:20.783Z",
+    "mtime": "2025-10-26T05:51:06.520Z",
     "size": 24650,
     "path": "../../../dist/_nuxt/Bet1ILSf.js"
   },
   "/_nuxt/BgYCh4M4.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"24ec-AjqnV/vNHSUD1LlOSrs0aMa5nbM\"",
-    "mtime": "2025-10-26T05:45:20.783Z",
+    "mtime": "2025-10-26T05:51:06.520Z",
     "size": 9452,
     "path": "../../../dist/_nuxt/BgYCh4M4.js"
   },
   "/_nuxt/BjjzT89E.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"2e8d-5z61JK4LOX6Bq+M2McnwFhngsDU\"",
-    "mtime": "2025-10-26T05:45:20.783Z",
+    "mtime": "2025-10-26T05:51:06.520Z",
     "size": 11917,
     "path": "../../../dist/_nuxt/BjjzT89E.js"
   },
   "/_nuxt/Bkr_gt6a.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"5c7-sgeKXNSVgU1d3xdXE5HntoQy59c\"",
-    "mtime": "2025-10-26T05:45:20.783Z",
+    "mtime": "2025-10-26T05:51:06.522Z",
     "size": 1479,
     "path": "../../../dist/_nuxt/Bkr_gt6a.js"
   },
   "/_nuxt/Bq6lx9vt.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"f11-AkQYfr109lk6mLKVavrxy22BVzk\"",
-    "mtime": "2025-10-26T05:45:20.783Z",
+    "mtime": "2025-10-26T05:51:06.522Z",
     "size": 3857,
     "path": "../../../dist/_nuxt/Bq6lx9vt.js"
   },
   "/_nuxt/BuxlwuOr.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"2d6c-MHFjgMX4EBOA+ErkjzfDncZ/wg4\"",
-    "mtime": "2025-10-26T05:45:20.783Z",
+    "mtime": "2025-10-26T05:51:06.522Z",
     "size": 11628,
     "path": "../../../dist/_nuxt/BuxlwuOr.js"
   },
   "/_nuxt/Bw0m4A-f.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"a3f-f1BARXg0A4xKL5bzdDRv7j3wgzU\"",
-    "mtime": "2025-10-26T05:45:20.783Z",
+    "mtime": "2025-10-26T05:51:06.522Z",
     "size": 2623,
     "path": "../../../dist/_nuxt/Bw0m4A-f.js"
   },
   "/_nuxt/Bw4r_SE6.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"670-CcKXgtq9583juEpMg5oAaTV4Py4\"",
-    "mtime": "2025-10-26T05:45:20.783Z",
+    "mtime": "2025-10-26T05:51:06.522Z",
     "size": 1648,
     "path": "../../../dist/_nuxt/Bw4r_SE6.js"
   },
   "/_nuxt/Bz6hioUj.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"1e4-Ws/R/rujiXlOO4HaWm/RsG/JRLA\"",
-    "mtime": "2025-10-26T05:45:20.783Z",
+    "mtime": "2025-10-26T05:51:06.522Z",
     "size": 484,
     "path": "../../../dist/_nuxt/Bz6hioUj.js"
   },
   "/_nuxt/C-v3KzvZ.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"2ea-5DAAbu6tArfeYyY6Qf21UAkKRUs\"",
-    "mtime": "2025-10-26T05:45:20.783Z",
+    "mtime": "2025-10-26T05:51:06.523Z",
     "size": 746,
     "path": "../../../dist/_nuxt/C-v3KzvZ.js"
   },
   "/_nuxt/CGqxy1od.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"90-wWYskXVDUmZjvWgEW5N2jaWHCV8\"",
-    "mtime": "2025-10-26T05:45:20.784Z",
+    "mtime": "2025-10-26T05:51:06.523Z",
     "size": 144,
     "path": "../../../dist/_nuxt/CGqxy1od.js"
   },
   "/_nuxt/CMC0lDcR.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"d157-3+h+s6W1XT2C9nvde/QFjsZ1nyY\"",
-    "mtime": "2025-10-26T05:45:20.784Z",
+    "mtime": "2025-10-26T05:51:06.523Z",
     "size": 53591,
     "path": "../../../dist/_nuxt/CMC0lDcR.js"
   },
   "/_nuxt/CQcKstTI.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"276-cxOQn/nUVdNTjGWIp8wgh18kCYI\"",
-    "mtime": "2025-10-26T05:45:20.783Z",
+    "mtime": "2025-10-26T05:51:06.523Z",
     "size": 630,
     "path": "../../../dist/_nuxt/CQcKstTI.js"
   },
   "/_nuxt/CUsIxLz8.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"4e-CmSYbMSHQAxM+BWLLDot9cVIm0Y\"",
-    "mtime": "2025-10-26T05:45:20.784Z",
+    "mtime": "2025-10-26T05:51:06.523Z",
     "size": 78,
     "path": "../../../dist/_nuxt/CUsIxLz8.js"
   },
   "/_nuxt/Ca_RxNRq.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"585a-30o7CKasXd73Rkv6dIl2xFb6w30\"",
-    "mtime": "2025-10-26T05:45:20.784Z",
+    "mtime": "2025-10-26T05:51:06.523Z",
     "size": 22618,
     "path": "../../../dist/_nuxt/Ca_RxNRq.js"
   },
   "/_nuxt/CawCaWgA.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"1495-xdmpra4VPY0dV1VO8kB3M+2HvzM\"",
-    "mtime": "2025-10-26T05:45:20.784Z",
+    "mtime": "2025-10-26T05:51:06.523Z",
     "size": 5269,
     "path": "../../../dist/_nuxt/CawCaWgA.js"
   },
   "/_nuxt/Cc5pbsce.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"cf-6fHBc2ugnwIWbttBq1U2O9V/DdE\"",
-    "mtime": "2025-10-26T05:45:20.784Z",
+    "mtime": "2025-10-26T05:51:06.523Z",
     "size": 207,
     "path": "../../../dist/_nuxt/Cc5pbsce.js"
   },
   "/_nuxt/CcE5oQfs.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"544-4ZAHxsMP3r9s9CB1KPgvZcP9ClA\"",
-    "mtime": "2025-10-26T05:45:20.784Z",
+    "mtime": "2025-10-26T05:51:06.523Z",
     "size": 1348,
     "path": "../../../dist/_nuxt/CcE5oQfs.js"
   },
   "/_nuxt/ChBHwHSS.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"d3-YkWn/EZdZJKOYV2n/eCxlTFHP80\"",
-    "mtime": "2025-10-26T05:45:20.784Z",
+    "mtime": "2025-10-26T05:51:06.523Z",
     "size": 211,
     "path": "../../../dist/_nuxt/ChBHwHSS.js"
   },
   "/_nuxt/CkHzT0cL.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"a6-V0+ZK8DyB7tzuNk165t1WPaVvl4\"",
-    "mtime": "2025-10-26T05:45:20.784Z",
+    "mtime": "2025-10-26T05:51:06.523Z",
     "size": 166,
     "path": "../../../dist/_nuxt/CkHzT0cL.js"
   },
   "/_nuxt/CqQ4CtVu.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"690b-xAMJeXO7I9yWoDhydFRCxCsjeNY\"",
-    "mtime": "2025-10-26T05:45:20.784Z",
+    "mtime": "2025-10-26T05:51:06.523Z",
     "size": 26891,
     "path": "../../../dist/_nuxt/CqQ4CtVu.js"
   },
   "/_nuxt/CrHm-xme.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"d2-9aGatTMdJHQBUngNcZZhz+BOZAw\"",
-    "mtime": "2025-10-26T05:45:20.785Z",
+    "mtime": "2025-10-26T05:51:06.523Z",
     "size": 210,
     "path": "../../../dist/_nuxt/CrHm-xme.js"
   },
   "/_nuxt/CryJcky7.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"760-8aEyuQK62OzVN3kkV9ZOcsdMCs8\"",
-    "mtime": "2025-10-26T05:45:20.784Z",
+    "mtime": "2025-10-26T05:51:06.523Z",
     "size": 1888,
     "path": "../../../dist/_nuxt/CryJcky7.js"
   },
   "/_nuxt/CspF7ZqE.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"376-L16WOo2S+/jy0a0+inrwnZWFnoE\"",
-    "mtime": "2025-10-26T05:45:20.784Z",
+    "mtime": "2025-10-26T05:51:06.524Z",
     "size": 886,
     "path": "../../../dist/_nuxt/CspF7ZqE.js"
   },
   "/_nuxt/CxYJgpPD.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"458-rBNOfCragTlh0QGii9bhiWp3LHc\"",
-    "mtime": "2025-10-26T05:45:20.785Z",
+    "mtime": "2025-10-26T05:51:06.524Z",
     "size": 1112,
     "path": "../../../dist/_nuxt/CxYJgpPD.js"
   },
   "/_nuxt/D1_rsi0f.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"713-7I+Wm0nB1+8Fh4JrsIXfAZC4sIE\"",
-    "mtime": "2025-10-26T05:45:20.785Z",
+    "mtime": "2025-10-26T05:51:06.524Z",
     "size": 1811,
     "path": "../../../dist/_nuxt/D1_rsi0f.js"
   },
   "/_nuxt/D3BQDUSP.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"243-N4xE/EXL5+jidrKtrgTv9nuGeKc\"",
-    "mtime": "2025-10-26T05:45:20.785Z",
+    "mtime": "2025-10-26T05:51:06.524Z",
     "size": 579,
     "path": "../../../dist/_nuxt/D3BQDUSP.js"
   },
   "/_nuxt/D3e2GlgO.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"781-ZKPEjlh5w49D50WwscH5LQTzPdg\"",
-    "mtime": "2025-10-26T05:45:20.785Z",
+    "mtime": "2025-10-26T05:51:06.524Z",
     "size": 1921,
     "path": "../../../dist/_nuxt/D3e2GlgO.js"
   },
   "/_nuxt/D3yFyMo2.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"802-SiaSWZR6KXQ/z8k/0byrFH6JfN0\"",
-    "mtime": "2025-10-26T05:45:20.785Z",
+    "mtime": "2025-10-26T05:51:06.524Z",
     "size": 2050,
     "path": "../../../dist/_nuxt/D3yFyMo2.js"
   },
   "/_nuxt/D4kci1pO.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"5970d-1ITRkEM4N4aw8C3/Yhjx6t48yyQ\"",
-    "mtime": "2025-10-26T05:45:20.787Z",
+    "mtime": "2025-10-26T05:51:06.525Z",
     "size": 366349,
     "path": "../../../dist/_nuxt/D4kci1pO.js"
   },
   "/_nuxt/D5F432e1.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"cf-mYv7lfWCzPnA99P1rhF7whPor60\"",
-    "mtime": "2025-10-26T05:45:20.786Z",
+    "mtime": "2025-10-26T05:51:06.524Z",
     "size": 207,
     "path": "../../../dist/_nuxt/D5F432e1.js"
   },
   "/_nuxt/D8NWrn7C.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"2cc-bhBqKL7kGcez6+Umf2EyS6S350k\"",
-    "mtime": "2025-10-26T05:45:20.785Z",
+    "mtime": "2025-10-26T05:51:06.524Z",
     "size": 716,
     "path": "../../../dist/_nuxt/D8NWrn7C.js"
   },
   "/_nuxt/D8j6IbrC.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"ce-+7c0rmvIyOifS24MjSkIS2z7OK4\"",
-    "mtime": "2025-10-26T05:45:20.785Z",
+    "mtime": "2025-10-26T05:51:06.524Z",
     "size": 206,
     "path": "../../../dist/_nuxt/D8j6IbrC.js"
   },
   "/_nuxt/D8jLLdbm.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"605-/Sb77/DzYtTqBcrERplAI1HF/nw\"",
-    "mtime": "2025-10-26T05:45:20.786Z",
+    "mtime": "2025-10-26T05:51:06.524Z",
     "size": 1541,
     "path": "../../../dist/_nuxt/D8jLLdbm.js"
   },
   "/_nuxt/DBNJMymQ.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"cf-y9cHPgAF3QfIKCZYx/tXVWz4gVk\"",
-    "mtime": "2025-10-26T05:45:20.786Z",
+    "mtime": "2025-10-26T05:51:06.525Z",
     "size": 207,
     "path": "../../../dist/_nuxt/DBNJMymQ.js"
   },
   "/_nuxt/DDanGHQI.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"243-a06eRFG4D3vUfrX/EURLJYumkJM\"",
-    "mtime": "2025-10-26T05:45:20.786Z",
+    "mtime": "2025-10-26T05:51:06.525Z",
     "size": 579,
     "path": "../../../dist/_nuxt/DDanGHQI.js"
   },
   "/_nuxt/DNQ8R4mk.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"3239-H6hgF2wwuE5WQBhREUwTtlau8+Q\"",
-    "mtime": "2025-10-26T05:45:20.786Z",
+    "mtime": "2025-10-26T05:51:06.525Z",
     "size": 12857,
     "path": "../../../dist/_nuxt/DNQ8R4mk.js"
   },
   "/_nuxt/DR4YMeVm.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"133-iaVs4M6M5qezpYXCBfwIn9gvJ0w\"",
-    "mtime": "2025-10-26T05:45:20.786Z",
+    "mtime": "2025-10-26T05:51:06.525Z",
     "size": 307,
     "path": "../../../dist/_nuxt/DR4YMeVm.js"
   },
   "/_nuxt/DR7wQHJ8.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"14f-AuUZztSkfJzlVzURz1FyQBllPTI\"",
-    "mtime": "2025-10-26T05:45:20.786Z",
+    "mtime": "2025-10-26T05:51:06.525Z",
     "size": 335,
     "path": "../../../dist/_nuxt/DR7wQHJ8.js"
   },
   "/_nuxt/DSAoiFr8.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"24fd-50VE9cKI9zZvrkjia1azcD3KgME\"",
-    "mtime": "2025-10-26T05:45:20.787Z",
+    "mtime": "2025-10-26T05:51:06.525Z",
     "size": 9469,
     "path": "../../../dist/_nuxt/DSAoiFr8.js"
   },
   "/_nuxt/DSMSeGYO.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"9a51-+kDF5IPaBkFz++ULoVWexgpPWuI\"",
-    "mtime": "2025-10-26T05:45:20.787Z",
+    "mtime": "2025-10-26T05:51:06.525Z",
     "size": 39505,
     "path": "../../../dist/_nuxt/DSMSeGYO.js"
   },
   "/_nuxt/DTHC0ur3.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"3b3-/UD9avRtiDMfWlW0daASyYc3x1Q\"",
-    "mtime": "2025-10-26T05:45:20.787Z",
+    "mtime": "2025-10-26T05:51:06.527Z",
     "size": 947,
     "path": "../../../dist/_nuxt/DTHC0ur3.js"
   },
   "/_nuxt/DXr-_edc.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"61ec-2KGOQPAt6BJwcbgESEqAbOoFOAc\"",
-    "mtime": "2025-10-26T05:45:20.787Z",
+    "mtime": "2025-10-26T05:51:06.527Z",
     "size": 25068,
     "path": "../../../dist/_nuxt/DXr-_edc.js"
   },
   "/_nuxt/DacsChji.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"299-PV/wYlF/FvXBvgNU4CidUZXlnCo\"",
-    "mtime": "2025-10-26T05:45:20.787Z",
+    "mtime": "2025-10-26T05:51:06.527Z",
     "size": 665,
     "path": "../../../dist/_nuxt/DacsChji.js"
   },
   "/_nuxt/DetNYNqF.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"516-E4G6t4MFc5cjPJ8JjV9Xtgzm1Co\"",
-    "mtime": "2025-10-26T05:45:20.787Z",
+    "mtime": "2025-10-26T05:51:06.527Z",
     "size": 1302,
     "path": "../../../dist/_nuxt/DetNYNqF.js"
   },
   "/_nuxt/Dh4lEi35.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"2d7f-HuW0CM+XimCcu/ddGgAYYV50UoQ\"",
-    "mtime": "2025-10-26T05:45:20.787Z",
+    "mtime": "2025-10-26T05:51:06.527Z",
     "size": 11647,
     "path": "../../../dist/_nuxt/Dh4lEi35.js"
   },
   "/_nuxt/DlAUqK2U.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"5b-eFCz/UrraTh721pgAl0VxBNR1es\"",
-    "mtime": "2025-10-26T05:45:20.787Z",
+    "mtime": "2025-10-26T05:51:06.527Z",
     "size": 91,
     "path": "../../../dist/_nuxt/DlAUqK2U.js"
   },
   "/_nuxt/DlAzJ9w_.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"23d-Yyzfc6YZqasXIy1rRPjPxiDbqWM\"",
-    "mtime": "2025-10-26T05:45:20.787Z",
+    "mtime": "2025-10-26T05:51:06.527Z",
     "size": 573,
     "path": "../../../dist/_nuxt/DlAzJ9w_.js"
   },
   "/_nuxt/DpYHcsS3.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"36e-WSik6gT9B2ev/Jvsb7YDSYcBu7g\"",
-    "mtime": "2025-10-26T05:45:20.787Z",
+    "mtime": "2025-10-26T05:51:06.527Z",
     "size": 878,
     "path": "../../../dist/_nuxt/DpYHcsS3.js"
   },
   "/_nuxt/DqzJaUU-.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"16ab-D8kuVMGmXCzDkXaQNlm40lsAIc8\"",
-    "mtime": "2025-10-26T05:45:20.788Z",
+    "mtime": "2025-10-26T05:51:06.528Z",
     "size": 5803,
     "path": "../../../dist/_nuxt/DqzJaUU-.js"
   },
   "/_nuxt/DtN5gbaI.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"4b9-3gd13ygFq0PHTg2jZ4514x3ZHAI\"",
-    "mtime": "2025-10-26T05:45:20.788Z",
+    "mtime": "2025-10-26T05:51:06.528Z",
     "size": 1209,
     "path": "../../../dist/_nuxt/DtN5gbaI.js"
   },
   "/_nuxt/DwRCI8ss.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"edc-VbZW4bA1duuFbnZ+SwqEbWyLeLo\"",
-    "mtime": "2025-10-26T05:45:20.788Z",
+    "mtime": "2025-10-26T05:51:06.528Z",
     "size": 3804,
     "path": "../../../dist/_nuxt/DwRCI8ss.js"
   },
   "/_nuxt/DycbNwdL.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"234-84fTNi/kw4OOZ6YHAVLL5f8+wXc\"",
-    "mtime": "2025-10-26T05:45:20.788Z",
+    "mtime": "2025-10-26T05:51:06.528Z",
     "size": 564,
     "path": "../../../dist/_nuxt/DycbNwdL.js"
   },
   "/_nuxt/EbecWGxK.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"4109-bGSunfP+/Jf+Dc0bvFtmYCCQ2vA\"",
-    "mtime": "2025-10-26T05:45:20.789Z",
+    "mtime": "2025-10-26T05:51:06.528Z",
     "size": 16649,
     "path": "../../../dist/_nuxt/EbecWGxK.js"
   },
   "/_nuxt/EditSectionModal.MNC0PvNl.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"5b1-OBoR1pbvJKo3ThdeKG6B2h/ta4A\"",
-    "mtime": "2025-10-26T05:45:20.788Z",
+    "mtime": "2025-10-26T05:51:06.528Z",
     "size": 1457,
     "path": "../../../dist/_nuxt/EditSectionModal.MNC0PvNl.css"
   },
   "/_nuxt/FiO2VVZd.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"481672-frQ7ybPosrF/4fpSpuXXm2PEqwE\"",
-    "mtime": "2025-10-26T05:45:20.798Z",
+    "mtime": "2025-10-26T05:51:06.532Z",
     "size": 4724338,
     "path": "../../../dist/_nuxt/FiO2VVZd.js"
   },
   "/_nuxt/HBS05Qap.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"185-wPsEG4ZFfOUL1QWWxjTn6vccQCo\"",
-    "mtime": "2025-10-26T05:45:20.788Z",
+    "mtime": "2025-10-26T05:51:06.528Z",
     "size": 389,
     "path": "../../../dist/_nuxt/HBS05Qap.js"
   },
   "/_nuxt/INjQ4lbV.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"466-xA5iLsXcEbSNyoiF3/cNKCjoK8Y\"",
-    "mtime": "2025-10-26T05:45:20.788Z",
+    "mtime": "2025-10-26T05:51:06.528Z",
     "size": 1126,
     "path": "../../../dist/_nuxt/INjQ4lbV.js"
   },
   "/_nuxt/JgNsLz1G.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"481-+AbGVmBwEysRIZ1FKIWNL8/szMk\"",
-    "mtime": "2025-10-26T05:45:20.788Z",
+    "mtime": "2025-10-26T05:51:06.528Z",
     "size": 1153,
     "path": "../../../dist/_nuxt/JgNsLz1G.js"
   },
   "/_nuxt/KanbanBoard.ChSM3HFe.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"203-kys7aEifuoQ1R8v2IJxDkOpzTKo\"",
-    "mtime": "2025-10-26T05:45:20.789Z",
+    "mtime": "2025-10-26T05:51:06.528Z",
     "size": 515,
     "path": "../../../dist/_nuxt/KanbanBoard.ChSM3HFe.css"
   },
   "/_nuxt/KjrRXCEG.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"6601-I4Dg8G5PVprTwUX6YVFVOK5MSK8\"",
-    "mtime": "2025-10-26T05:45:20.789Z",
+    "mtime": "2025-10-26T05:51:06.529Z",
     "size": 26113,
     "path": "../../../dist/_nuxt/KjrRXCEG.js"
   },
   "/_nuxt/ProseCode.B_fgAJq0.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"2e-GbvrqT5j9gSWlpa8e36U/Kv6Zx0\"",
-    "mtime": "2025-10-26T05:45:20.789Z",
+    "mtime": "2025-10-26T05:51:06.528Z",
     "size": 46,
     "path": "../../../dist/_nuxt/ProseCode.B_fgAJq0.css"
   },
   "/_nuxt/QIUgoP2f.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"cf-aPIxV18r/qI5x3PPsCY6vWOUVKk\"",
-    "mtime": "2025-10-26T05:45:20.789Z",
+    "mtime": "2025-10-26T05:51:06.529Z",
     "size": 207,
     "path": "../../../dist/_nuxt/QIUgoP2f.js"
   },
   "/_nuxt/Quicksand-normal-300-latin-ext.CrJ75Ewg.woff2": {
     "type": "font/woff2",
     "etag": "\"67f8-ZJHYGZuQy671141X3V8EWG7JgFw\"",
-    "mtime": "2025-10-26T05:45:20.790Z",
+    "mtime": "2025-10-26T05:51:06.529Z",
     "size": 26616,
     "path": "../../../dist/_nuxt/Quicksand-normal-300-latin-ext.CrJ75Ewg.woff2"
   },
   "/_nuxt/Quicksand-normal-300-latin.Buj9m_3d.woff2": {
     "type": "font/woff2",
     "etag": "\"6e54-DCTGITdFBs5wQDp0c7R6zYa7+Rk\"",
-    "mtime": "2025-10-26T05:45:20.790Z",
+    "mtime": "2025-10-26T05:51:06.529Z",
     "size": 28244,
     "path": "../../../dist/_nuxt/Quicksand-normal-300-latin.Buj9m_3d.woff2"
   },
   "/_nuxt/Quicksand-normal-300-vietnamese.ei70gACF.woff2": {
     "type": "font/woff2",
     "etag": "\"2288-peHOwdJJoiDaofCCsPJdNQaUiTY\"",
-    "mtime": "2025-10-26T05:45:20.790Z",
+    "mtime": "2025-10-26T05:51:06.529Z",
     "size": 8840,
     "path": "../../../dist/_nuxt/Quicksand-normal-300-vietnamese.ei70gACF.woff2"
   },
   "/_nuxt/Roboto-normal-400-cyrillic-ext.DzMWdK87.woff2": {
     "type": "font/woff2",
     "etag": "\"41d0-ejh4D/6k1Ortl+l4CjGuoPuxL1c\"",
-    "mtime": "2025-10-26T05:45:20.791Z",
+    "mtime": "2025-10-26T05:51:06.530Z",
     "size": 16848,
     "path": "../../../dist/_nuxt/Roboto-normal-400-cyrillic-ext.DzMWdK87.woff2"
   },
   "/_nuxt/Roboto-normal-400-cyrillic.DAIM1_dR.woff2": {
     "type": "font/woff2",
     "etag": "\"2e40-4wKdtEl1B3DMtQx0Nkp+9h6N2zY\"",
-    "mtime": "2025-10-26T05:45:20.791Z",
+    "mtime": "2025-10-26T05:51:06.529Z",
     "size": 11840,
     "path": "../../../dist/_nuxt/Roboto-normal-400-cyrillic.DAIM1_dR.woff2"
   },
   "/_nuxt/Roboto-normal-400-greek.jFM2czAU.woff2": {
     "type": "font/woff2",
     "etag": "\"25ac-lea6lpxOnHaVlm7eEUbJyECYzeo\"",
-    "mtime": "2025-10-26T05:45:20.791Z",
+    "mtime": "2025-10-26T05:51:06.529Z",
     "size": 9644,
     "path": "../../../dist/_nuxt/Roboto-normal-400-greek.jFM2czAU.woff2"
   },
   "/_nuxt/Roboto-normal-400-latin-ext.ZYmyxeOy.woff2": {
     "type": "font/woff2",
     "etag": "\"35ac-5PwpXbf0XTH23zzP7JQ++/pHdUc\"",
-    "mtime": "2025-10-26T05:45:20.791Z",
+    "mtime": "2025-10-26T05:51:06.530Z",
     "size": 13740,
     "path": "../../../dist/_nuxt/Roboto-normal-400-latin-ext.ZYmyxeOy.woff2"
   },
   "/_nuxt/Roboto-normal-400-latin.CNwBRw8h.woff2": {
     "type": "font/woff2",
     "etag": "\"5084-R79bLyTqSkyq/MyJudKmZ37547g\"",
-    "mtime": "2025-10-26T05:45:20.792Z",
+    "mtime": "2025-10-26T05:51:06.530Z",
     "size": 20612,
     "path": "../../../dist/_nuxt/Roboto-normal-400-latin.CNwBRw8h.woff2"
   },
   "/_nuxt/Roboto-normal-400-math.B3wgz80t.woff2": {
     "type": "font/woff2",
     "etag": "\"4ccc-jmq3W+K3w3jBGztPy2QCt7rCEzg\"",
-    "mtime": "2025-10-26T05:45:20.791Z",
+    "mtime": "2025-10-26T05:51:06.530Z",
     "size": 19660,
     "path": "../../../dist/_nuxt/Roboto-normal-400-math.B3wgz80t.woff2"
   },
   "/_nuxt/Roboto-normal-400-symbols.fF1SLJBj.woff2": {
     "type": "font/woff2",
     "etag": "\"2950-kGCwf2YAvWzY5CQYQ+jux0PikmQ\"",
-    "mtime": "2025-10-26T05:45:20.791Z",
+    "mtime": "2025-10-26T05:51:06.530Z",
     "size": 10576,
     "path": "../../../dist/_nuxt/Roboto-normal-400-symbols.fF1SLJBj.woff2"
   },
   "/_nuxt/Roboto-normal-400-vietnamese.CDDxGrUb.woff2": {
     "type": "font/woff2",
     "etag": "\"1eb0-SxFXBq8fTBf/tVVfTdPpbly7NmE\"",
-    "mtime": "2025-10-26T05:45:20.792Z",
+    "mtime": "2025-10-26T05:51:06.530Z",
     "size": 7856,
     "path": "../../../dist/_nuxt/Roboto-normal-400-vietnamese.CDDxGrUb.woff2"
   },
   "/_nuxt/WCFOlK5l.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"3805-efbEZbhr8KSF5buGVI1s82wGiGs\"",
-    "mtime": "2025-10-26T05:45:20.792Z",
+    "mtime": "2025-10-26T05:51:06.531Z",
     "size": 14341,
     "path": "../../../dist/_nuxt/WCFOlK5l.js"
   },
   "/_nuxt/WnSKba9c.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"243-69xTjAuL7tb12pDxBU0yKw1V3JQ\"",
-    "mtime": "2025-10-26T05:45:20.792Z",
+    "mtime": "2025-10-26T05:51:06.531Z",
     "size": 579,
     "path": "../../../dist/_nuxt/WnSKba9c.js"
   },
   "/_nuxt/YRpvElPI.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"d2-0Itp9U5HcJNak7c5z05xnPTT9U4\"",
-    "mtime": "2025-10-26T05:45:20.792Z",
+    "mtime": "2025-10-26T05:51:06.531Z",
     "size": 210,
     "path": "../../../dist/_nuxt/YRpvElPI.js"
   },
   "/_nuxt/_slug_.CTOThQ9y.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"667-PPwVDd/6aO7eFR8pJ3w+yHUE9YA\"",
-    "mtime": "2025-10-26T05:45:20.792Z",
+    "mtime": "2025-10-26T05:51:06.531Z",
     "size": 1639,
     "path": "../../../dist/_nuxt/_slug_.CTOThQ9y.css"
   },
   "/_nuxt/b8hky9ZO.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"11a-NAqylOJ9Pk/WdLhlNFP2wdhISS8\"",
-    "mtime": "2025-10-26T05:45:20.793Z",
+    "mtime": "2025-10-26T05:51:06.531Z",
     "size": 282,
     "path": "../../../dist/_nuxt/b8hky9ZO.js"
   },
   "/_nuxt/cR0cI7cV.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"7bf-cPykb8ItL1DhygyvlV/JfSAb5lM\"",
-    "mtime": "2025-10-26T05:45:20.793Z",
+    "mtime": "2025-10-26T05:51:06.531Z",
     "size": 1983,
     "path": "../../../dist/_nuxt/cR0cI7cV.js"
   },
   "/_nuxt/career-planner.ljE-1UDE.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"d55-uMvmVyNKRPzWfYgC60Klvj5cECQ\"",
-    "mtime": "2025-10-26T05:45:20.793Z",
+    "mtime": "2025-10-26T05:51:06.531Z",
     "size": 3413,
     "path": "../../../dist/_nuxt/career-planner.ljE-1UDE.css"
   },
   "/_nuxt/cover-letter.D5Fn_hxO.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"617-dL+EQj5hykGQxstZ0Gk9ivLYGDY\"",
-    "mtime": "2025-10-26T05:45:20.793Z",
+    "mtime": "2025-10-26T05:51:06.531Z",
     "size": 1559,
     "path": "../../../dist/_nuxt/cover-letter.D5Fn_hxO.css"
   },
   "/_nuxt/default.DinlPNgn.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"11a-E4W48cqOpF9RzLWUVfber5aPvJQ\"",
-    "mtime": "2025-10-26T05:45:20.793Z",
+    "mtime": "2025-10-26T05:51:06.531Z",
     "size": 282,
     "path": "../../../dist/_nuxt/default.DinlPNgn.css"
   },
   "/_nuxt/entry.CobpmxZj.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"51-/v1xGv99tUN9q+4B+Nb4v0K3pyU\"",
-    "mtime": "2025-10-26T05:45:20.793Z",
+    "mtime": "2025-10-26T05:51:06.532Z",
     "size": 81,
     "path": "../../../dist/_nuxt/entry.CobpmxZj.css"
   },
   "/_nuxt/error-404.4oxyXxx0.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"de4-Nud+fczsEISIZfJaE5cVGR8qKic\"",
-    "mtime": "2025-10-26T05:45:20.793Z",
+    "mtime": "2025-10-26T05:51:06.532Z",
     "size": 3556,
     "path": "../../../dist/_nuxt/error-404.4oxyXxx0.css"
   },
   "/_nuxt/error-500.CZqNkBuR.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"75c-Ri+jM1T7rkunCBcNyJ0rTLFEHks\"",
-    "mtime": "2025-10-26T05:45:20.793Z",
+    "mtime": "2025-10-26T05:51:06.532Z",
     "size": 1884,
     "path": "../../../dist/_nuxt/error-500.CZqNkBuR.css"
   },
   "/_nuxt/index.DY-Ux3Fu.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"fe6-ZKSoLSvX88Iqutv3fTrBwdiP21U\"",
-    "mtime": "2025-10-26T05:45:20.793Z",
+    "mtime": "2025-10-26T05:51:06.532Z",
     "size": 4070,
     "path": "../../../dist/_nuxt/index.DY-Ux3Fu.css"
   },
   "/_nuxt/personalized-report.go10KVbv.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"6b9-zu80EIhgHBd8tQ9n7LU87l1zTfI\"",
-    "mtime": "2025-10-26T05:45:20.794Z",
+    "mtime": "2025-10-26T05:51:06.532Z",
     "size": 1721,
     "path": "../../../dist/_nuxt/personalized-report.go10KVbv.css"
   },
   "/_nuxt/qVyWDOnf.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"d1-rjByDqeIGPpktyKDapRocXaRTMM\"",
-    "mtime": "2025-10-26T05:45:20.794Z",
+    "mtime": "2025-10-26T05:51:06.532Z",
     "size": 209,
     "path": "../../../dist/_nuxt/qVyWDOnf.js"
   },
   "/_nuxt/resume-builder.D9SAdtwW.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"11b4-esxbolPL/hvPbhY9mxC0UE0jTH8\"",
-    "mtime": "2025-10-26T05:45:20.794Z",
+    "mtime": "2025-10-26T05:51:06.532Z",
     "size": 4532,
     "path": "../../../dist/_nuxt/resume-builder.D9SAdtwW.css"
   },
   "/_nuxt/resume-summary.C1d5CnKp.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"39f-z9GAOrTIoe4NphUXTEu+0HBYrO4\"",
-    "mtime": "2025-10-26T05:45:20.794Z",
+    "mtime": "2025-10-26T05:51:06.532Z",
     "size": 927,
     "path": "../../../dist/_nuxt/resume-summary.C1d5CnKp.css"
   },
   "/_nuxt/resume-wizard.CJEw0koo.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"220-Lt8OhQSlAyUNjsEnDkLXZlfYo84\"",
-    "mtime": "2025-10-26T05:45:20.794Z",
+    "mtime": "2025-10-26T05:51:06.532Z",
     "size": 544,
     "path": "../../../dist/_nuxt/resume-wizard.CJEw0koo.css"
   },
   "/_nuxt/rxxy-Wd8.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"2cf9-S69vDLMCf8IAz+GgOUsZ9xejOBg\"",
-    "mtime": "2025-10-26T05:45:20.794Z",
+    "mtime": "2025-10-26T05:51:06.532Z",
     "size": 11513,
     "path": "../../../dist/_nuxt/rxxy-Wd8.js"
   },
   "/_nuxt/sNI3VoJE.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"232-lHTM5yQj185ZllLRfRMl4zKwC64\"",
-    "mtime": "2025-10-26T05:45:20.794Z",
+    "mtime": "2025-10-26T05:51:06.533Z",
     "size": 562,
     "path": "../../../dist/_nuxt/sNI3VoJE.js"
   },
   "/_nuxt/tasks.lu732kO9.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"1be-N9XHgx6tQZIK+wHhgz+fgzQjtfs\"",
-    "mtime": "2025-10-26T05:45:20.794Z",
+    "mtime": "2025-10-26T05:51:06.532Z",
     "size": 446,
     "path": "../../../dist/_nuxt/tasks.lu732kO9.css"
   },
   "/_nuxt/uwUJd2Ov.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"3fb-QnaJPMm5JXmf4CYaR4qT5sUMFsE\"",
-    "mtime": "2025-10-26T05:45:20.794Z",
+    "mtime": "2025-10-26T05:51:06.533Z",
     "size": 1019,
     "path": "../../../dist/_nuxt/uwUJd2Ov.js"
   },
   "/_nuxt/w_NGrCAd.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"32b-eGGng7okThrdBd/OyT4zxRaeeEQ\"",
-    "mtime": "2025-10-26T05:45:20.794Z",
+    "mtime": "2025-10-26T05:51:06.533Z",
     "size": 811,
     "path": "../../../dist/_nuxt/w_NGrCAd.js"
   },
   "/_nuxt/x_rD_Ya3.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"2b-NQFdZyJZYCba7NdYw0SoR9PvUtA\"",
-    "mtime": "2025-10-26T05:45:20.794Z",
+    "mtime": "2025-10-26T05:51:06.533Z",
     "size": 43,
     "path": "../../../dist/_nuxt/x_rD_Ya3.js"
   },
   "/_nuxt/z0SKT99R.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"207f-7t199Dx3IWU88EmcKR/kKyYgjYE\"",
-    "mtime": "2025-10-26T05:45:20.795Z",
+    "mtime": "2025-10-26T05:51:06.534Z",
     "size": 8319,
     "path": "../../../dist/_nuxt/z0SKT99R.js"
   },
   "/_nuxt/zE_zwJYt.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"cf-eSQLFvsYQj8xPGG4BNJfgefTsL4\"",
-    "mtime": "2025-10-26T05:45:20.795Z",
+    "mtime": "2025-10-26T05:51:06.534Z",
     "size": 207,
     "path": "../../../dist/_nuxt/zE_zwJYt.js"
   },
   "/css/nuxt-google-fonts.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"2ba5-3x/v+7xTOkIujTFKPmcqfKeP0P8\"",
-    "mtime": "2025-10-26T05:45:20.766Z",
+    "mtime": "2025-10-26T05:51:06.492Z",
     "size": 11173,
     "path": "../../../dist/css/nuxt-google-fonts.css"
   },
   "/fonts/Quicksand-normal-300-latin-ext.woff2": {
     "type": "font/woff2",
     "etag": "\"67f8-ZJHYGZuQy671141X3V8EWG7JgFw\"",
-    "mtime": "2025-10-26T05:45:20.766Z",
+    "mtime": "2025-10-26T05:51:06.495Z",
     "size": 26616,
     "path": "../../../dist/fonts/Quicksand-normal-300-latin-ext.woff2"
   },
   "/fonts/Quicksand-normal-300-latin.woff2": {
     "type": "font/woff2",
     "etag": "\"6e54-DCTGITdFBs5wQDp0c7R6zYa7+Rk\"",
-    "mtime": "2025-10-26T05:45:20.766Z",
+    "mtime": "2025-10-26T05:51:06.493Z",
     "size": 28244,
     "path": "../../../dist/fonts/Quicksand-normal-300-latin.woff2"
   },
   "/fonts/Quicksand-normal-300-vietnamese.woff2": {
     "type": "font/woff2",
     "etag": "\"2288-peHOwdJJoiDaofCCsPJdNQaUiTY\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.496Z",
     "size": 8840,
     "path": "../../../dist/fonts/Quicksand-normal-300-vietnamese.woff2"
   },
   "/fonts/Quicksand-normal-400-latin-ext.woff2": {
     "type": "font/woff2",
     "etag": "\"67f8-ZJHYGZuQy671141X3V8EWG7JgFw\"",
-    "mtime": "2025-10-26T05:45:20.766Z",
+    "mtime": "2025-10-26T05:51:06.493Z",
     "size": 26616,
     "path": "../../../dist/fonts/Quicksand-normal-400-latin-ext.woff2"
   },
   "/fonts/Quicksand-normal-400-latin.woff2": {
     "type": "font/woff2",
     "etag": "\"6e54-DCTGITdFBs5wQDp0c7R6zYa7+Rk\"",
-    "mtime": "2025-10-26T05:45:20.766Z",
+    "mtime": "2025-10-26T05:51:06.493Z",
     "size": 28244,
     "path": "../../../dist/fonts/Quicksand-normal-400-latin.woff2"
   },
   "/fonts/Quicksand-normal-400-vietnamese.woff2": {
     "type": "font/woff2",
     "etag": "\"2288-peHOwdJJoiDaofCCsPJdNQaUiTY\"",
-    "mtime": "2025-10-26T05:45:20.766Z",
+    "mtime": "2025-10-26T05:51:06.493Z",
     "size": 8840,
     "path": "../../../dist/fonts/Quicksand-normal-400-vietnamese.woff2"
   },
   "/fonts/Quicksand-normal-500-latin-ext.woff2": {
     "type": "font/woff2",
     "etag": "\"67f8-ZJHYGZuQy671141X3V8EWG7JgFw\"",
-    "mtime": "2025-10-26T05:45:20.766Z",
+    "mtime": "2025-10-26T05:51:06.493Z",
     "size": 26616,
     "path": "../../../dist/fonts/Quicksand-normal-500-latin-ext.woff2"
   },
   "/fonts/Quicksand-normal-500-latin.woff2": {
     "type": "font/woff2",
     "etag": "\"6e54-DCTGITdFBs5wQDp0c7R6zYa7+Rk\"",
-    "mtime": "2025-10-26T05:45:20.766Z",
+    "mtime": "2025-10-26T05:51:06.495Z",
     "size": 28244,
     "path": "../../../dist/fonts/Quicksand-normal-500-latin.woff2"
   },
   "/fonts/Quicksand-normal-500-vietnamese.woff2": {
     "type": "font/woff2",
     "etag": "\"2288-peHOwdJJoiDaofCCsPJdNQaUiTY\"",
-    "mtime": "2025-10-26T05:45:20.766Z",
+    "mtime": "2025-10-26T05:51:06.495Z",
     "size": 8840,
     "path": "../../../dist/fonts/Quicksand-normal-500-vietnamese.woff2"
   },
   "/fonts/Quicksand-normal-600-latin-ext.woff2": {
     "type": "font/woff2",
     "etag": "\"67f8-ZJHYGZuQy671141X3V8EWG7JgFw\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.493Z",
     "size": 26616,
     "path": "../../../dist/fonts/Quicksand-normal-600-latin-ext.woff2"
   },
   "/fonts/Quicksand-normal-600-latin.woff2": {
     "type": "font/woff2",
     "etag": "\"6e54-DCTGITdFBs5wQDp0c7R6zYa7+Rk\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.494Z",
     "size": 28244,
     "path": "../../../dist/fonts/Quicksand-normal-600-latin.woff2"
   },
   "/fonts/Quicksand-normal-600-vietnamese.woff2": {
     "type": "font/woff2",
     "etag": "\"2288-peHOwdJJoiDaofCCsPJdNQaUiTY\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.494Z",
     "size": 8840,
     "path": "../../../dist/fonts/Quicksand-normal-600-vietnamese.woff2"
   },
   "/fonts/Quicksand-normal-700-latin-ext.woff2": {
     "type": "font/woff2",
     "etag": "\"67f8-ZJHYGZuQy671141X3V8EWG7JgFw\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.494Z",
     "size": 26616,
     "path": "../../../dist/fonts/Quicksand-normal-700-latin-ext.woff2"
   },
   "/fonts/Quicksand-normal-700-latin.woff2": {
     "type": "font/woff2",
     "etag": "\"6e54-DCTGITdFBs5wQDp0c7R6zYa7+Rk\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.494Z",
     "size": 28244,
     "path": "../../../dist/fonts/Quicksand-normal-700-latin.woff2"
   },
   "/fonts/Quicksand-normal-700-vietnamese.woff2": {
     "type": "font/woff2",
     "etag": "\"2288-peHOwdJJoiDaofCCsPJdNQaUiTY\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.494Z",
     "size": 8840,
     "path": "../../../dist/fonts/Quicksand-normal-700-vietnamese.woff2"
   },
   "/fonts/Roboto-normal-400-cyrillic-ext.woff2": {
     "type": "font/woff2",
     "etag": "\"41d0-ejh4D/6k1Ortl+l4CjGuoPuxL1c\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.495Z",
     "size": 16848,
     "path": "../../../dist/fonts/Roboto-normal-400-cyrillic-ext.woff2"
   },
   "/fonts/Roboto-normal-400-cyrillic.woff2": {
     "type": "font/woff2",
     "etag": "\"2e40-4wKdtEl1B3DMtQx0Nkp+9h6N2zY\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.495Z",
     "size": 11840,
     "path": "../../../dist/fonts/Roboto-normal-400-cyrillic.woff2"
   },
   "/fonts/Roboto-normal-400-greek-ext.woff2": {
     "type": "font/woff2",
     "etag": "\"e5c-0mqGRLs3D7LjlGYYzoNHcmePiS0\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.495Z",
     "size": 3676,
     "path": "../../../dist/fonts/Roboto-normal-400-greek-ext.woff2"
   },
   "/fonts/Roboto-normal-400-greek.woff2": {
     "type": "font/woff2",
     "etag": "\"25ac-lea6lpxOnHaVlm7eEUbJyECYzeo\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.496Z",
     "size": 9644,
     "path": "../../../dist/fonts/Roboto-normal-400-greek.woff2"
   },
   "/fonts/Roboto-normal-400-latin-ext.woff2": {
     "type": "font/woff2",
     "etag": "\"35ac-5PwpXbf0XTH23zzP7JQ++/pHdUc\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.495Z",
     "size": 13740,
     "path": "../../../dist/fonts/Roboto-normal-400-latin-ext.woff2"
   },
   "/fonts/Roboto-normal-400-latin.woff2": {
     "type": "font/woff2",
     "etag": "\"5084-R79bLyTqSkyq/MyJudKmZ37547g\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.496Z",
     "size": 20612,
     "path": "../../../dist/fonts/Roboto-normal-400-latin.woff2"
   },
   "/fonts/Roboto-normal-400-math.woff2": {
     "type": "font/woff2",
     "etag": "\"4ccc-jmq3W+K3w3jBGztPy2QCt7rCEzg\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.495Z",
     "size": 19660,
     "path": "../../../dist/fonts/Roboto-normal-400-math.woff2"
   },
   "/fonts/Roboto-normal-400-symbols.woff2": {
     "type": "font/woff2",
     "etag": "\"2950-kGCwf2YAvWzY5CQYQ+jux0PikmQ\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.496Z",
     "size": 10576,
     "path": "../../../dist/fonts/Roboto-normal-400-symbols.woff2"
   },
   "/fonts/Roboto-normal-400-vietnamese.woff2": {
     "type": "font/woff2",
     "etag": "\"1eb0-SxFXBq8fTBf/tVVfTdPpbly7NmE\"",
-    "mtime": "2025-10-26T05:45:20.767Z",
+    "mtime": "2025-10-26T05:51:06.496Z",
     "size": 7856,
     "path": "../../../dist/fonts/Roboto-normal-400-vietnamese.woff2"
   },
   "/_nuxt/builds/latest.json": {
     "type": "application/json",
-    "etag": "\"47-6YDkH8XOtIUSr7IZf8ULVpoORKw\"",
-    "mtime": "2025-10-26T05:45:20.763Z",
+    "etag": "\"47-LVXs6iGjo07ouJkNneaa8ngXn7g\"",
+    "mtime": "2025-10-26T05:51:06.489Z",
     "size": 71,
     "path": "../../../dist/_nuxt/builds/latest.json"
   },
-  "/api/_content/cache.1761457492762.json": {
+  "/api/_content/cache.1761457838326.json": {
     "type": "application/json",
-    "etag": "\"1084a-jJyrHbdesFuHQ96zYdcRgrEPUPE\"",
-    "mtime": "2025-10-26T05:45:20.750Z",
+    "etag": "\"1084a-MPwR3WcBZ7pWRJGhAyeg5HNPcKo\"",
+    "mtime": "2025-10-26T05:51:06.476Z",
     "size": 67658,
-    "path": "../../../dist/api/_content/cache.1761457492762.json"
+    "path": "../../../dist/api/_content/cache.1761457838326.json"
   },
-  "/_nuxt/builds/meta/6bf98b81-c41e-4cd8-93b8-6da31a182c22.json": {
+  "/_nuxt/builds/meta/9c5093da-9700-4d83-824b-a44bee87ca28.json": {
     "type": "application/json",
-    "etag": "\"8b-UcmPLTXY7wEReU3YBoOziwFKjIY\"",
-    "mtime": "2025-10-26T05:45:20.758Z",
+    "etag": "\"8b-gLLk7FQt7eGIOrLEZuZPBGqd6sc\"",
+    "mtime": "2025-10-26T05:51:06.488Z",
     "size": 139,
-    "path": "../../../dist/_nuxt/builds/meta/6bf98b81-c41e-4cd8-93b8-6da31a182c22.json"
+    "path": "../../../dist/_nuxt/builds/meta/9c5093da-9700-4d83-824b-a44bee87ca28.json"
   }
 };
 
@@ -7518,30 +7516,933 @@ function contentHeading(body) {
   };
 }
 
-const projectRoot = process.cwd();
-const templatesDir = resolve$2(projectRoot, "server", "templates");
-console.log("Loading templates from:", templatesDir);
-function loadTemplate(templateName) {
-  try {
-    const templatePath = resolve$2(templatesDir, templateName);
-    console.log("Loading template:", templatePath);
-    const content = readFileSync(templatePath, "utf-8");
-    console.log("\u2713 Successfully loaded:", templateName, `(${content.length} bytes)`);
-    return content;
-  } catch (error) {
-    console.error(`\u2717 Failed to load template ${templateName}:`, error.message);
-    console.error("Attempted path:", resolve$2(templatesDir, templateName));
-    throw new Error(`Template not found: ${templateName} - ${error.message}`);
-  }
-}
+const classic_resume_hbs = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume</title>
+    <script src="https://cdn.tailwindcss.com"><\/script>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-white p-6 max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-6 border-b-2 border-gray-300 pb-4">
+            <h1 class="text-3xl font-bold mb-2 text-gray-900">{{ resumeData.personalInfo.fullName }}</h1>
+            <div class="text-sm text-gray-700 space-y-1">
+                <div class="flex justify-center items-center space-x-4 flex-wrap">
+                    <span>{{ resumeData.personalInfo.email }}</span>
+                    <span>\u2022</span>
+                    <span>{{ resumeData.personalInfo.phone }}</span>
+                    {{#if resumeData.personalInfo.location}}
+                        <span>\u2022</span>
+                        <span>{{ resumeData.personalInfo.location }}</span>
+                    {{/if}}
+                </div>
+                {{#if resumeData.personalInfo.linkedin}}
+                <div class="flex justify-center items-center space-x-4 flex-wrap">
+                    <span>{{ resumeData.personalInfo.linkedin }}</span>
+                    {{#if resumeData.personalInfo.website}}
+                        <span>\u2022</span>
+                        <span>{{ resumeData.personalInfo.website }}</span>
+                    {{/if}}
+                </div>
+                {{else}}
+                    {{#if resumeData.personalInfo.website}}
+                    <div class="flex justify-center items-center space-x-4 flex-wrap">
+                        <span>{{ resumeData.personalInfo.website }}</span>
+                    </div>
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
+
+        <!-- Professional Summary -->
+        <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-900 border-b border-gray-400 pb-1">PROFESSIONAL SUMMARY</h2>
+            <p class="text-sm leading-relaxed text-gray-800 pt-2">{{ resumeData.professionalSummary }}</p>
+        </div>
+
+        <!-- Work Experience -->
+        <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-900 border-b border-gray-400 pb-1 mb-3">WORK EXPERIENCE</h2>
+            {{#each resumeData.workExperience}}
+            <div class="mb-4">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <h3 class="font-bold text-sm text-gray-900">{{ this.jobTitle }}</h3>
+                        <p class="text-sm text-gray-800">{{ this.company }}{{#if this.location}}, {{ this.location }}{{/if}}</p>
+                    </div>
+                    <div class="text-sm text-gray-700 text-right">
+                        {{ this.startDate }} - {{#if this.endDate}}{{ this.endDate }}{{else}}Present{{/if}}
+                    </div>
+                </div>
+                <ul class="space-y-1">
+                    {{#each this.achievements}}
+                    <li class="text-sm text-gray-800 flex items-start">
+                        <span class="text-gray-800 mr-2 mt-0.5 flex-shrink-0">\u2022</span>
+                        <span class="leading-relaxed">{{ this }}</span>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+            {{/each}}
+        </div>
+
+        <!-- Education -->
+        <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-900 border-b border-gray-400 pb-1 mb-3">EDUCATION</h2>
+            {{#each resumeData.education}}
+            <div class="mb-3">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold text-sm text-gray-900">
+                            {{ this.degree }}{{#if this.field}}, {{ this.field }}{{/if}}
+                        </h3>
+                        <p class="text-sm text-gray-800">{{ this.institution }}</p>
+                        {{#if this.gpa}}
+                        <p class="text-sm text-gray-700">
+                            <span>GPA: {{ this.gpa }}</span>
+                            {{#if this.honors}}
+                                <span> \u2022 </span>
+                                <span>{{ this.honors }}</span>
+                            {{/if}}
+                        </p>
+                        {{else}}
+                            {{#if this.honors}}
+                            <p class="text-sm text-gray-700">
+                                <span>{{ this.honors }}</span>
+                            </p>
+                            {{/if}}
+                        {{/if}}
+                    </div>
+                    {{#if this.graduationYear}}
+                    <div class="text-sm text-gray-700">
+                        {{ this.graduationYear }}
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+
+        <!-- Skills -->
+        <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-900 border-b border-gray-400 pb-1 mb-3">SKILLS</h2>
+            <div class="grid grid-cols-1 gap-2">
+                {{#if resumeData.skills.technical}}
+                <div class="mb-2">
+                    <span class="font-semibold text-sm text-gray-900">Technical: </span>
+                    <span class="text-sm text-gray-800">{{#each resumeData.skills.technical}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}</span>
+                </div>
+                {{/if}}
+                {{#if resumeData.skills.tools}}
+                <div class="mb-2">
+                    <span class="font-semibold text-sm text-gray-900">Tools & Platforms: </span>
+                    <span class="text-sm text-gray-800">{{#each resumeData.skills.tools}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}</span>
+                </div>
+                {{/if}}
+                {{#if resumeData.skills.soft}}
+                <div class="mb-2">
+                    <span class="font-semibold text-sm text-gray-900">Core Competencies: </span>
+                    <span class="text-sm text-gray-800">{{#each resumeData.skills.soft}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}</span>
+                </div>
+                {{/if}}
+                {{#if resumeData.skills.languages}}
+                <div class="mb-2">
+                    <span class="font-semibold text-sm text-gray-900">Languages: </span>
+                    <span class="text-sm text-gray-800">{{#each resumeData.skills.languages}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}</span>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+
+        <!-- Certifications -->
+        {{#if resumeData.certifications}}
+        <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-900 border-b border-gray-400 pb-1 mb-3">CERTIFICATIONS</h2>
+            {{#each resumeData.certifications}}
+            <div class="mb-2">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold text-sm text-gray-900">{{ this.name }}</h3>
+                        <p class="text-sm text-gray-800">{{ this.issuer }}</p>
+                    </div>
+                    <div class="text-sm text-gray-700 text-right">
+                        {{#if this.date}}<div>{{ this.date }}</div>{{/if}}
+                        {{#if this.expirationDate}}<div class="text-xs">Expires: {{ this.expirationDate }}</div>{{/if}}
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}
+
+        <!-- Projects -->
+        {{#if resumeData.projects}}
+        <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-900 border-b border-gray-400 pb-1 mb-3">PROJECTS</h2>
+            {{#each resumeData.projects}}
+            <div class="mb-3">
+                <h3 class="font-bold text-sm text-gray-900">{{ this.name }}</h3>
+                <p class="text-sm text-gray-800 mb-1">{{ this.description }}</p>
+                {{#if this.technologies}}
+                <div class="text-sm text-gray-700 mb-1">
+                    <span class="font-semibold">Technologies: </span>{{#each this.technologies}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}
+                </div>
+                {{/if}}
+                {{#if this.link}}
+                <div class="text-sm text-gray-700">
+                    <span class="font-semibold">Link: </span>{{ this.link }}
+                </div>
+                {{/if}}
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}
+    </div>
+</body>
+</html>
+`;
+const modern_resume_hbs = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume</title>
+    <script src="https://cdn.tailwindcss.com"><\/script>
+    <style>
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-white max-w-4xl mx-auto shadow-lg overflow-hidden">
+        <!-- Header with Color Background -->
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div class="mb-4 md:mb-0">
+                    <h1 class="text-4xl font-bold mb-2">{{ resumeData.personalInfo.fullName }}</h1>
+                    <div class="flex flex-wrap gap-4 text-blue-100">
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                            </svg>
+                            <span>{{ resumeData.personalInfo.email }}</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                            </svg>
+                            <span>{{ resumeData.personalInfo.phone }}</span>
+                        </div>
+                        {{#if resumeData.personalInfo.location}}
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>{{ resumeData.personalInfo.location }}</span>
+                        </div>
+                        {{/if}}
+                    </div>
+                    <div class="flex flex-wrap gap-4 text-blue-100 mt-2">
+                        {{#if resumeData.personalInfo.linkedin}}
+                        <div class="flex items-center space-x-2">
+                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="truncate">{{ resumeData.personalInfo.linkedin }}</span>
+                        </div>
+                        {{/if}}
+                        {{#if resumeData.personalInfo.website}}
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="truncate">{{ resumeData.personalInfo.website }}</span>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <!-- Professional Summary -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 flex items-center mb-4">
+                    <div class="w-1 h-8 bg-blue-600 mr-3 rounded-full"></div>
+                    PROFESSIONAL SUMMARY
+                </h2>
+                <p class="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-lg border-l-4 border-blue-600">
+                    {{ resumeData.professionalSummary }}
+                </p>
+            </div>
+
+            <!-- Work Experience -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 flex items-center mb-6">
+                    <div class="w-1 h-8 bg-blue-600 mr-3 rounded-full"></div>
+                    WORK EXPERIENCE
+                </h2>
+                <div class="space-y-6">
+                    {{#each resumeData.workExperience}}
+                    <div class="relative pl-8 pb-6">
+                        <div class="absolute left-0 top-2 w-3 h-3 bg-blue-600 rounded-full"></div>
+                        <div class="absolute left-1.5 top-5 w-0.5 h-full bg-gray-200"></div>
+                        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-1">{{ this.jobTitle }}</h3>
+                                    <p class="text-lg text-blue-600 font-medium">{{ this.company }}</p>
+                                    {{#if this.location}}<p class="text-gray-600">{{ this.location }}</p>{{/if}}
+                                </div>
+                                <div class="text-right">
+                                    <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                                        {{ this.startDate }} - {{#if this.endDate}}{{ this.endDate }}{{else}}Present{{/if}}
+                                    </span>
+                                </div>
+                            </div>
+                            <ul class="space-y-2">
+                                {{#each this.achievements}}
+                                <li class="flex items-start">
+                                    <div class="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                    <span class="text-gray-700">{{ this }}</span>
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 flex items-center mb-6">
+                    <div class="w-1 h-8 bg-blue-600 mr-3 rounded-full"></div>
+                    EDUCATION
+                </h2>
+                <div class="grid grid-cols-2 gap-6">
+                    {{#each resumeData.education}}
+                    <div class="bg-gray-50 rounded-lg p-6 border-l-4 border-blue-600">
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">
+                            {{ this.degree }}{{#if this.field}}, {{ this.field }}{{/if}}
+                        </h3>
+                        <p class="text-blue-600 font-medium mb-1">{{ this.institution }}</p>
+                        <p class="text-gray-600 text-sm mb-2">{{ this.graduationYear }}</p>
+                        {{#if this.gpa}}
+                        <div class="text-sm text-gray-700">
+                            <span class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2">GPA: {{ this.gpa }}</span>
+                             {{#if this.honors}}<span class="inline-block bg-green-100 text-green-800 px-2 py-1 rounded">{{ this.honors }}</span>{{/if}}
+                        </div>
+                        {{else}}
+                             {{#if this.honors}}<span class="inline-block bg-green-100 text-green-800 px-2 py-1 rounded">{{ this.honors }}</span>{{/if}}
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+
+            <!-- Skills -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 flex items-center mb-6">
+                    <div class="w-1 h-8 bg-blue-600 mr-3 rounded-full"></div>
+                    SKILLS
+                </h2>
+                <div class="grid grid-cols-2 gap-6">
+                    {{#if resumeData.skills.technical}}
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                             <svg class="w-5 h-5 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 16a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                            Technical Skills
+                        </h3>
+                        <div class="flex flex-wrap gap-2">
+                            {{#each resumeData.skills.technical}}
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">{{ this }}</span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{#if resumeData.skills.tools}}
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                             <svg class="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                            Tools & Platforms
+                        </h3>
+                        <div class="flex flex-wrap gap-2">
+                            {{#each resumeData.skills.tools}}
+                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">{{ this }}</span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{#if resumeData.skills.soft}}
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                            <svg class="w-5 h-5 text-purple-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                            </svg>
+                            Core Competencies
+                        </h3>
+                        <div class="flex flex-wrap gap-2">
+                             {{#each resumeData.skills.soft}}
+                            <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">{{ this }}</span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{#if resumeData.skills.languages}}
+                     <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                             <svg class="w-5 h-5 text-orange-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M7 2a1 1 0 011 1v1h3V3a1 1 0 112 0v1h3V3a1 1 0 112 0v1h1a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2h1V3a1 1 0 011-1zM4 6h12v8H4V6z" clip-rule="evenodd"/>
+                            </svg>
+                            Languages
+                        </h3>
+                        <div class="flex flex-wrap gap-2">
+                             {{#each resumeData.skills.languages}}
+                            <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm font-medium">{{ this }}</span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+
+            <!-- Certifications -->
+            {{#if resumeData.certifications}}
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 flex items-center mb-6">
+                    <div class="w-1 h-8 bg-blue-600 mr-3 rounded-full"></div>
+                    CERTIFICATIONS
+                </h2>
+                <div class="grid grid-cols-2 gap-6">
+                    {{#each resumeData.certifications}}
+                    <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-bold text-gray-900 mb-1">{{ this.name }}</h3>
+                                <p class="text-blue-600 font-medium">{{ this.issuer }}</p>
+                            </div>
+                            <div class="text-right">
+                                {{#if this.date}}<div class="text-sm text-gray-600">{{ this.date }}</div>{{/if}}
+                                {{#if this.expirationDate}}<div class="text-xs text-gray-500">Expires: {{ this.expirationDate }}</div>{{/if}}
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            {{/if}}
+
+            <!-- Projects -->
+             {{#if resumeData.projects}}
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 flex items-center mb-6">
+                    <div class="w-1 h-8 bg-blue-600 mr-3 rounded-full"></div>
+                    PROJECTS
+                </h2>
+                <div class="grid grid-cols-2 gap-6">
+                    {{#each resumeData.projects}}
+                    <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">{{ this.name }}</h3>
+                        <p class="text-gray-700 mb-4">{{ this.description }}</p>
+                        {{#if this.technologies}}
+                        <div class="mb-4">
+                            <div class="flex flex-wrap gap-2">
+                                {{#each this.technologies}}
+                                <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">{{ this }}</span>
+                                {{/each}}
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{#if this.link}}
+                        <div class="text-sm">
+                            <a href="{{ this.link }}" target="_blank" class="text-blue-600 hover:text-blue-800 underline">
+                                View Project \u2192
+                            </a>
+                        </div>
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+</body>
+</html>
+`;
+const minimal_resume_hbs = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume</title>
+    <script src="https://cdn.tailwindcss.com"><\/script>
+    <style>
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-white p-8 max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="border-b border-gray-200 pb-8 mb-10">
+            <h1 class="text-5xl font-light text-gray-900 mb-4 tracking-wide">{{ resumeData.personalInfo.fullName }}</h1>
+            <div class="flex flex-wrap gap-8 text-gray-600">
+                <span>{{ resumeData.personalInfo.email }}</span>
+                <span>{{ resumeData.personalInfo.phone }}</span>
+                {{#if resumeData.personalInfo.location}}<span>{{ resumeData.personalInfo.location }}</span>{{/if}}
+                {{#if resumeData.personalInfo.linkedin}}<span>{{ resumeData.personalInfo.linkedin }}</span>{{/if}}
+                {{#if resumeData.personalInfo.website}}<span>{{ resumeData.personalInfo.website }}</span>{{/if}}
+            </div>
+        </div>
+
+        <!-- Professional Summary -->
+        <div class="mb-12">
+            <h2 class="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-4">Professional Summary</h2>
+            <p class="text-gray-700 leading-relaxed max-w-4xl">{{ resumeData.professionalSummary }}</p>
+        </div>
+
+        <!-- Work Experience -->
+        <div class="mb-12">
+            <h2 class="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-8">Experience</h2>
+            <div class="space-y-10">
+                {{#each resumeData.workExperience}}
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900">{{ this.jobTitle }}</h3>
+                            <p class="text-gray-600">{{ this.company }}{{#if this.location}}, {{ this.location }}{{/if}}</p>
+                        </div>
+                        <span class="text-sm text-gray-500 font-light">
+                            {{ this.startDate }} \u2014 {{#if this.endDate}}{{ this.endDate }}{{else}}Present{{/if}}
+                        </span>
+                    </div>
+                    <ul class="space-y-3 text-gray-700">
+                        {{#each this.achievements}}
+                        <li class="flex items-start">
+                            <span class="text-gray-400 mr-3 mt-2 flex-shrink-0">\u2014</span>
+                            <span>{{ this }}</span>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <!-- Two Column Layout for Education and Skills -->
+        <div class="grid grid-cols-2 gap-12">
+            <!-- Education -->
+            <div>
+                <h2 class="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-6">Education</h2>
+                <div class="space-y-6">
+                    {{#each resumeData.education}}
+                    <div>
+                        <h3 class="text-base font-medium text-gray-900">
+                            {{ this.degree }}{{#if this.field}}, {{ this.field }}{{/if}}
+                        </h3>
+                        <p class="text-gray-600">{{ this.institution }}</p>
+                        <p class="text-sm text-gray-500">{{ this.graduationYear }}</p>
+                        {{#if this.gpa}}
+                        <div class="text-sm text-gray-600 mt-1">
+                            <span>GPA: {{ this.gpa }}</span>
+                            {{#if this.honors}}
+                                <span> \u2022 </span>
+                                <span>{{ this.honors }}</span>
+                            {{/if}}
+                        </div>
+                         {{else}}
+                            {{#if this.honors}}
+                                 <div class="text-sm text-gray-600 mt-1">
+                                    <span>{{ this.honors }}</span>
+                                </div>
+                            {{/if}}
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+
+            <!-- Skills -->
+            <div>
+                <h2 class="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-6">Skills</h2>
+                <div class="space-y-4">
+                    {{#if resumeData.skills.technical}}
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-900 mb-2">Technical</h3>
+                        <p class="text-gray-700">{{#each resumeData.skills.technical}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}</p>
+                    </div>
+                    {{/if}}
+                    {{#if resumeData.skills.tools}}
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-900 mb-2">Tools & Platforms</h3>
+                        <p class="text-gray-700">{{#each resumeData.skills.tools}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}</p>
+                    </div>
+                    {{/if}}
+                    {{#if resumeData.skills.soft}}
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-900 mb-2">Core Competencies</h3>
+                        <p class="text-gray-700">{{#each resumeData.skills.soft}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}</p>
+                    </div>
+                    {{/if}}
+                    {{#if resumeData.skills.languages}}
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-900 mb-2">Languages</h3>
+                        <p class="text-gray-700">{{#each resumeData.skills.languages}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}</p>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+
+        <!-- Certifications -->
+        {{#if resumeData.certifications}}
+        <div class="mt-12">
+            <h2 class="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-6">Certifications</h2>
+            <div class="space-y-4">
+                {{#each resumeData.certifications}}
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-base font-medium text-gray-900">{{ this.name }}</h3>
+                        <p class="text-gray-600">{{ this.issuer }}</p>
+                    </div>
+                    <div class="text-right text-sm text-gray-500">
+                        {{#if this.date}}<div>{{ this.date }}</div>{{/if}}
+                        {{#if this.expirationDate}}<div class="text-xs">Expires: {{ this.expirationDate }}</div>{{/if}}
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        {{/if}}
+
+        <!-- Projects -->
+        {{#if resumeData.projects}}
+        <div class="mt-12">
+            <h2 class="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-6">Projects</h2>
+            <div class="space-y-6">
+                {{#each resumeData.projects}}
+                <div>
+                    <h3 class="text-base font-medium text-gray-900 mb-2">{{ this.name }}</h3>
+                    <p class="text-gray-700 mb-2">{{ this.description }}</p>
+                    {{#if this.technologies}}
+                    <div class="text-sm text-gray-600 mb-1">
+                        <span class="font-medium">Technologies:</span> {{#each this.technologies}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}
+                    </div>
+                    {{/if}}
+                    {{#if this.link}}
+                    <div class="text-sm text-gray-600">
+                        <span class="font-medium">Link:</span> {{ this.link }}
+                    </div>
+                    {{/if}}
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        {{/if}}
+    </div>
+</body>
+</html>
+`;
+const classic_cover_letter_hbs = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cover Letter</title>
+    <style>
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+
+        :root {
+        font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+        font-family: 'Quicksand', sans-serif;
+        }
+    </style>
+     <script src="https://cdn.tailwindcss.com"><\/script>
+</head>
+<body>
+    <div id="cover-letter-content-wrapper">
+    <div class="cover-letter-classic bg-white min-h-screen">
+      <!-- Header Section -->
+      <div class="bg-gray-100 text-gray-900 p-8 border-b border-gray-200">
+        <div class="max-w-4xl mx-auto">
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="text-3xl font-bold mb-2">{{ resumeData.personalInfo.fullName }}</h1>
+              <p class="text-gray-600 text-lg">{{ resumeData.personalInfo.title }}</p>
+              <div class="flex items-center space-x-4 mt-3 text-gray-600">
+                {{#if resumeData.personalInfo.email}}
+                <div class="flex items-center">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                  </svg>
+                  {{ resumeData.personalInfo.email }}
+                </div>
+                {{/if}}
+                {{#if resumeData.personalInfo.phone}}
+                <div class="flex items-center">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                  </svg>
+                  {{ resumeData.personalInfo.phone }}
+                </div>
+                {{/if}}
+                {{#if resumeData.personalInfo.location}}
+                <div class="flex items-center">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  </svg>
+                  {{ resumeData.personalInfo.location }}
+                </div>
+                {{/if}}
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-2xl font-bold">{{currentDate}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="max-w-4xl mx-auto p-8">
+        <div class="grid grid-cols-3 gap-8 mb-8">
+          <div class="col-span-2">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                <div class="w-2 h-6 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full mr-3"></div>
+                Cover Letter
+              </h2>
+              <div class="prose prose-lg max-w-none">
+                <div class="whitespace-pre-line text-gray-800 leading-relaxed">{{ coverLetterData.coverLetterText }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 class="text-lg font-bold text-gray-900 mb-4 text-center">Role Alignment</h3>
+              <div class="flex justify-center mb-4">
+                <div class="relative inline-flex items-center justify-center w-20 h-20">
+                  <svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 36 36">
+                    <path
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      fill="none"
+                      stroke="#e5e7eb"
+                      stroke-width="2"
+                    />
+                    <path
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      fill="none"
+                      stroke="#10b981"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-dasharray="{{coverLetterData.alignmentScore}}, 100"
+                    />
+                  </svg>
+                  <span class="absolute text-lg font-bold text-gray-900">{{ coverLetterData.alignmentScore }}%</span>
+                </div>
+              </div>
+              <p class="text-sm text-gray-600 text-center">{{ getAlignmentDescription coverLetterData.alignmentScore }}</p>
+            </div>
+
+            {{#if coverLetterData.companyHighlights}}
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center">
+                <div class="w-2 h-6 bg-gradient-to-b from-emerald-500 to-teal-600 rounded-full mr-3"></div>
+                Experience Highlights
+              </h3>
+              
+              <div class="space-y-4">
+                {{#each coverLetterData.companyHighlights}}
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <h4 class="font-bold text-lg text-gray-900 mb-3 text-center">{{this.companyName}}</h4>
+                  <p class="text-sm text-gray-700">{{this.keyAchievements.[0]}}</p>
+                </div>
+                {{/each}}
+              </div>
+            </div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{#if coverLetterData.alignedSkills}}
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+            <div class="w-2 h-6 bg-gradient-to-b from-indigo-500 to-blue-600 rounded-full mr-3"></div>
+            Key Skills Match
+          </h2>
+          
+          <div class="grid grid-cols-3 gap-6">
+            {{#each coverLetterData.alignedSkills}}
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-center justify-center min-h-[80px]">
+              <span class="font-semibold text-gray-900 text-center">{{this.skillName}}</span>
+            </div>
+            {{/each}}
+          </div>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+`;
+const modern_cover_letter_hbs = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cover Letter</title>
+    <script src="https://cdn.tailwindcss.com"><\/script>
+</head>
+<body>
+    <div id="cover-letter-content-wrapper">
+        <div class="cover-letter-modern bg-white min-h-screen">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8">
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="text-3xl font-bold mb-2">{{ resumeData.personalInfo.fullName }}</h1>
+                            <p class="text-blue-100 text-lg">{{ resumeData.personalInfo.title }}</p>
+                            <div class="flex items-center space-x-4 mt-3 text-blue-100">
+                                {{#if resumeData.personalInfo.email}}
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    </svg>
+                                    {{ resumeData.personalInfo.email }}
+                                </div>
+                                {{/if}}
+                                {{#if resumeData.personalInfo.phone}}
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                    </svg>
+                                    {{ resumeData.personalInfo.phone }}
+                                </div>
+                                {{/if}}
+                                {{#if resumeData.personalInfo.location}}
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    {{ resumeData.personalInfo.location }}
+                                </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold">{{currentDate}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto p-8">
+                <div class="grid grid-cols-3 gap-8 mb-8">
+                    <div class="col-span-2">
+                        <div class="bg-gray-50 rounded-2xl p-6 border-l-4 border-blue-500">
+                            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                                <div class="w-2 h-6 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full mr-3"></div>
+                                Cover Letter
+                            </h2>
+                            <div class="prose prose-lg max-w-none">
+                                <div class="whitespace-pre-line text-gray-800 leading-relaxed">{{ coverLetterData.coverLetterText }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-200">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4 text-center">Role Alignment</h3>
+                            <div class="flex justify-center mb-4">
+                                <div class="relative inline-flex items-center justify-center w-24 h-24">
+                                    <svg class="w-24 h-24 transform -rotate-90" viewBox="0 0 36 36">
+                                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e5e7eb" stroke-width="2" />
+                                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-dasharray="{{coverLetterData.alignmentScore}}, 100" />
+                                    </svg>
+                                    <span class="absolute text-xl font-bold text-gray-900">{{coverLetterData.alignmentScore}}%</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 text-center">{{ getAlignmentDescription coverLetterData.alignmentScore }}</p>
+                        </div>
+
+                        {{#if coverLetterData.companyHighlights}}
+                        <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 border border-emerald-200">
+                            <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center">
+                                <div class="w-2 h-6 bg-gradient-to-b from-emerald-500 to-teal-600 rounded-full mr-3"></div>
+                                Experience Highlights
+                            </h3>
+                            <div class="space-y-4">
+                                {{#each coverLetterData.companyHighlights}}
+                                <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transform hover:scale-105 transition-all duration-300">
+                                    <h4 class="font-bold text-lg text-gray-900 mb-3 text-center">{{this.companyName}}</h4>
+                                    <p class="text-sm text-gray-700">{{this.keyAchievements.[0]}}</p>
+                                </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+
+                {{#if coverLetterData.alignedSkills}}
+                <div class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl p-6 border-l-4 border-indigo-500">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                        <div class="w-2 h-6 bg-gradient-to-b from-indigo-500 to-blue-600 rounded-full mr-3"></div>
+                        Key Skills Match
+                    </h2>
+                    <div class="grid grid-cols-3 gap-6">
+                        {{#each coverLetterData.alignedSkills}}
+                        <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-h-[80px]">
+                            <span class="font-semibold text-gray-900 text-center">{{this.skillName}}</span>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+`;
+
 const templates = {
-  "classic-resume.hbs": loadTemplate("classic-resume.hbs"),
-  "modern-resume.hbs": loadTemplate("modern-resume.hbs"),
-  "minimal-resume.hbs": loadTemplate("minimal-resume.hbs"),
-  "classic-cover-letter.hbs": loadTemplate("classic-cover-letter.hbs"),
-  "modern-cover-letter.hbs": loadTemplate("modern-cover-letter.hbs")
+  "classic-resume.hbs": classic_resume_hbs,
+  "modern-resume.hbs": modern_resume_hbs,
+  "minimal-resume.hbs": minimal_resume_hbs,
+  "classic-cover-letter.hbs": classic_cover_letter_hbs,
+  "modern-cover-letter.hbs": modern_cover_letter_hbs
 };
-console.log("\u2713 All templates loaded successfully");
+console.log("\u2713 Templates loaded from inline strings");
 
 const collections = {
 };
@@ -7727,7 +8628,7 @@ const handlers = [
   { route: '/api/_content/query/:qid/**:params', handler: _WpBdkJ, lazy: false, middleware: false, method: "get" },
   { route: '/api/_content/query/:qid', handler: _WpBdkJ, lazy: false, middleware: false, method: "get" },
   { route: '/api/_content/query', handler: _WpBdkJ, lazy: false, middleware: false, method: "get" },
-  { route: '/api/_content/cache.1761457492762.json', handler: _Z5NCLO, lazy: false, middleware: false, method: "get" },
+  { route: '/api/_content/cache.1761457838326.json', handler: _Z5NCLO, lazy: false, middleware: false, method: "get" },
   { route: '/api/_content/navigation/:qid/**:params', handler: _SOjnlb, lazy: false, middleware: false, method: "get" },
   { route: '/api/_content/navigation/:qid', handler: _SOjnlb, lazy: false, middleware: false, method: "get" },
   { route: '/api/_content/navigation', handler: _SOjnlb, lazy: false, middleware: false, method: "get" },

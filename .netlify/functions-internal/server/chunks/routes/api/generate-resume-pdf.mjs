@@ -14,8 +14,6 @@ import 'detab';
 import 'micromark-util-sanitize-uri';
 import 'hast-util-to-string';
 import 'github-slugger';
-import 'fs';
-import 'path';
 import 'node:http';
 import 'node:https';
 import 'node:events';
@@ -30,6 +28,7 @@ import 'node:os';
 import 'follow-redirects';
 import 'tar-fs';
 import 'node:zlib';
+import 'fs';
 
 function normalizeResumeData(data) {
   var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
