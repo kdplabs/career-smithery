@@ -1,4 +1,4 @@
-import { x as prefixStorage, S as withBase, B as pascalCase, Z as createStorage, _ as memoryDriver, q as joinURL } from '../nitro/nitro.mjs';
+import { y as prefixStorage, T as withBase, C as pascalCase, _ as createStorage, a0 as memoryDriver, q as joinURL } from '../nitro/nitro.mjs';
 import { c as createQuery, b as ensureArray, d as apply, o as omit, g as get, f as sortList, h as withoutKeys, i as withKeys, k as assertArray } from './query-BYQHWqEv.mjs';
 import { b as useRuntimeConfig, a as useNuxtApp } from './server.mjs';
 import { u as useContentPreview } from './preview-CdOJLZif.mjs';
@@ -15,6 +15,8 @@ import 'detab';
 import 'micromark-util-sanitize-uri';
 import 'hast-util-to-string';
 import 'github-slugger';
+import 'fs';
+import 'path';
 import 'node:http';
 import 'node:https';
 import 'node:events';

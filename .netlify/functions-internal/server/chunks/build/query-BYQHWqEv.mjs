@@ -1,4 +1,4 @@
-import { S as withBase, w as withLeadingSlash, q as joinURL, v as withoutTrailingSlash } from '../nitro/nitro.mjs';
+import { T as withBase, w as withLeadingSlash, q as joinURL, x as withoutTrailingSlash } from '../nitro/nitro.mjs';
 import { h as hash } from '../_/index2.mjs';
 import { b as useRuntimeConfig, j as useRequestEvent } from './server.mjs';
 import { u as useContentPreview } from './preview-CdOJLZif.mjs';

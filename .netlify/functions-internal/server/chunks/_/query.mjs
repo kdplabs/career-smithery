@@ -12,6 +12,8 @@ import 'detab';
 import 'micromark-util-sanitize-uri';
 import 'hast-util-to-string';
 import 'github-slugger';
+import 'fs';
+import 'path';
 import 'node:http';
 import 'node:https';
 import 'node:events';

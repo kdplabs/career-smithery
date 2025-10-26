@@ -1,5 +1,5 @@
 import { toRef, isRef, hasInjectionContext, inject, getCurrentInstance, defineAsyncComponent, defineComponent, h, computed, unref, ref, provide, Suspense, Fragment, createApp, shallowReactive, onErrorCaptured, onServerPrefetch, createVNode, resolveDynamicComponent, reactive, effectScope, shallowRef, isReadonly, isShallow, isReactive, toRaw, mergeProps, withCtx, getCurrentScope, nextTick, useSSRContext } from 'vue';
-import { C as klona, D as defuFn, c as createError$1, E as hasProtocol, F as isScriptProtocol, q as joinURL, G as withQuery, H as sanitizeStatusCode, I as getContext, $ as $fetch$1, J as baseURL, K as createHooks, L as executeAsync, M as getHeader, N as toRouteMatcher, O as createRouter$1, A as defu, P as setCookie } from '../nitro/nitro.mjs';
+import { D as klona, E as defuFn, c as createError$1, F as hasProtocol, G as isScriptProtocol, q as joinURL, H as withQuery, I as sanitizeStatusCode, J as getContext, $ as $fetch$1, K as baseURL, L as createHooks, M as executeAsync, N as getHeader, O as toRouteMatcher, P as createRouter$1, B as defu, Q as setCookie } from '../nitro/nitro.mjs';
 import { useRoute as useRoute$1, RouterView, createMemoryHistory, createRouter, START_LOCATION } from 'vue-router';
 import { createServerClient, parseCookieHeader } from '@supabase/ssr';
 import { _api, addAPIProvider, setCustomIconsLoader } from '@iconify/vue';
@@ -17,6 +17,8 @@ import 'detab';
 import 'micromark-util-sanitize-uri';
 import 'hast-util-to-string';
 import 'github-slugger';
+import 'fs';
+import 'path';
 import 'node:http';
 import 'node:https';
 import 'node:events';
@@ -461,7 +463,7 @@ const _routes = [
     name: "cover-letter",
     path: "/cover-letter",
     meta: __nuxt_page_meta$4 || {},
-    component: () => import('./cover-letter-DN9sO9Na.mjs')
+    component: () => import('./cover-letter-B9aaysgs.mjs')
   },
   {
     name: "auth-callback",

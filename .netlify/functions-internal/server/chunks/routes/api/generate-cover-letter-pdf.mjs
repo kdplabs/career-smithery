@@ -1,9 +1,6 @@
-import { d as defineEventHandler, r as readBody, c as createError, s as send } from '../../nitro/nitro.mjs';
+import { d as defineEventHandler, r as readBody, c as createError, t as templates, s as send } from '../../nitro/nitro.mjs';
 import puppeteer from 'puppeteer-core';
-import chromium from '@sparticuz/chromium';
-import { h as handlebars } from '../../_/index.mjs';
-import { promises } from 'fs';
-import path from 'path';
+import { h as handlebars, C as Chromium } from '../../_/index.mjs';
 import 'unified';
 import 'remark-parse';
 import 'remark-rehype';
@@ -17,6 +14,8 @@ import 'detab';
 import 'micromark-util-sanitize-uri';
 import 'hast-util-to-string';
 import 'github-slugger';
+import 'fs';
+import 'path';
 import 'node:http';
 import 'node:https';
 import 'node:events';
@@ -27,6 +26,10 @@ import 'node:crypto';
 import 'node:url';
 import '@iconify/utils';
 import 'consola';
+import 'node:os';
+import 'follow-redirects';
+import 'tar-fs';
+import 'node:zlib';
 
 const generateCoverLetterPdf = defineEventHandler(async (event) => {
   var _a;
@@ -60,10 +63,13 @@ const generateCoverLetterPdf = defineEventHandler(async (event) => {
     }
   }
   const templateName = template === "modern" ? "modern-cover-letter.hbs" : "classic-cover-letter.hbs";
-  const templatePath = path.join(process.cwd(), "server", "templates", templateName);
   let browser = null;
   try {
-    const templateFile = await promises.readFile(templatePath, "utf-8");
+    const templateFile = templates[templateName];
+    if (!templateFile) {
+      throw new Error(`Template not found: ${templateName}. Available templates: ${Object.keys(templates).join(", ")}`);
+    }
+    console.log("\u2713 Loaded template:", templateName);
     handlebars.registerHelper("getAlignmentDescription", function(score) {
       if (score >= 90) return "Excellent alignment! Your cover letter is highly relevant to the job requirements.";
       if (score >= 70) return "Good alignment. Your cover letter covers the key aspects of the job description.";
@@ -80,10 +86,10 @@ const generateCoverLetterPdf = defineEventHandler(async (event) => {
     const isServerless = process.env.NETLIFY || process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
     if (isServerless) {
       browser = await puppeteer.launch({
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath(),
-        headless: chromium.headless
+        args: Chromium.args,
+        defaultViewport: Chromium.defaultViewport,
+        executablePath: await Chromium.executablePath(),
+        headless: Chromium.headless
       });
     } else {
       const puppeteerRegular = await import('puppeteer');
@@ -112,14 +118,27 @@ const generateCoverLetterPdf = defineEventHandler(async (event) => {
     event.node.res.setHeader("Content-Type", "application/pdf");
     return send(event, pdfBuffer);
   } catch (error) {
+    console.error("=== COVER LETTER PDF GENERATION ERROR START ===");
     console.error("Puppeteer PDF generation error:", error);
+    console.error("Error message:", error.message);
     console.error("Error stack:", error.stack);
-    console.error("Cover letter data structure:", JSON.stringify(coverLetterData, null, 2));
-    console.error("Resume data structure:", JSON.stringify(resumeData, null, 2));
-    throw createError({
-      statusCode: 500,
-      statusMessage: `Failed to generate PDF cover letter: ${error.message}`
-    });
+    console.error("Error name:", error.name);
+    console.error("Template:", template);
+    console.error("Environment:", process.env.NETLIFY ? "netlify" : process.env.VERCEL ? "vercel" : "local");
+    console.error("Has cover letter data:", !!coverLetterData);
+    console.error("Has resume data:", !!resumeData);
+    console.error("=== COVER LETTER PDF GENERATION ERROR END ===");
+    event.node.res.setHeader("Content-Type", "application/json");
+    event.node.res.statusCode = 500;
+    return {
+      error: true,
+      message: error.message,
+      name: error.name,
+      timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+      template,
+      environment: process.env.NETLIFY ? "netlify" : process.env.VERCEL ? "vercel" : "local",
+      statusCode: 500
+    };
   } finally {
     if (browser) {
       await browser.close();

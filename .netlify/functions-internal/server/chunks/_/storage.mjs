@@ -1,4 +1,4 @@
-import { l as parseMarkdown, m as isRelative, n as destr, o as camelCase, q as joinURL, u as useRuntimeConfig, t as isPreview, w as withLeadingSlash, v as withoutTrailingSlash, x as prefixStorage, y as useStorage, z as getPreview, A as defu, k as useNitroApp } from '../nitro/nitro.mjs';
+import { l as parseMarkdown, m as isRelative, n as destr, o as camelCase, q as joinURL, u as useRuntimeConfig, v as isPreview, w as withLeadingSlash, x as withoutTrailingSlash, y as prefixStorage, z as useStorage, A as getPreview, B as defu, k as useNitroApp } from '../nitro/nitro.mjs';
 import { h as hash } from './index2.mjs';
 import { unified } from 'unified';
 import { d as defineTransformer, g as generatePath, p as pathMeta } from './path-meta.mjs';

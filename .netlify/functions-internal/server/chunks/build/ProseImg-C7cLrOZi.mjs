@@ -1,6 +1,6 @@
 import { defineComponent, computed, createVNode, resolveDynamicComponent, unref, mergeProps, useSSRContext } from 'vue';
 import { ssrRenderVNode } from 'vue/server-renderer';
-import { w as withLeadingSlash, R as withTrailingSlash, q as joinURL } from '../nitro/nitro.mjs';
+import { w as withLeadingSlash, S as withTrailingSlash, q as joinURL } from '../nitro/nitro.mjs';
 import { b as useRuntimeConfig } from './server.mjs';
 import 'unified';
 import 'remark-parse';
@@ -15,6 +15,8 @@ import 'detab';
 import 'micromark-util-sanitize-uri';
 import 'hast-util-to-string';
 import 'github-slugger';
+import 'fs';
+import 'path';
 import 'node:http';
 import 'node:https';
 import 'node:events';

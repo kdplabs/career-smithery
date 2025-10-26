@@ -1,31 +1,36 @@
 import { readFileSync } from 'fs';
-import { join } from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { resolve } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// Get the project root directory
+// During build, process.cwd() is the project root
+const projectRoot = process.cwd();
+const templatesDir = resolve(projectRoot, 'server', 'templates');
 
-// Read templates at build time and export as strings
-// This ensures they're bundled with the function
-const templatesDir = join(__dirname, '..', 'templates');
+console.log('Loading templates from:', templatesDir);
 
-export function getTemplate(templateName) {
+function loadTemplate(templateName) {
   try {
-    const templatePath = join(templatesDir, templateName);
-    return readFileSync(templatePath, 'utf-8');
+    const templatePath = resolve(templatesDir, templateName);
+    console.log('Loading template:', templatePath);
+    const content = readFileSync(templatePath, 'utf-8');
+    console.log('✓ Successfully loaded:', templateName, `(${content.length} bytes)`);
+    return content;
   } catch (error) {
-    console.error(`Failed to load template ${templateName}:`, error);
-    throw new Error(`Template not found: ${templateName}`);
+    console.error(`✗ Failed to load template ${templateName}:`, error.message);
+    console.error('Attempted path:', resolve(templatesDir, templateName));
+    throw new Error(`Template not found: ${templateName} - ${error.message}`);
   }
 }
 
 // Pre-load all templates to ensure they're bundled
+// These are loaded at module initialization time (during build)
 export const templates = {
-  'classic-resume.hbs': getTemplate('classic-resume.hbs'),
-  'modern-resume.hbs': getTemplate('modern-resume.hbs'),
-  'minimal-resume.hbs': getTemplate('minimal-resume.hbs'),
-  'classic-cover-letter.hbs': getTemplate('classic-cover-letter.hbs'),
-  'modern-cover-letter.hbs': getTemplate('modern-cover-letter.hbs'),
+  'classic-resume.hbs': loadTemplate('classic-resume.hbs'),
+  'modern-resume.hbs': loadTemplate('modern-resume.hbs'),
+  'minimal-resume.hbs': loadTemplate('minimal-resume.hbs'),
+  'classic-cover-letter.hbs': loadTemplate('classic-cover-letter.hbs'),
+  'modern-cover-letter.hbs': loadTemplate('modern-cover-letter.hbs'),
 };
+
+console.log('✓ All templates loaded successfully');
 

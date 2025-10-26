@@ -1,9 +1,6 @@
-import { d as defineEventHandler, r as readBody, c as createError, s as send } from '../../nitro/nitro.mjs';
+import { d as defineEventHandler, r as readBody, c as createError, t as templates, s as send } from '../../nitro/nitro.mjs';
 import puppeteer from 'puppeteer-core';
-import chromium from '@sparticuz/chromium';
-import { h as handlebars } from '../../_/index.mjs';
-import { promises } from 'fs';
-import path from 'path';
+import { h as handlebars, C as Chromium } from '../../_/index.mjs';
 import 'unified';
 import 'remark-parse';
 import 'remark-rehype';
@@ -17,6 +14,8 @@ import 'detab';
 import 'micromark-util-sanitize-uri';
 import 'hast-util-to-string';
 import 'github-slugger';
+import 'fs';
+import 'path';
 import 'node:http';
 import 'node:https';
 import 'node:events';
@@ -27,6 +26,10 @@ import 'node:crypto';
 import 'node:url';
 import '@iconify/utils';
 import 'consola';
+import 'node:os';
+import 'follow-redirects';
+import 'tar-fs';
+import 'node:zlib';
 
 function normalizeResumeData(data) {
   var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
@@ -77,7 +80,7 @@ function normalizeResumeData(data) {
   };
 }
 const generateResumePdf = defineEventHandler(async (event) => {
-  var _a;
+  var _a, _b, _c;
   let { resumeData, template = "classic" } = await readBody(event);
   if (!resumeData) {
     throw createError({
@@ -110,10 +113,13 @@ const generateResumePdf = defineEventHandler(async (event) => {
     minimal: "minimal-resume.hbs"
   };
   const templateName = templateNameMap[template] || "classic-resume.hbs";
-  const templatePath = path.join(process.cwd(), "server", "templates", templateName);
   let browser = null;
   try {
-    const templateFile = await promises.readFile(templatePath, "utf-8");
+    const templateFile = templates[templateName];
+    if (!templateFile) {
+      throw new Error(`Template not found: ${templateName}. Available templates: ${Object.keys(templates).join(", ")}`);
+    }
+    console.log("\u2713 Loaded template:", templateName);
     const compiledTemplate = handlebars.compile(templateFile);
     const templateData = {
       resumeData: normalizedResumeData,
@@ -123,10 +129,10 @@ const generateResumePdf = defineEventHandler(async (event) => {
     const isServerless = process.env.NETLIFY || process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
     if (isServerless) {
       browser = await puppeteer.launch({
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath(),
-        headless: chromium.headless
+        args: Chromium.args,
+        defaultViewport: Chromium.defaultViewport,
+        executablePath: await Chromium.executablePath(),
+        headless: Chromium.headless
       });
     } else {
       const puppeteerRegular = await import('puppeteer');
@@ -154,13 +160,37 @@ const generateResumePdf = defineEventHandler(async (event) => {
     event.node.res.setHeader("Content-Type", "application/pdf");
     return send(event, pdfBuffer);
   } catch (error) {
+    console.error("=== PDF GENERATION ERROR START ===");
     console.error("Puppeteer PDF generation error:", error);
+    console.error("Error message:", error.message);
     console.error("Error stack:", error.stack);
-    console.error("Normalized resume data structure:", JSON.stringify(normalizedResumeData, null, 2));
-    throw createError({
-      statusCode: 500,
-      statusMessage: `Failed to generate PDF resume: ${error.message}`
-    });
+    console.error("Error name:", error.name);
+    console.error("Template:", template);
+    console.error("Environment:", process.env.NETLIFY ? "netlify" : process.env.VERCEL ? "vercel" : "local");
+    try {
+      console.error("Resume data sample:", JSON.stringify({
+        hasPersonalInfo: !!(normalizedResumeData == null ? void 0 : normalizedResumeData.personalInfo),
+        fullName: (_b = normalizedResumeData == null ? void 0 : normalizedResumeData.personalInfo) == null ? void 0 : _b.fullName,
+        hasWorkExperience: !!(normalizedResumeData == null ? void 0 : normalizedResumeData.workExperience),
+        workExpCount: (_c = normalizedResumeData == null ? void 0 : normalizedResumeData.workExperience) == null ? void 0 : _c.length,
+        hasEducation: !!(normalizedResumeData == null ? void 0 : normalizedResumeData.education),
+        hasSkills: !!(normalizedResumeData == null ? void 0 : normalizedResumeData.skills)
+      }, null, 2));
+    } catch (e) {
+      console.error("Could not log resume data sample:", e);
+    }
+    console.error("=== PDF GENERATION ERROR END ===");
+    event.node.res.setHeader("Content-Type", "application/json");
+    event.node.res.statusCode = 500;
+    return {
+      error: true,
+      message: error.message,
+      name: error.name,
+      timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+      template,
+      environment: process.env.NETLIFY ? "netlify" : process.env.VERCEL ? "vercel" : "local",
+      statusCode: 500
+    };
   } finally {
     if (browser) {
       await browser.close();

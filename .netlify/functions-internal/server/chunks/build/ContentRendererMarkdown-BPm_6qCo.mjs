@@ -1,5 +1,5 @@
 import { defineComponent, computed, mergeProps, unref, h, getCurrentInstance, toRaw, reactive, watch, resolveComponent, defineAsyncComponent, Text, Comment, useSSRContext } from 'vue';
-import { B as pascalCase, Y as kebabCase, n as destr } from '../nitro/nitro.mjs';
+import { C as pascalCase, Z as kebabCase, n as destr } from '../nitro/nitro.mjs';
 import { find, html } from 'property-information';
 import { f as flatUnwrap } from './node-hwMnPqaI.mjs';
 import { ssrRenderComponent } from 'vue/server-renderer';
@@ -17,6 +17,8 @@ import 'detab';
 import 'micromark-util-sanitize-uri';
 import 'hast-util-to-string';
 import 'github-slugger';
+import 'fs';
+import 'path';
 import 'node:http';
 import 'node:https';
 import 'node:events';

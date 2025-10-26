@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { n as destr, C as klona, T as parse, U as getRequestHeader, V as isEqual, P as setCookie, W as getCookie, X as deleteCookie } from '../nitro/nitro.mjs';
+import { n as destr, D as klona, U as parse, V as getRequestHeader, W as isEqual, Q as setCookie, X as getCookie, Y as deleteCookie } from '../nitro/nitro.mjs';
 import { h as useRoute, a as useNuxtApp, j as useRequestEvent } from './server.mjs';
 
 const CookieDefaults = {

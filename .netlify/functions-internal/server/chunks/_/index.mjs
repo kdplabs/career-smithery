@@ -1,4 +1,432 @@
+import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { access, symlink, createWriteStream, rm, existsSync, createReadStream, mkdirSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, basename, dirname } from 'node:path';
+import { fileURLToPath, URL as URL$1 } from 'node:url';
+import fr from 'follow-redirects';
+import { extract } from 'tar-fs';
+import { createBrotliDecompress, createUnzip } from 'node:zlib';
 import * as fs from 'fs';
+
+/**
+ * Creates a symlink to a file
+ */
+const createSymlink = (source, target) => {
+    return new Promise((resolve, reject) => {
+        access(source, (error) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+            symlink(source, target, (error) => {
+                /* c8 ignore next */
+                if (error) {
+                    /* c8 ignore next 3 */
+                    reject(error);
+                    return;
+                }
+                resolve();
+            });
+        });
+    });
+};
+/**
+ * Downloads a file from a URL
+ */
+const downloadFile = (url, outputPath) => {
+    return new Promise((resolve, reject) => {
+        const stream = createWriteStream(outputPath);
+        stream.once("error", reject);
+        fr.https
+            .get(url, (response) => {
+            if (response.statusCode !== 200) {
+                stream.close();
+                reject(new Error(
+                /* c8 ignore next 2 */
+                `Unexpected status code: ${response.statusCode?.toFixed(0) ?? "UNK"}.`));
+                return;
+            }
+            // Pipe directly to file rather than manually writing chunks
+            // This is more efficient and uses less memory
+            response.pipe(stream);
+            // Listen for completion
+            stream.once("finish", () => {
+                stream.close();
+                resolve();
+            });
+            // Handle response errors
+            response.once("error", (error) => {
+                /* c8 ignore next 2 */
+                stream.close();
+                reject(error);
+            });
+        })
+            /* c8 ignore next 3 */
+            .on("error", (error) => {
+            stream.close();
+            reject(error);
+        });
+    });
+};
+/**
+ * Adds the proper folders to the environment
+ * @param baseLibPath the path to this packages lib folder
+ */
+const setupLambdaEnvironment = (baseLibPath) => {
+    // If the FONTCONFIG_PATH is not set, set it to /tmp/fonts
+    process.env["FONTCONFIG_PATH"] ??= join(tmpdir(), "fonts");
+    // Set up Home folder if not already set
+    process.env["HOME"] ??= tmpdir();
+    // If LD_LIBRARY_PATH is undefined, set it to baseLibPath, otherwise, add it
+    if (process.env["LD_LIBRARY_PATH"] === undefined) {
+        process.env["LD_LIBRARY_PATH"] = baseLibPath;
+    }
+    else if (!process.env["LD_LIBRARY_PATH"].startsWith(baseLibPath)) {
+        process.env["LD_LIBRARY_PATH"] = [
+            baseLibPath,
+            ...new Set(process.env["LD_LIBRARY_PATH"].split(":")),
+        ].join(":");
+    }
+};
+/**
+ * Determines if the input is a valid URL
+ * @param input the input to check
+ * @returns boolean indicating if the input is a valid URL
+ */
+const isValidUrl = (input) => {
+    try {
+        return Boolean(new URL(input));
+    }
+    catch {
+        return false;
+    }
+};
+/**
+ * Determines if the running instance is inside an Amazon Linux 2023 container,
+ * AWS_EXECUTION_ENV is for native Lambda instances
+ * AWS_LAMBDA_JS_RUNTIME is for netlify instances
+ * CODEBUILD_BUILD_IMAGE is for CodeBuild instances
+ * VERCEL is for Vercel Functions (Node 20 or later enables an AL2023-compatible environment).
+ * @returns boolean indicating if the running instance is inside a Lambda container with nodejs20
+ */
+const isRunningInAmazonLinux2023 = (nodeMajorVersion) => {
+    const awsExecEnv = process.env["AWS_EXECUTION_ENV"] ?? "";
+    const awsLambdaJsRuntime = process.env["AWS_LAMBDA_JS_RUNTIME"] ?? "";
+    const codebuildImage = process.env["CODEBUILD_BUILD_IMAGE"] ?? "";
+    // Check for explicit version substrings, returns on first match
+    if (awsExecEnv.includes("20.x") ||
+        awsExecEnv.includes("22.x") ||
+        awsLambdaJsRuntime.includes("20.x") ||
+        awsLambdaJsRuntime.includes("22.x") ||
+        codebuildImage.includes("nodejs20") ||
+        codebuildImage.includes("nodejs22")) {
+        return true;
+    }
+    // Vercel: Node 20+ is AL2023 compatible
+    // eslint-disable-next-line sonarjs/prefer-single-boolean-return
+    if (process.env["VERCEL"] && nodeMajorVersion >= 20) {
+        return true;
+    }
+    return false;
+};
+const downloadAndExtract = async (url) => {
+    const getOptions = new URL(url);
+    // Increase the max body length to 60MB for larger files
+    getOptions.maxBodyLength = 60 * 1024 * 1024;
+    const destDir = join(tmpdir(), "chromium-pack");
+    return new Promise((resolve, reject) => {
+        const extractObj = extract(destDir);
+        // Setup error handlers for better cleanup
+        /* c8 ignore next 5 */
+        const cleanupOnError = (err) => {
+            rm(destDir, { force: true, recursive: true }, () => {
+                reject(err);
+            });
+        };
+        // Attach error handler to extract stream
+        extractObj.once("error", cleanupOnError);
+        // Handle extraction completion
+        extractObj.once("finish", () => {
+            resolve(destDir);
+        });
+        const req = fr.https.get(url, (response) => {
+            /* c8 ignore next */
+            if (response.statusCode !== 200) {
+                /* c8 ignore next 9 */
+                reject(new Error(`Unexpected status code: ${response.statusCode?.toFixed(0) ?? "UNK"}.`));
+                return;
+            }
+            // Pipe the response directly to the extraction stream
+            response.pipe(extractObj);
+            // Handle response errors
+            response.once("error", cleanupOnError);
+        });
+        // Handle request errors
+        req.once("error", cleanupOnError);
+        // Set a timeout to avoid hanging requests
+        req.setTimeout(60 * 1000, () => {
+            /* c8 ignore next 2 */
+            req.destroy();
+            cleanupOnError(new Error("Request timeout"));
+        });
+    });
+};
+
+/**
+ * Decompresses a (tarballed) Brotli or Gzip compressed file and returns the path to the decompressed file/folder.
+ *
+ * @param filePath Path of the file to decompress.
+ */
+const inflate = (filePath) => {
+    // Determine the output path based on the file type
+    const output = filePath.includes("swiftshader")
+        ? tmpdir()
+        : join(tmpdir(), basename(filePath).replace(/\.(?:t(?:ar(?:\.(?:br|gz))?|br|gz)|br|gz)$/i, ""));
+    return new Promise((resolve, reject) => {
+        // Quick return if the file is already decompressed
+        if (filePath.includes("swiftshader")) {
+            if (existsSync(`${output}/libGLESv2.so`)) {
+                resolve(output);
+                return;
+            }
+        }
+        else if (existsSync(output)) {
+            resolve(output);
+            return;
+        }
+        // Optimize chunk size based on file type - use smaller chunks for better memory usage
+        // Brotli files tend to decompress to much larger sizes
+        const isBrotli = /br$/i.test(filePath);
+        const isGzip = /gz$/i.test(filePath);
+        const isTar = /\.t(?:ar(?:\.(?:br|gz))?|br|gz)$/i.test(filePath);
+        // Use a smaller highWaterMark for better memory efficiency
+        // For most serverless environments, 4MB (2**22) is more memory-efficient than 8MB
+        const highWaterMark = 2 ** 22;
+        const source = createReadStream(filePath, { highWaterMark });
+        let target;
+        // Setup error handlers first for both streams
+        const handleError = (error) => {
+            reject(error);
+        };
+        source.once("error", handleError);
+        // Setup the appropriate target stream based on file type
+        if (isTar) {
+            target = extract(output);
+            target.once("finish", () => {
+                resolve(output);
+            });
+        }
+        else {
+            target = createWriteStream(output, { mode: 0o700 });
+            target.once("close", () => {
+                resolve(output);
+            });
+        }
+        target.once("error", handleError);
+        // Pipe through the appropriate decompressor if needed
+        if (isBrotli || isGzip) {
+            // Use optimized chunk size for decompression
+            // 2MB (2**21) is sufficient for most brotli/gzip files
+            const decompressor = isBrotli
+                ? createBrotliDecompress({ chunkSize: 2 ** 21 })
+                : createUnzip({ chunkSize: 2 ** 21 });
+            // Handle decompressor errors
+            decompressor.once("error", handleError);
+            // Chain the streams
+            source.pipe(decompressor).pipe(target);
+        }
+        else {
+            source.pipe(target);
+        }
+    });
+};
+
+/**
+ * Get the bin directory path for ESM modules
+ */
+function getBinPath() {
+    return join(dirname(fileURLToPath(globalThis._importMeta_.url)), "..", "..", "bin");
+}
+
+const nodeMajorVersion = Number.parseInt(process.versions.node.split(".")[0] ?? "");
+// Setup the lambda environment
+if (isRunningInAmazonLinux2023(nodeMajorVersion)) {
+    setupLambdaEnvironment(join(tmpdir(), "al2023", "lib"));
+}
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+class Chromium {
+    /**
+     * Returns a list of additional Chromium flags recommended for serverless environments.
+     * The canonical list of flags can be found on https://peter.sh/experiments/chromium-command-line-switches/.
+     * Most of below can be found here: https://github.com/GoogleChrome/chrome-launcher/blob/main/docs/chrome-flags-for-tools.md
+     */
+    static get args() {
+        const chromiumFlags = [
+            "--ash-no-nudges", // Avoids blue bubble "user education" nudges (eg., "… give your browser a new look", Memory Saver)
+            "--disable-domain-reliability", // Disables Domain Reliability Monitoring, which tracks whether the browser has difficulty contacting Google-owned sites and uploads reports to Google.
+            "--disable-print-preview", // https://source.chromium.org/search?q=lang:cpp+symbol:kDisablePrintPreview&ss=chromium
+            "--disk-cache-size=33554432", // https://source.chromium.org/search?q=lang:cpp+symbol:kDiskCacheSize&ss=chromium Forces the maximum disk space to be used by the disk cache, in bytes.
+            "--no-default-browser-check", // Disable the default browser check, do not prompt to set it as such. (This is already set by Playwright, but not Puppeteer)
+            "--no-pings", // Don't send hyperlink auditing pings
+            "--single-process", // Runs the renderer and plugins in the same process as the browser. NOTES: Needs to be single-process to avoid `prctl(PR_SET_NO_NEW_PRIVS) failed` error
+            "--font-render-hinting=none", // https://github.com/puppeteer/puppeteer/issues/2410#issuecomment-560573612
+        ];
+        const chromiumDisableFeatures = [
+            "AudioServiceOutOfProcess",
+            "IsolateOrigins",
+            "site-per-process", // Disables OOPIF. https://www.chromium.org/Home/chromium-security/site-isolation
+        ];
+        const chromiumEnableFeatures = ["SharedArrayBuffer"];
+        const graphicsFlags = [
+            "--ignore-gpu-blocklist", // https://source.chromium.org/search?q=lang:cpp+symbol:kIgnoreGpuBlocklist&ss=chromium
+            "--in-process-gpu", // Saves some memory by moving GPU process into a browser process thread
+        ];
+        // https://chromium.googlesource.com/chromium/src/+/main/docs/gpu/swiftshader.md
+        if (this.graphics) {
+            graphicsFlags.push(
+            // As the unsafe WebGL fallback, SwANGLE (ANGLE + SwiftShader Vulkan)
+            "--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader");
+        }
+        else {
+            graphicsFlags.push("--disable-webgl");
+        }
+        const insecureFlags = [
+            "--allow-running-insecure-content", // https://source.chromium.org/search?q=lang:cpp+symbol:kAllowRunningInsecureContent&ss=chromium
+            "--disable-setuid-sandbox", // Lambda runs as root, so this is required to allow Chromium to run as root
+            "--disable-site-isolation-trials", // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableSiteIsolation&ss=chromium
+            "--disable-web-security", // https://source.chromium.org/search?q=lang:cpp+symbol:kDisableWebSecurity&ss=chromium
+        ];
+        const headlessFlags = [
+            "--headless='shell'", // We only support running chrome-headless-shell
+            "--no-sandbox", // https://source.chromium.org/search?q=lang:cpp+symbol:kNoSandbox&ss=chromium
+            "--no-zygote", // https://source.chromium.org/search?q=lang:cpp+symbol:kNoZygote&ss=chromium
+        ];
+        return [
+            ...chromiumFlags,
+            `--disable-features=${[...chromiumDisableFeatures].join(",")}`,
+            `--enable-features=${[...chromiumEnableFeatures].join(",")}`,
+            ...graphicsFlags,
+            ...insecureFlags,
+            ...headlessFlags,
+        ];
+    }
+    /**
+     * Returns whether the graphics stack is enabled or disabled
+     * @returns boolean
+     */
+    static get graphics() {
+        return this.graphicsMode;
+    }
+    /**
+     * Sets whether the graphics stack is enabled or disabled.
+     * @param true means the stack is enabled. WebGL will work.
+     * @param false means that the stack is disabled. WebGL will not work.
+     * @default true
+     */
+    static set setGraphicsMode(value) {
+        if (typeof value !== "boolean") {
+            throw new TypeError(`Graphics mode must be a boolean, you entered '${String(value)}'`);
+        }
+        this.graphicsMode = value;
+    }
+    /**
+     * If true, the graphics stack and webgl is enabled,
+     * If false, webgl will be disabled.
+     * (If false, the swiftshader.tar.br file will also not extract)
+     */
+    static graphicsMode = true;
+    /**
+     * Inflates the included version of Chromium
+     * @param input The location of the `bin` folder
+     * @returns The path to the `chromium` binary
+     */
+    static async executablePath(input) {
+        /**
+         * If the `chromium` binary already exists in /tmp/chromium, return it.
+         */
+        if (existsSync(join(tmpdir(), "chromium"))) {
+            return join(tmpdir(), "chromium");
+        }
+        /**
+         * If input is a valid URL, download and extract the file. It will extract to /tmp/chromium-pack
+         * and executablePath will be recursively called on that location, which will then extract
+         * the brotli files to the correct locations
+         */
+        if (input && isValidUrl(input)) {
+            return this.executablePath(await downloadAndExtract(input));
+        }
+        /**
+         * If input is defined, use that as the location of the brotli files,
+         * otherwise, the default location is ../../bin.
+         * A custom location is needed for workflows that using custom packaging.
+         */
+        input ??= getBinPath();
+        /**
+         * If the input directory doesn't exist, throw an error.
+         */
+        if (!existsSync(input)) {
+            throw new Error(`The input directory "${input}" does not exist. Please provide the location of the brotli files.`);
+        }
+        // Extract the required files
+        const promises = [
+            inflate(join(input, "chromium.br")),
+            inflate(join(input, "fonts.tar.br")),
+            inflate(join(input, "swiftshader.tar.br")),
+        ];
+        if (isRunningInAmazonLinux2023(nodeMajorVersion)) {
+            promises.push(inflate(join(input, "al2023.tar.br")));
+        }
+        // Await all extractions
+        const result = await Promise.all(promises);
+        // Returns the first result of the promise, which is the location of the `chromium` binary
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return result.shift();
+    }
+    /**
+     * Downloads or symlinks a custom font and returns its basename, patching the environment so that Chromium can find it.
+     */
+    static async font(input) {
+        const fontsDir = process.env["FONTCONFIG_PATH"] ??
+            join(process.env["HOME"] ?? tmpdir(), ".fonts");
+        // Create fonts directory if it doesn't exist
+        if (!existsSync(fontsDir)) {
+            mkdirSync(fontsDir);
+        }
+        // Convert local path to file URL if needed
+        if (!/^https?:\/\//i.test(input)) {
+            input = `file://${input}`;
+        }
+        const url = new URL$1(input);
+        const fontName = url.pathname.split("/").pop();
+        if (!fontName) {
+            throw new Error(`Invalid font name: ${url.pathname}`);
+        }
+        const outputPath = `${fontsDir}/${fontName}`;
+        // Return font name if it already exists
+        if (existsSync(outputPath)) {
+            return fontName;
+        }
+        // Handle local file
+        if (url.protocol === "file:") {
+            try {
+                await createSymlink(url.pathname, outputPath);
+                return fontName;
+            }
+            catch (error) {
+                throw new Error(`Failed to create symlink for font: ${JSON.stringify(error)}`);
+            }
+        }
+        // Handle remote file
+        else {
+            try {
+                await downloadFile(input, outputPath);
+                return fontName;
+            }
+            catch (error) {
+                throw new Error(`Failed to download font: ${JSON.stringify(error)}`);
+            }
+        }
+    }
+}
 
 function getDefaultExportFromCjs (x) {
 	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
@@ -5004,5 +5432,5 @@ if (typeof commonjsRequire !== 'undefined' && commonjsRequire.extensions) {
 
 const handlebars$1 = /*@__PURE__*/getDefaultExportFromCjs(lib);
 
-export { handlebars$1 as h };
+export { Chromium as C, handlebars$1 as h };
 //# sourceMappingURL=index.mjs.map

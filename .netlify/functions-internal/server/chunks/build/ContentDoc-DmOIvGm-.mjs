@@ -1,5 +1,5 @@
 import { defineComponent, useSlots, h, unref, watch, useSSRContext } from 'vue';
-import { R as withTrailingSlash, q as joinURL, v as withoutTrailingSlash, E as hasProtocol } from '../nitro/nitro.mjs';
+import { S as withTrailingSlash, q as joinURL, x as withoutTrailingSlash, F as hasProtocol } from '../nitro/nitro.mjs';
 import _sfc_main$2 from './ContentRenderer-i6ZtBeqF.mjs';
 import _sfc_main$1 from './ContentQuery-Bdwg4NoN.mjs';
 import { b as useRuntimeConfig, h as useRoute } from './server.mjs';
@@ -17,6 +17,8 @@ import 'detab';
 import 'micromark-util-sanitize-uri';
 import 'hast-util-to-string';
 import 'github-slugger';
+import 'fs';
+import 'path';
 import 'node:http';
 import 'node:https';
 import 'node:events';
