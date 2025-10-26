@@ -33,9 +33,11 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'netlify',
     serveStatic: true,
-    // Let Netlify handle the bundling - don't externalize
+    // When deploying to Netlify, we need to ensure that the @sparticuz/chromium
+    // package is not bundled by Nitro, but is instead included as a standalone
+    // dependency in the function's node_modules directory.
     externals: {
-      inline: ['handlebars']
+      external: ['@sparticuz/chromium']
     }
   },
   // If you want to use Heroicons, you might need a Vite plugin.
