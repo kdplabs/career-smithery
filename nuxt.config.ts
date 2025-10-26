@@ -33,21 +33,6 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'netlify',
     serveStatic: true,
-    // Include template files in the deployment
-    publicAssets: [
-      {
-        baseURL: '/_templates',
-        dir: 'server/templates',
-        maxAge: 0
-      }
-    ],
-    // Copy template files to the function bundle
-    serverAssets: [
-      {
-        baseName: 'templates',
-        dir: './server/templates'
-      }
-    ],
     // Let Netlify handle the bundling - don't externalize
     externals: {
       inline: ['handlebars']

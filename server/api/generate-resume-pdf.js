@@ -1,8 +1,7 @@
 import puppeteer from 'puppeteer-core';
 import chromium from '@sparticuz/chromium';
 import handlebars from 'handlebars';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { templates } from '../utils/templates.js';
 
 // Helper function to normalize resume data and ensure all required fields exist
 function normalizeResumeData(data) {
@@ -98,36 +97,14 @@ export default defineEventHandler(async (event) => {
   
   let browser = null;
   try {
-    // Read template - try multiple paths for different environments
-    let templateFile;
-    const possiblePaths = [
-      // Try server assets first (Nitro's asset system)
-      path.join(process.cwd(), '.output', 'server', 'assets', 'templates', templateName),
-      // Try relative to current file (works in some builds)
-      path.join(process.cwd(), 'server', 'templates', templateName),
-      // Try from root (local development)
-      path.join(process.cwd(), '..', '..', 'server', 'templates', templateName),
-      // Try Netlify function path
-      path.join('/var/task/server/templates', templateName),
-    ];
-    
-    console.log('Attempting to load template:', templateName);
-    console.log('Current working directory:', process.cwd());
-    
-    for (const templatePath of possiblePaths) {
-      try {
-        console.log('Trying path:', templatePath);
-        templateFile = await fs.readFile(templatePath, 'utf-8');
-        console.log('✓ Successfully loaded template from:', templatePath);
-        break;
-      } catch (e) {
-        console.log('✗ Failed to load from:', templatePath, '-', e.message);
-      }
-    }
+    // Get template from pre-loaded templates (bundled at build time)
+    const templateFile = templates[templateName];
     
     if (!templateFile) {
-      throw new Error(`Template file not found: ${templateName}. Tried paths: ${possiblePaths.join(', ')}`);
+      throw new Error(`Template not found: ${templateName}. Available templates: ${Object.keys(templates).join(', ')}`);
     }
+    
+    console.log('✓ Loaded template:', templateName);
     const compiledTemplate = handlebars.compile(templateFile);
     
     // Prepare data for the template
