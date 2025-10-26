@@ -493,7 +493,23 @@ const downloadCoverLetterFromServer = async () => {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to generate PDF on the server.');
+      // Try to get detailed error from response
+      let errorDetails = null
+      try {
+        const errorText = await response.text()
+        console.error('Server error response:', errorText)
+        try {
+          errorDetails = JSON.parse(errorText)
+          console.error('Parsed error details:', errorDetails)
+        } catch (e) {
+          console.error('Could not parse error as JSON')
+        }
+      } catch (e) {
+        console.error('Could not read error response:', e)
+      }
+      
+      const errorMessage = errorDetails?.data?.message || errorDetails?.message || 'Failed to generate PDF on the server.'
+      throw new Error(errorMessage);
     }
 
     const blob = await response.blob();
@@ -517,6 +533,12 @@ const downloadCoverLetterFromServer = async () => {
 
   } catch (error) {
     console.error('Error downloading server-side generated cover letter:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      coverLetterData: coverLetterData.value,
+      template: selectedTemplate.value
+    });
     alert(`Failed to download cover letter: ${error.message || 'Unknown error'}`);
   } finally {
     downloadingPDF.value = false;

@@ -329,7 +329,23 @@ async function downloadResumeFromServer() {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to generate PDF on the server.');
+      // Try to get detailed error from response
+      let errorDetails = null
+      try {
+        const errorText = await response.text()
+        console.error('Server error response:', errorText)
+        try {
+          errorDetails = JSON.parse(errorText)
+          console.error('Parsed error details:', errorDetails)
+        } catch (e) {
+          console.error('Could not parse error as JSON')
+        }
+      } catch (e) {
+        console.error('Could not read error response:', e)
+      }
+      
+      const errorMessage = errorDetails?.data?.message || errorDetails?.message || 'Failed to generate PDF on the server.'
+      throw new Error(errorMessage);
     }
 
     const blob = await response.blob();
@@ -353,6 +369,12 @@ async function downloadResumeFromServer() {
 
   } catch (error) {
     console.error('Error downloading server-side generated resume:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      resumeData: resumeData.value,
+      template: selectedTemplate.value
+    });
     alert(`Failed to download resume: ${error.message || 'Unknown error'}`);
   } finally {
     downloadLoadingServer.value = false

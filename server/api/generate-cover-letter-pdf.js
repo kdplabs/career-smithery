@@ -119,11 +119,28 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     console.error('Puppeteer PDF generation error:', error);
     console.error('Error stack:', error.stack);
+    console.error('Error name:', error.name);
     console.error('Cover letter data structure:', JSON.stringify(coverLetterData, null, 2));
     console.error('Resume data structure:', JSON.stringify(resumeData, null, 2));
+    
+    // Create detailed error response for client
+    const errorDetails = {
+      message: error.message,
+      name: error.name,
+      stack: error.stack,
+      timestamp: new Date().toISOString(),
+      template: template,
+      hasCoverLetterData: !!coverLetterData,
+      hasResumeData: !!resumeData,
+      environment: process.env.NETLIFY ? 'netlify' : (process.env.VERCEL ? 'vercel' : 'local')
+    };
+    
+    console.error('Error details being sent to client:', JSON.stringify(errorDetails, null, 2));
+    
     throw createError({
       statusCode: 500,
       statusMessage: `Failed to generate PDF cover letter: ${error.message}`,
+      data: errorDetails
     });
   } finally {
     if (browser) {
