@@ -38,7 +38,22 @@ export default defineNuxtConfig({
     },
     externals: {
       inline: ['handlebars']
-    }
+    },
+    // Include template files in the deployment
+    publicAssets: [
+      {
+        baseURL: '/_templates',
+        dir: 'server/templates',
+        maxAge: 0
+      }
+    ],
+    // Copy template files to the function bundle
+    serverAssets: [
+      {
+        baseName: 'templates',
+        dir: './server/templates'
+      }
+    ]
   },
   // If you want to use Heroicons, you might need a Vite plugin.
   // For example, vite-plugin-heroicons-sg

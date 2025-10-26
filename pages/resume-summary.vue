@@ -328,24 +328,18 @@ async function downloadResumeFromServer() {
       }),
     });
 
+    // Check if response is JSON (error) or blob (PDF)
+    const contentType = response.headers.get('content-type')
+    
+    if (contentType && contentType.includes('application/json')) {
+      // This is an error response
+      const errorData = await response.json()
+      console.error('Server returned error:', errorData)
+      throw new Error(errorData.message || 'Failed to generate PDF on the server.')
+    }
+    
     if (!response.ok) {
-      // Try to get detailed error from response
-      let errorDetails = null
-      try {
-        const errorText = await response.text()
-        console.error('Server error response:', errorText)
-        try {
-          errorDetails = JSON.parse(errorText)
-          console.error('Parsed error details:', errorDetails)
-        } catch (e) {
-          console.error('Could not parse error as JSON')
-        }
-      } catch (e) {
-        console.error('Could not read error response:', e)
-      }
-      
-      const errorMessage = errorDetails?.data?.message || errorDetails?.message || 'Failed to generate PDF on the server.'
-      throw new Error(errorMessage);
+      throw new Error('Failed to generate PDF on the server.')
     }
 
     const blob = await response.blob();

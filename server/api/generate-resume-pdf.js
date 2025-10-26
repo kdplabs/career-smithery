@@ -95,12 +95,26 @@ export default defineEventHandler(async (event) => {
     minimal: 'minimal-resume.hbs'
   };
   const templateName = templateNameMap[template] || 'classic-resume.hbs';
-  const templatePath = path.join(process.cwd(), 'server', 'templates', templateName);
   
   let browser = null;
   try {
-    // Read and compile the Handlebars template
-    const templateFile = await fs.readFile(templatePath, 'utf-8');
+    // Read template from server assets (works in both dev and production)
+    let templateFile;
+    try {
+      // Try to read from server assets first (production/Netlify)
+      const storage = useStorage('assets:templates');
+      templateFile = await storage.getItem(templateName);
+      console.log('Loaded template from server assets:', templateName);
+    } catch (e) {
+      // Fallback to file system (local development)
+      console.log('Loading template from filesystem:', templateName);
+      const templatePath = path.join(process.cwd(), 'server', 'templates', templateName);
+      templateFile = await fs.readFile(templatePath, 'utf-8');
+    }
+    
+    if (!templateFile) {
+      throw new Error(`Template file not found: ${templateName}`);
+    }
     const compiledTemplate = handlebars.compile(templateFile);
     
     // Prepare data for the template
@@ -161,30 +175,44 @@ export default defineEventHandler(async (event) => {
     return send(event, pdfBuffer);
 
   } catch (error) {
+    console.error('=== PDF GENERATION ERROR START ===');
     console.error('Puppeteer PDF generation error:', error);
+    console.error('Error message:', error.message);
     console.error('Error stack:', error.stack);
     console.error('Error name:', error.name);
-    console.error('Normalized resume data structure:', JSON.stringify(normalizedResumeData, null, 2));
+    console.error('Template:', template);
+    console.error('Environment:', process.env.NETLIFY ? 'netlify' : (process.env.VERCEL ? 'vercel' : 'local'));
     
-    // Create detailed error response for client
-    const errorDetails = {
+    // Log a sample of the resume data (not the full thing as it's too large)
+    try {
+      console.error('Resume data sample:', JSON.stringify({
+        hasPersonalInfo: !!normalizedResumeData?.personalInfo,
+        fullName: normalizedResumeData?.personalInfo?.fullName,
+        hasWorkExperience: !!normalizedResumeData?.workExperience,
+        workExpCount: normalizedResumeData?.workExperience?.length,
+        hasEducation: !!normalizedResumeData?.education,
+        hasSkills: !!normalizedResumeData?.skills
+      }, null, 2));
+    } catch (e) {
+      console.error('Could not log resume data sample:', e);
+    }
+    
+    console.error('=== PDF GENERATION ERROR END ===');
+    
+    // Set response headers for JSON error
+    event.node.res.setHeader('Content-Type', 'application/json');
+    event.node.res.statusCode = 500;
+    
+    // Return error response with detailed message
+    return {
+      error: true,
       message: error.message,
       name: error.name,
-      stack: error.stack,
       timestamp: new Date().toISOString(),
       template: template,
-      hasResumeData: !!resumeData,
-      hasNormalizedData: !!normalizedResumeData,
-      environment: process.env.NETLIFY ? 'netlify' : (process.env.VERCEL ? 'vercel' : 'local')
+      environment: process.env.NETLIFY ? 'netlify' : (process.env.VERCEL ? 'vercel' : 'local'),
+      statusCode: 500
     };
-    
-    console.error('Error details being sent to client:', JSON.stringify(errorDetails, null, 2));
-    
-    throw createError({
-      statusCode: 500,
-      statusMessage: `Failed to generate PDF resume: ${error.message}`,
-      data: errorDetails
-    });
   } finally {
     if (browser) {
       await browser.close();
