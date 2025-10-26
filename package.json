@@ -27,7 +27,6 @@
     "pdf-lib": "^1.17.1",
     "pdfkit": "^0.17.2",
     "plotly.js-dist-min": "^3.0.1",
-    "puppeteer": "^24.26.0",
     "puppeteer-core": "^24.26.1",
     "raw-body": "^2.5.2",
     "stripe": "^12.18.0",
