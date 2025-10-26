@@ -125,7 +125,10 @@ export default defineEventHandler(async (event) => {
       browser = await puppeteer.launch({
         args: chromium.args,
         defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath(),
+        executablePath: await chromium.executablePath({
+          headless: true,
+          executablePath: '/tmp/chromium'
+        }),
         headless: chromium.headless,
       });
     } else {
@@ -171,7 +174,8 @@ export default defineEventHandler(async (event) => {
     console.error('Error stack:', error.stack);
     console.error('Error name:', error.name);
     console.error('Template:', template);
-    console.error('Environment:', process.env.NETLIFY ? 'netlify' : (process.env.VERCEL ? 'vercel' : 'local'));
+    const env = process.env.NETLIFY ? 'netlify' : (process.env.VERCEL ? 'vercel' : (process.env.AWS_LAMBDA_FUNCTION_NAME ? 'lambda' : 'local'));
+    console.error('Environment:', env);
     
     // Log a sample of the resume data (not the full thing as it's too large)
     try {
@@ -200,7 +204,7 @@ export default defineEventHandler(async (event) => {
       name: error.name,
       timestamp: new Date().toISOString(),
       template: template,
-      environment: process.env.NETLIFY ? 'netlify' : (process.env.VERCEL ? 'vercel' : 'local'),
+      environment: env,
       statusCode: 500
     };
   } finally {
