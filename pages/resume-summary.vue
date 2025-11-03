@@ -381,6 +381,11 @@ async function generateCoverLetter() {
     return
   }
 
+  if (!user.value) {
+    alert('Please log in to generate a cover letter.')
+    return
+  }
+
   // Check if user has enough credits
   if (userCredits.value < 1) {
     showCreditWarning.value = true
@@ -399,15 +404,26 @@ async function generateCoverLetter() {
       body: JSON.stringify({
         resumeData: resumeData.value,
         jobDescription: jobData.value.job_description,
+        user_id: user.value.id,
       }),
     })
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `HTTP ${response.status}: Failed to generate cover letter`);
+      let errorMessage = `HTTP ${response.status}: Failed to generate cover letter`
+      try {
+        const errorData = await response.json()
+        errorMessage = errorData.statusMessage || errorData.message || errorData.error || errorMessage
+        console.error('API error:', errorData)
+      } catch (e) {
+        const textError = await response.text().catch(() => '')
+        errorMessage = textError || errorMessage
+        console.error('API error (text):', textError)
+      }
+      throw new Error(errorMessage)
     }
 
     const coverLetterData = await response.json()
+    console.log('Cover letter generated successfully:', coverLetterData)
     
     // Save the generated cover letter to database
     const { saveCoverLetterToDatabase } = useDatabase()
@@ -418,7 +434,7 @@ async function generateCoverLetter() {
     
   } catch (error) {
     console.error('Error generating cover letter:', error)
-    alert('Failed to generate cover letter. Please try again.')
+    alert(`Failed to generate cover letter: ${error.message || 'Please try again.'}`)
   } finally {
     generatingCoverLetter.value = false
   }

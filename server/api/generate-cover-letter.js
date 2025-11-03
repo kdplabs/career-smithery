@@ -17,10 +17,10 @@ export default defineEventHandler(async (event) => {
   const { resumeData, jobDescription, additionalPrompt, user_id } = await readBody(event);
 
   if (!resumeData || !jobDescription || !user_id) {
-    return {
+    throw createError({
       statusCode: 400,
-      body: JSON.stringify({ error: 'Missing resumeData, jobDescription, or user_id' }),
-    };
+      statusMessage: 'Missing resumeData, jobDescription, or user_id'
+    });
   }
 
   // 1. Check available_credit in user_subscriptions
@@ -33,17 +33,17 @@ export default defineEventHandler(async (event) => {
     .single();
   
   if (subError || !sub) {
-    return {
+    throw createError({
       statusCode: 403,
-      body: JSON.stringify({ error: 'No active subscription or credit info found' }),
-    };
+      statusMessage: 'No active subscription or credit info found'
+    });
   }
   
   if ((sub.available_credit || 0) < 1) {
-    return {
+    throw createError({
       statusCode: 402,
-      body: JSON.stringify({ error: 'Not enough credits' }),
-    };
+      statusMessage: 'Not enough credits'
+    });
   }
 
   const prompt = `
@@ -145,7 +145,37 @@ Respond ONLY with valid JSON. Make the content specific, relevant, and professio
     });
     
     if (!geminiRes.ok) {
-      throw new Error('Gemini API error');
+      let errorMessage = `Gemini API error (${geminiRes.status}): ${geminiRes.statusText}`;
+      try {
+        // Try to read as text first, then parse as JSON if possible
+        const errorText = await geminiRes.text();
+        console.error('Gemini API error response (raw):', {
+          status: geminiRes.status,
+          statusText: geminiRes.statusText,
+          errorText
+        });
+        
+        // Try to parse as JSON
+        let errorData = null;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch (parseError) {
+          // Not JSON, use text as-is
+        }
+        
+        if (errorData) {
+          errorMessage = `Gemini API error (${geminiRes.status}): ${errorData?.error?.message || errorData?.error?.code || JSON.stringify(errorData) || geminiRes.statusText}`;
+        } else {
+          errorMessage = `Gemini API error (${geminiRes.status}): ${errorText || geminiRes.statusText}`;
+        }
+      } catch (e) {
+        console.error('Gemini API error - unable to read response:', {
+          status: geminiRes.status,
+          statusText: geminiRes.statusText,
+          error: e.message
+        });
+      }
+      throw new Error(errorMessage);
     }
     
     const geminiData = await geminiRes.json();
@@ -180,10 +210,10 @@ Respond ONLY with valid JSON. Make the content specific, relevant, and professio
     
     if (creditError) {
       console.error('Failed to deduct credit:', creditError);
-      return {
+      throw createError({
         statusCode: 500,
-        body: JSON.stringify({ error: 'Failed to deduct credit' }),
-      };
+        statusMessage: 'Failed to deduct credit'
+      });
     }
     
     return {
