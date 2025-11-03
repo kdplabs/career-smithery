@@ -179,11 +179,11 @@ watch(
           .from('user_plans')
           .select('id, assessment_data')
           .eq('user_id', newUser.id)
-          .single()
+          .maybeSingle()
         
         // console.log('Existing plan check:', existingPlan); 
         
-        if (fetchError && fetchError.code !== 'PGRST116') {
+        if (fetchError) {
           throw new Error('Error checking existing plan: ' + fetchError.message)
         }
 
