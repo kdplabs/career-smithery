@@ -273,48 +273,44 @@ Requirements for the blog post:
 10. **Blog Components (CRITICAL - MUST USE THESE)**:
    You MUST use Vue blog components throughout your content to make it visually engaging and interactive. These components use MDC (Markdown Components) syntax with double colons.
    
-   **Component Syntax**: Use `::ComponentName{props}` format. For arrays/objects, use `:propName` (Vue binding). For strings, use `propName="value"`.
+   **Component Syntax**: Use ::ComponentName{props} format. For arrays/objects, use :propName (Vue binding). For strings, use propName="value".
    
    **Available Components and When to Use Them**:
    
    a. **CalloutBox** - For important notes, warnings, tips, or information boxes:
-      ```markdown
+      Use this syntax:
       ::CalloutBox{type="info" title="Important Note"}
       Your important information here
       ::
-      ```
-      Types: `info`, `warning`, `success`, `error`, `tip`
+      Types: info, warning, success, error, tip
       Use for: Important callouts, warnings, tips, success messages
    
    b. **TipBox** - For pro tips and advice:
-      ```markdown
+      Use this syntax:
       ::TipBox{title="Pro Tip"}
       Your tip content here
       ::
-      ```
       Use for: Actionable tips, career advice, best practices
    
    c. **HighlightBox** - For highlighted content with CTAs:
-      ```markdown
+      Use this syntax:
       ::HighlightBox{title="Try Our Tool" icon="🚀" color="purple" ctaText="Get Started" ctaLink="/resume-wizard"}
       Description of the tool or feature
       ::
-      ```
-      Colors: `blue`, `green`, `purple`, `orange`, `pink`
+      Colors: blue, green, purple, orange, pink
       Use for: Product highlights, feature showcases, CTAs
    
    d. **StepList** - For step-by-step instructions:
-      ```markdown
+      Use this syntax:
       ::StepList{:steps='[
         { title: "Step 1", description: "Description here", tip: "Optional tip" },
         { title: "Step 2", description: "Description here" }
       ]'}
       ::
-      ```
       Use for: Tutorials, how-to guides, processes
    
    e. **ComparisonTable** - For side-by-side comparisons:
-      ```markdown
+      Use this syntax:
       ::ComparisonTable{
         leftHeader="Before" 
         rightHeader="After"
@@ -323,11 +319,10 @@ Requirements for the blog post:
         ]'
       }
       ::
-      ```
       Use for: Comparing approaches, methods, or options
    
    f. **ProConsList** - For pros and cons:
-      ```markdown
+      Use this syntax:
       ::ProConsList{
         :pros='["Pro 1", "Pro 2"]'
         :cons='["Con 1", "Con 2"]'
@@ -335,62 +330,55 @@ Requirements for the blog post:
         consTitle="Drawbacks"
       }
       ::
-      ```
       Use for: Evaluating options, decision-making content
    
    g. **StatsGrid** - For displaying statistics:
-      ```markdown
+      Use this syntax:
       ::StatsGrid{:stats='[
         { value: "85%", label: "Success Rate", description: "Details here" }
       ]' columns="3"}
       ::
-      ```
       Use for: Key metrics, statistics, impressive numbers
    
    h. **ChecklistBox** - For interactive checklists:
-      ```markdown
+      Use this syntax:
       ::ChecklistBox{
         title="Your Checklist"
         :items='["Item 1", "Item 2", "Item 3"]'
         showProgress="true"
       }
       ::
-      ```
       Use for: Action items, to-do lists, verification steps
    
    i. **AccordionList** - For FAQs or expandable content:
-      ```markdown
+      Use this syntax:
       ::AccordionList{:items='[
         { title: "Question", content: "Answer here" }
       ]' allowMultiple="false"}
       ::
-      ```
       Use for: FAQs, expandable sections, detailed explanations
    
    j. **QuoteBlock** - For quotes:
-      ```markdown
+      Use this syntax:
       ::QuoteBlock{author="Name" source="Source"}
       Quote text here
       ::
-      ```
       Use for: Inspirational quotes, expert opinions, testimonials
    
    k. **FeatureGrid** - For showcasing features:
-      ```markdown
+      Use this syntax:
       ::FeatureGrid{:features='[
         { icon: "🎯", title: "Feature", description: "Description", link: "/link" }
       ]' columns="3"}
       ::
-      ```
       Use for: Feature showcases, benefit lists, tool highlights
    
    l. **TimelineBlock** - For timelines:
-      ```markdown
+      Use this syntax:
       ::TimelineBlock{:events='[
         { title: "Event", description: "Details", date: "2025", icon: "📅", tags: ["tag"] }
       ]'}
       ::
-      ```
       Use for: Processes, career paths, historical events
    
    **Component Usage Requirements**:
@@ -407,7 +395,7 @@ Requirements for the blog post:
    - Place components strategically where they add value
    
    **Example Component Usage in Content**:
-   ```markdown
+   Example structure:
    ## Introduction
    
    Your introduction paragraph here...
@@ -442,7 +430,6 @@ Requirements for the blog post:
      ]'
    }
    ::
-   ```
 
 ${sourceLink ? `IMPORTANT: Naturally incorporate information or insights from the source link provided. Reference it in a way that adds value to the reader and demonstrates you've actually reviewed the source.` : ''}
 
