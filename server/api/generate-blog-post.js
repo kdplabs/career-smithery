@@ -88,8 +88,15 @@ export default defineEventHandler(async (event) => {
   const tagsArray = Array.isArray(tags) ? tags : (tags ? [tags] : []);
 
   try {
+    // Determine if this topic requires product promotion (CTA in TLDR)
+    const isResumeRelated = topic.toLowerCase().match(/\b(resume|cv|curriculum vitae|ats|applicant tracking|job application|cover letter|interview prep|hiring)\b/);
+    const isCareerPlanningRelated = topic.toLowerCase().match(/\b(career plan|career development|career transition|career strategy|career goals|professional growth|skill development)\b/);
+    const shouldIncludeProductCTA = isResumeRelated || isCareerPlanningRelated;
+    const productLink = isResumeRelated ? '/resume-wizard' : (isCareerPlanningRelated ? '/career-planner' : null);
+    const productName = isResumeRelated ? 'Resume Builder' : (isCareerPlanningRelated ? 'Career Planner' : null);
+
     // 2. Generate blog post content using Gemini
-    const prompt = `You are an expert career and professional development blog writer. Generate a comprehensive, engaging blog post about the following topic.
+    const prompt = `You are an expert career and professional development blog writer with years of experience writing engaging, human-authored content. Your writing style is natural, conversational, and authentic - indistinguishable from content written by a professional human writer. Generate a comprehensive, engaging blog post about the following topic.
 
 TOPIC: ${topic}
 
@@ -102,24 +109,95 @@ ${category ? `CATEGORY: ${category}` : ''}
 Generate a well-structured blog post in markdown format with the following requirements:
 
 1. **Frontmatter**: Include YAML frontmatter with:
-   - title: A compelling, SEO-friendly title
-   - description: A 1-2 sentence summary (max 160 characters)
+   - title: A compelling, SEO-optimized title (50-60 characters) that includes primary keyword naturally
+   - description: A 1-2 sentence meta description (150-160 characters) that includes keywords and entices clicks
    - author: ${author}
    - date: Today's date in YYYY-MM-DD format (use ${new Date().toISOString().split('T')[0]})
    - image: /blog/default-blog-image.jpg (or suggest a relevant image path)
    - category: ${category}
    - tags: ${tagsArray.length > 0 ? `Use these tags: ${tagsArray.join(', ')}. Add 1-2 more relevant tags if needed.` : 'Array of 3-5 relevant tags related to the topic'}
 
-2. **Content Structure**:
-   - Start with an engaging introduction (2-3 paragraphs)
-   - Include 3-5 main sections with clear headings (H2)
-   - Use subheadings (H3) where appropriate
-   - Include bullet points and lists for readability
+2. **TLDR Section** (IMPORTANT - Place immediately after frontmatter, before introduction):
+   - Create a "## TL;DR" section (H2 heading)
+   - Include 2-4 concise bullet points summarizing the key takeaways
+   - Keep it scannable and under 60 words total
+   - ${shouldIncludeProductCTA ? `OPTIONALLY include a natural, non-intrusive call-to-action at the end of the TLDR section that links to ${productName} (use link: ${productLink}). Example format: "Ready to get started? [Try our ${productName}](${productLink}) to [benefit related to topic]." Make it feel like a helpful suggestion, not a hard sell.` : 'Do NOT include any call-to-action in the TLDR section - keep it purely informational.'}
+   - The TLDR should provide immediate value and help readers decide if they want to read the full article
+
+3. **Content Structure**:
+   - Start with an engaging introduction (2-3 paragraphs) that:
+     * Naturally incorporates primary keywords in the first 100 words
+     * Hooks the reader with a relatable scenario, question, or insight
+     * Sets up the value proposition of the article
+   - Include 3-5 main sections with clear headings (H2) that:
+     * Include target keywords naturally where appropriate
+     * Use question-based headers for SEO (e.g., "How to...", "What is...", "Why...")
+     * Follow proper heading hierarchy
+   - Use subheadings (H3) where appropriate to break up content
+   - Include bullet points, numbered lists, and tables for readability and featured snippet optimization
    - Add practical tips, examples, or actionable advice
-   - Include a conclusion section
+   - Include a conclusion section that summarizes key points
    - Strategically place call-to-action (CTA) sections throughout the article
 
-3. **Call-to-Action Requirements**:
+4. **SEO Best Practices** (CRITICAL):
+   - **Keyword Optimization**:
+     * Naturally integrate primary keywords in title, first paragraph, headings, and throughout content
+     * Use long-tail keywords and semantic variations naturally
+     * Avoid keyword stuffing - keywords should flow naturally
+     * Include related keywords and synonyms
+   
+   - **Content Structure**:
+     * Use proper heading hierarchy: H1 in title (frontmatter), H2 for main sections, H3 for subsections
+     * Include at least one H2 with a question format for featured snippets
+     * Use bullet lists and numbered lists (Google often features these)
+     * Include tables when presenting comparative data
+     * Use bold/italic to emphasize key terms naturally
+   
+   - **Content Quality**:
+     * Aim for 1200-2000 words (optimal for SEO)
+     * Ensure content is comprehensive and answers the user's search intent
+     * Include internal linking opportunities (mention related topics naturally)
+     * Use descriptive anchor text for any links
+     * Include relevant examples, case studies, or statistics
+   
+   - **Readability**:
+     * Use short paragraphs (2-4 sentences max)
+     * Break up text with white space, lists, and images
+     * Use transition words naturally (however, therefore, moreover, etc.)
+     * Write for humans first, optimize for search engines second
+
+5. **Humanization Requirements** (CRITICAL - Content must NOT be detectable as AI-generated):
+   - **Natural Language Patterns**:
+     * Vary sentence structure extensively - mix short punchy sentences with longer, more complex ones
+     * Use natural transitions between ideas (not formulaic connectors)
+     * Include occasional conversational phrases and contractions where appropriate
+     * Avoid repetitive sentence patterns or structures
+     * Use varied vocabulary - don't repeat the same words/phrases unnecessarily
+   
+   - **Authentic Voice**:
+     * Write with subtle personality - not robotic or overly formal
+     * Include natural asides or parenthetical thoughts occasionally
+     * Use rhetorical questions to engage readers
+     * Show genuine understanding of the topic, not just surface-level knowledge
+     * Include nuanced perspectives and balanced viewpoints
+   
+   - **Avoid AI Patterns**:
+     * DO NOT use phrases like "In conclusion," "In summary," "It's important to note," "It's worth mentioning" - these are AI red flags
+     * DO NOT start every paragraph with "One of the..." or "Another way to..."
+     * DO NOT use overly formal or academic language when conversational works better
+     * DO NOT create lists that are too perfectly formatted or structured
+     * DO NOT use the same sentence structure repeatedly
+     * Avoid generic statements - be specific and concrete
+     * Don't overuse transition words at the start of sentences
+   
+   - **Natural Flow**:
+     * Ideas should flow organically, not feel like a checklist
+     * Include occasional tangential but relevant points
+     * Vary paragraph length significantly
+     * Use natural dialogue-style phrasing where it makes sense
+     * Include specific examples, anecdotes, or scenarios that feel real
+
+6. **Call-to-Action Requirements**:
    - **Resume-Related Topics**: If the topic relates to resumes, resume writing, ATS optimization, resume formatting, job applications, cover letters, or interview preparation, include CTAs that link to the Resume Builder tool (use link: /resume-wizard). Use natural, contextual CTAs like:
      * "Ready to optimize your resume? [Try our AI-powered Resume Builder](/resume-wizard) to create an ATS-optimized resume tailored to your target job."
      * "[Use our Resume Builder](/resume-wizard) to create a professional resume that stands out to recruiters and ATS systems."
@@ -147,30 +225,39 @@ Generate a well-structured blog post in markdown format with the following requi
      * Make CTAs actionable and benefit-focused
      * Use varied language - don't repeat the same CTA text multiple times
 
-4. **Writing Style**:
-   - Write in a professional yet conversational tone
-   - Use natural, human language that avoids AI-generated patterns
-   - Include specific examples and real-world scenarios
+7. **Writing Style**:
+   - Write in a professional yet conversational tone that sounds like a knowledgeable colleague sharing insights
+   - Use natural, human language that feels authentic and personal
+   - Include specific examples and real-world scenarios that readers can relate to
    - Make it engaging and easy to read
-   - Use active voice
-   - Keep paragraphs concise (3-4 sentences max)
-   - Use markdown formatting (bold, italics, lists, etc.)
+   - Use active voice predominantly (passive voice occasionally for variety)
+   - Keep paragraphs concise but vary lengths for natural rhythm
+   - Use markdown formatting (bold, italics, lists, etc.) strategically
 
-5. **Content Quality**:
-   - Ensure the content is accurate and helpful
-   - Include practical, actionable advice
+8. **Content Quality**:
+   - Ensure the content is accurate, helpful, and demonstrates deep expertise
+   - Include practical, actionable advice that readers can implement immediately
    - Reference the source link if provided (mention it naturally in the content)
    - Make it valuable for readers seeking career advice
-   - Aim for 800-1500 words
+   - Aim for 1200-2000 words (optimal length for SEO and authority)
+   - Include specific examples, numbers, statistics, or case studies where relevant
 
-6. **Markdown Formatting**:
+9. **Markdown Formatting**:
    - Use proper markdown syntax
    - Include code blocks if relevant (use triple backticks)
-   - Use blockquotes for important quotes
+   - Use blockquotes for important quotes or emphasis
    - Include links to relevant resources
    - Use proper heading hierarchy (# for H1, ## for H2, ### for H3)
+   - Use tables for comparative information when appropriate
 
-${sourceLink ? `IMPORTANT: Naturally incorporate information or insights from the source link provided. Reference it in a way that adds value to the reader.` : ''}
+${sourceLink ? `IMPORTANT: Naturally incorporate information or insights from the source link provided. Reference it in a way that adds value to the reader and demonstrates you've actually reviewed the source.` : ''}
+
+CRITICAL FINAL INSTRUCTIONS:
+- Read through your generated content and ensure it sounds like it was written by a human expert, not an AI
+- Vary your sentence structures, paragraph lengths, and vocabulary throughout
+- Make sure the TLDR section is at the top (after frontmatter, before introduction)
+- Ensure SEO keywords are integrated naturally, not forced
+- The content should feel authentic, personal, and valuable - like advice from a trusted mentor
 
 Return ONLY the complete markdown content including the frontmatter. Do not include any additional text or explanations before or after the markdown.`;
 
@@ -185,10 +272,10 @@ Return ONLY the complete markdown content including the frontmatter. Do not incl
           { parts: [{ text: prompt }] }
         ],
         generationConfig: {
-          temperature: 0.7,
-          topP: 0.8,
+          temperature: 0.85, // Higher temperature for more creative, human-like variation
+          topP: 0.9, // Higher topP for more diverse vocabulary
           topK: 40,
-          maxOutputTokens: 8192,
+          maxOutputTokens: 16384, // Increased for longer, comprehensive content (1200-2000 words)
         }
       })
     });
