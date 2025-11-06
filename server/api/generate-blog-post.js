@@ -270,6 +270,180 @@ Requirements for the blog post:
    - Use proper heading hierarchy (# for H1, ## for H2, ### for H3)
    - Use tables for comparative information when appropriate
 
+10. **Blog Components (CRITICAL - MUST USE THESE)**:
+   You MUST use Vue blog components throughout your content to make it visually engaging and interactive. These components use MDC (Markdown Components) syntax with double colons.
+   
+   **Component Syntax**: Use `::ComponentName{props}` format. For arrays/objects, use `:propName` (Vue binding). For strings, use `propName="value"`.
+   
+   **Available Components and When to Use Them**:
+   
+   a. **CalloutBox** - For important notes, warnings, tips, or information boxes:
+      ```markdown
+      ::CalloutBox{type="info" title="Important Note"}
+      Your important information here
+      ::
+      ```
+      Types: `info`, `warning`, `success`, `error`, `tip`
+      Use for: Important callouts, warnings, tips, success messages
+   
+   b. **TipBox** - For pro tips and advice:
+      ```markdown
+      ::TipBox{title="Pro Tip"}
+      Your tip content here
+      ::
+      ```
+      Use for: Actionable tips, career advice, best practices
+   
+   c. **HighlightBox** - For highlighted content with CTAs:
+      ```markdown
+      ::HighlightBox{title="Try Our Tool" icon="🚀" color="purple" ctaText="Get Started" ctaLink="/resume-wizard"}
+      Description of the tool or feature
+      ::
+      ```
+      Colors: `blue`, `green`, `purple`, `orange`, `pink`
+      Use for: Product highlights, feature showcases, CTAs
+   
+   d. **StepList** - For step-by-step instructions:
+      ```markdown
+      ::StepList{:steps='[
+        { title: "Step 1", description: "Description here", tip: "Optional tip" },
+        { title: "Step 2", description: "Description here" }
+      ]'}
+      ::
+      ```
+      Use for: Tutorials, how-to guides, processes
+   
+   e. **ComparisonTable** - For side-by-side comparisons:
+      ```markdown
+      ::ComparisonTable{
+        leftHeader="Before" 
+        rightHeader="After"
+        :rows='[
+          { left: "Text", right: "Text", leftIcon: "❌", rightIcon: "✅" }
+        ]'
+      }
+      ::
+      ```
+      Use for: Comparing approaches, methods, or options
+   
+   f. **ProConsList** - For pros and cons:
+      ```markdown
+      ::ProConsList{
+        :pros='["Pro 1", "Pro 2"]'
+        :cons='["Con 1", "Con 2"]'
+        prosTitle="Benefits"
+        consTitle="Drawbacks"
+      }
+      ::
+      ```
+      Use for: Evaluating options, decision-making content
+   
+   g. **StatsGrid** - For displaying statistics:
+      ```markdown
+      ::StatsGrid{:stats='[
+        { value: "85%", label: "Success Rate", description: "Details here" }
+      ]' columns="3"}
+      ::
+      ```
+      Use for: Key metrics, statistics, impressive numbers
+   
+   h. **ChecklistBox** - For interactive checklists:
+      ```markdown
+      ::ChecklistBox{
+        title="Your Checklist"
+        :items='["Item 1", "Item 2", "Item 3"]'
+        showProgress="true"
+      }
+      ::
+      ```
+      Use for: Action items, to-do lists, verification steps
+   
+   i. **AccordionList** - For FAQs or expandable content:
+      ```markdown
+      ::AccordionList{:items='[
+        { title: "Question", content: "Answer here" }
+      ]' allowMultiple="false"}
+      ::
+      ```
+      Use for: FAQs, expandable sections, detailed explanations
+   
+   j. **QuoteBlock** - For quotes:
+      ```markdown
+      ::QuoteBlock{author="Name" source="Source"}
+      Quote text here
+      ::
+      ```
+      Use for: Inspirational quotes, expert opinions, testimonials
+   
+   k. **FeatureGrid** - For showcasing features:
+      ```markdown
+      ::FeatureGrid{:features='[
+        { icon: "🎯", title: "Feature", description: "Description", link: "/link" }
+      ]' columns="3"}
+      ::
+      ```
+      Use for: Feature showcases, benefit lists, tool highlights
+   
+   l. **TimelineBlock** - For timelines:
+      ```markdown
+      ::TimelineBlock{:events='[
+        { title: "Event", description: "Details", date: "2025", icon: "📅", tags: ["tag"] }
+      ]'}
+      ::
+      ```
+      Use for: Processes, career paths, historical events
+   
+   **Component Usage Requirements**:
+   - Use at least 3-5 different components per blog post
+   - Mix components naturally throughout the content - don't cluster them all together
+   - Use CalloutBox or TipBox for important information (use 2-4 times per post)
+   - Use StepList for any how-to or tutorial content
+   - Use ComparisonTable or ProConsList when comparing options
+   - Use StatsGrid when you have relevant statistics or metrics
+   - Use HighlightBox for product/tool CTAs (in addition to regular markdown CTAs)
+   - Use ChecklistBox for actionable checklists
+   - Use AccordionList for FAQs if the topic warrants it
+   - Components should enhance the content, not distract from it
+   - Place components strategically where they add value
+   
+   **Example Component Usage in Content**:
+   ```markdown
+   ## Introduction
+   
+   Your introduction paragraph here...
+   
+   ::CalloutBox{type="info" title="Did You Know?"}
+   Important statistic or fact that hooks the reader
+   ::
+   
+   ## Main Section
+   
+   Content here...
+   
+   ::TipBox{title="Pro Tip"}
+   Actionable tip related to the content
+   ::
+   
+   ## Step-by-Step Guide
+   
+   ::StepList{:steps='[
+     { title: "Step 1", description: "Do this first" },
+     { title: "Step 2", description: "Then do this" }
+   ]'}
+   ::
+   
+   ## Comparison
+   
+   ::ComparisonTable{
+     leftHeader="Traditional Approach" 
+     rightHeader="Better Approach"
+     :rows='[
+       { left: "Old way", right: "New way", leftIcon: "❌", rightIcon: "✅" }
+     ]'
+   }
+   ::
+   ```
+
 ${sourceLink ? `IMPORTANT: Naturally incorporate information or insights from the source link provided. Reference it in a way that adds value to the reader and demonstrates you've actually reviewed the source.` : ''}
 
 CRITICAL FINAL INSTRUCTIONS:
