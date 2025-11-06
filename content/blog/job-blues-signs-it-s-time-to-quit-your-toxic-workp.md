@@ -68,7 +68,7 @@ Before you hand in your resignation, consider these steps:
 
 Once you've decided to leave your toxic job, it's essential to have a plan in place. Here's how to prepare for your job search and exit strategy:
 
-*   **Update Your Resume:** Highlight your accomplishments and skills, and tailor your resume to the types of jobs you're seeking. Ready to optimize your resume? [Try our AI-powered Resume Builder](/resume-wizard) to create an ATS-optimized resume tailored to your target job.
+*   **Update Your Resume:** Highlight your accomplishments and skills, and tailor your resume to the types of jobs you're seeking. Ready to optimize your resume? [Try our AI-powered Resume Builder](https://careersmithery.com/solutions/resume-builder) to create an ATS-optimized resume tailored to your target job.
 *   **Start Networking:** Reach out to your contacts and let them know you're looking for a new job. Networking can open doors to opportunities you might not otherwise find.
 *   **Practice Your Interview Skills:** Prepare for common interview questions and practice your responses. Confidence and preparation can make a big difference in your job search.
 *   **Save Money:** If possible, save up enough money to cover your expenses for a few months while you're searching for a new job. This can provide peace of mind and reduce stress.
@@ -76,7 +76,7 @@ Once you've decided to leave your toxic job, it's essential to have a plan in pl
 
 ## Finding a Healthier Workplace: Moving Forward
 
-Leaving a toxic job can be a difficult but ultimately liberating decision. Remember, you deserve to work in an environment where you feel valued, respected, and supported. Take your time to find a new job that aligns with your values and goals. Use our Career Planner to create a personalized roadmap for your professional growth. [Use our Career Planner](/career-planner) to create a personalized roadmap for your professional growth.
+Leaving a toxic job can be a difficult but ultimately liberating decision. Remember, you deserve to work in an environment where you feel valued, respected, and supported. Take your time to find a new job that aligns with your values and goals. [Use our Career Planner](https://careersmithery.com/solutions/career-planner) to create a personalized roadmap for your professional growth.
 
 *   **Research Companies:** Before accepting a new job, research the company culture and values. Look for companies that prioritize employee well-being and create a positive work environment.
 *   **Trust Your Gut:** If something feels off during the interview process, trust your intuition. Don't ignore red flags or warning signs.
@@ -84,4 +84,4 @@ Leaving a toxic job can be a difficult but ultimately liberating decision. Remem
 
 ## Conclusion: Prioritizing Your Well-being
 
-Recognizing when it's time to quit a toxic job is crucial for your well-being and career growth. If you're experiencing the signs of a toxic work environment, don't hesitate to take action. Prioritize your health, set boundaries, and seek support. Remember, you deserve to work in a place where you feel valued, respected, and supported. By taking control of your career and making informed decisions, you can create a brighter and more fulfilling future for yourself. Leaving a toxic workplace is not a sign of failure, but a courageous step towards a happier and healthier life. Start planning your career journey today with [our comprehensive Career Planner](/career-planner) tool.
+Recognizing when it's time to quit a toxic job is crucial for your well-being and career growth. If you're experiencing the signs of a toxic work environment, don't hesitate to take action. Prioritize your health, set boundaries, and seek support. Remember, you deserve to work in a place where you feel valued, respected, and supported. By taking control of your career and making informed decisions, you can create a brighter and more fulfilling future for yourself. Leaving a toxic workplace is not a sign of failure, but a courageous step towards a happier and healthier life. Start planning your career journey today with [our comprehensive Career Planner](https://careersmithery.com/solutions/career-planner) tool.

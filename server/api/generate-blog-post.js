@@ -96,7 +96,7 @@ export default defineEventHandler(async (event) => {
     const isResumeRelated = topicContext.toLowerCase().match(/\b(resume|cv|curriculum vitae|ats|applicant tracking|job application|cover letter|interview prep|hiring)\b/);
     const isCareerPlanningRelated = topicContext.toLowerCase().match(/\b(career plan|career development|career transition|career strategy|career goals|professional growth|skill development)\b/);
     const shouldIncludeProductCTA = isResumeRelated || isCareerPlanningRelated;
-    const productLink = isResumeRelated ? '/resume-wizard' : (isCareerPlanningRelated ? '/career-planner' : null);
+    const productLink = isResumeRelated ? 'https://careersmithery.com/solutions/resume-builder' : (isCareerPlanningRelated ? 'https://careersmithery.com/solutions/career-planner' : null);
     const productName = isResumeRelated ? 'Resume Builder' : (isCareerPlanningRelated ? 'Career Planner' : null);
     
     // Get current date in YYYY-MM-DD format
@@ -218,17 +218,17 @@ Requirements for the blog post:
      * Include specific examples, anecdotes, or scenarios that feel real
 
 6. **Call-to-Action Requirements**:
-   - **Resume-Related Topics**: If the topic relates to resumes, resume writing, ATS optimization, resume formatting, job applications, cover letters, or interview preparation, include CTAs that link to the Resume Builder tool (use link: /resume-wizard). Use natural, contextual CTAs like:
-     * "Ready to optimize your resume? [Try our AI-powered Resume Builder](/resume-wizard) to create an ATS-optimized resume tailored to your target job."
-     * "[Use our Resume Builder](/resume-wizard) to create a professional resume that stands out to recruiters and ATS systems."
-     * "Get started with [our Resume Builder](/resume-wizard) today and transform your resume into a powerful job-search tool."
-     * "Create your perfect resume with [our Resume Builder](/resume-wizard), which uses AI to optimize your content for ATS systems."
+   - **Resume-Related Topics**: If the topic relates to resumes, resume writing, ATS optimization, resume formatting, job applications, cover letters, or interview preparation, include CTAs that link to the Resume Builder tool (use link: https://careersmithery.com/solutions/resume-builder). Use natural, contextual CTAs like:
+     * "Ready to optimize your resume? [Try our AI-powered Resume Builder](https://careersmithery.com/solutions/resume-builder) to create an ATS-optimized resume tailored to your target job."
+     * "[Use our Resume Builder](https://careersmithery.com/solutions/resume-builder) to create a professional resume that stands out to recruiters and ATS systems."
+     * "Get started with [our Resume Builder](https://careersmithery.com/solutions/resume-builder) today and transform your resume into a powerful job-search tool."
+     * "Create your perfect resume with [our Resume Builder](https://careersmithery.com/solutions/resume-builder), which uses AI to optimize your content for ATS systems."
    
-   - **Career Planning Topics**: If the topic relates to career planning, career development, career transitions, skill development, career strategy, career goals, or professional growth, include CTAs that link to the Career Planner tool (use link: /career-planner). Use natural, contextual CTAs like:
-     * "Take control of your career path with [our Career Planner](/career-planner), which helps you identify goals, track progress, and plan your next steps."
-     * "[Use our Career Planner](/career-planner) to create a personalized roadmap for your professional growth."
-     * "Start planning your career journey today with [our comprehensive Career Planner](/career-planner) tool."
-     * "Map out your career path with [our Career Planner](/career-planner) and set yourself up for long-term success."
+   - **Career Planning Topics**: If the topic relates to career planning, career development, career transitions, skill development, career strategy, career goals, or professional growth, include CTAs that link to the Career Planner tool (use link: https://careersmithery.com/solutions/career-planner). Use natural, contextual CTAs like:
+     * "Take control of your career path with [our Career Planner](https://careersmithery.com/solutions/career-planner), which helps you identify goals, track progress, and plan your next steps."
+     * "[Use our Career Planner](https://careersmithery.com/solutions/career-planner) to create a personalized roadmap for your professional growth."
+     * "Start planning your career journey today with [our comprehensive Career Planner](https://careersmithery.com/solutions/career-planner) tool."
+     * "Map out your career path with [our Career Planner](https://careersmithery.com/solutions/career-planner) and set yourself up for long-term success."
    
    - **Both Tools**: If the topic relates to both resume building and career planning, include CTAs for both tools at appropriate points in the article.
    
@@ -240,7 +240,7 @@ Requirements for the blog post:
      * Don't make CTAs feel forced or spammy - they should flow naturally with the content
    
    - **Format**: When including CTAs:
-     * Always use markdown links: [Resume Builder](/resume-wizard) or [Career Planner](/career-planner)
+     * Always use markdown links with full URLs: [Resume Builder](https://careersmithery.com/solutions/resume-builder) or [Career Planner](https://careersmithery.com/solutions/career-planner)
      * Write CTAs as complete sentences or paragraphs, not just standalone links
      * Make CTAs actionable and benefit-focused
      * Use varied language - don't repeat the same CTA text multiple times
@@ -294,7 +294,7 @@ Requirements for the blog post:
    
    c. **HighlightBox** - For highlighted content with CTAs:
       Use this syntax:
-      ::HighlightBox{title="Try Our Tool" icon="🚀" color="purple" ctaText="Get Started" ctaLink="/resume-wizard"}
+      ::HighlightBox{title="Try Our Tool" icon="🚀" color="purple" ctaText="Get Started" ctaLink="https://careersmithery.com/solutions/resume-builder"}
       Description of the tool or feature
       ::
       Colors: blue, green, purple, orange, pink

@@ -38,6 +38,29 @@ export default defineNuxtConfig({
     // dependency in the function's node_modules directory.
     externals: {
       external: ['@sparticuz/chromium']
+    },
+    // Optimize for Netlify builds - reduce memory usage
+    minify: true,
+    compressPublicAssets: true
+  },
+  // Nuxt Content optimizations for better build performance
+  content: {
+    // Enable content caching to speed up builds
+    experimental: {
+      cacheContents: true,
+      stripQueryParameters: false
+    },
+    // Only process markdown files (ignore other file types if not needed)
+    ignores: ['**/.git/**', '**/node_modules/**'],
+    // Optimize markdown processing
+    markdown: {
+      // Disable syntax highlighting if not needed (saves build time)
+      // highlight: false,
+      // Keep anchor links for better UX
+      anchorLinks: {
+        depth: 4,
+        exclude: [1]
+      }
     }
   },
   // If you want to use Heroicons, you might need a Vite plugin.

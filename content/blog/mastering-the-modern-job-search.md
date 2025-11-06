@@ -63,13 +63,13 @@ Success in today's job market requires a systematic approach. Here are the key p
     icon: "🎯", 
     title: "Strategic Targeting", 
     description: "Focus on roles that truly match your skills and career goals. Quality over quantity always wins.",
-    link: "/solutions/career-planner"
+    link: "https://careersmithery.com/solutions/career-planner"
   },
   { 
     icon: "✨", 
     title: "Resume Optimization", 
     description: "Use AI to tailor your resume for each position, ensuring it passes ATS and impresses humans.",
-    link: "/solutions/resume-builder"
+    link: "https://careersmithery.com/solutions/resume-builder"
   },
   { 
     icon: "🤝", 
@@ -156,7 +156,7 @@ Artificial Intelligence has revolutionized how we approach job searching. Here's
   icon="🤖" 
   color="purple"
   ctaText="Try Our AI Resume Builder"
-  ctaLink="/solutions/resume-builder"
+  ctaLink="https://careersmithery.com/solutions/resume-builder"
 }
 Our AI analyzes job descriptions and optimizes your resume to match exactly what employers are looking for. It identifies missing keywords, suggests stronger action verbs, and ensures your formatting passes ATS screening.
 
@@ -219,7 +219,7 @@ Equip yourself with the right tools for success:
   :tags='["Career Planning", "Strategy", "Goals"]'
   author="Career Smithery Team"
   date="Oct 2025"
-  link="/solutions/career-planner"
+  link="https://careersmithery.com/solutions/career-planner"
   linkText="Start Planning"
 }
 ::

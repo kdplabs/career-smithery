@@ -12,7 +12,7 @@ Landing a job interview is a huge accomplishment. You've impressed them enough o
 
 Interviews are about more than just qualifications; they're about connection. Demonstrating your skills and experience is important, but so is showing that you're a good fit for the team and the company culture. By understanding and applying these psychological hacks, you can increase your chances of making a positive, lasting impression. Let's dive into three powerful techniques you can use to ace your next interview.
 
-Ready to optimize your resume to even get *more* interviews? [Try our AI-powered Resume Builder](/resume-wizard) to create an ATS-optimized resume tailored to your target job.
+Ready to optimize your resume to even get *more* interviews? [Try our AI-powered Resume Builder](https://careersmithery.com/solutions/resume-builder) to create an ATS-optimized resume tailored to your target job.
 
 ## 1. Harness the Power of Priming
 
@@ -47,7 +47,7 @@ Mirroring should be subtle and natural. Avoid directly mimicking the interviewer
 
 It's important to use mirroring ethically. The goal is to build genuine rapport, not to manipulate the interviewer. Focus on connecting with them on a human level and showing that you understand their needs and priorities. If mirroring feels forced or unnatural, don't do it. Authenticity is key.
 
-Take control of your career path with [our Career Planner](/career-planner), which helps you identify goals, track progress, and plan your next steps.
+Take control of your career path with [our Career Planner](https://careersmithery.com/solutions/career-planner), which helps you identify goals, track progress, and plan your next steps.
 
 ## 3. Leverage the Anchoring Bias
 
@@ -67,7 +67,7 @@ Instead of saying, "I have experience in project management," try saying, "In my
 
 By understanding and applying these three psychology hacks, you can significantly improve your interview performance. Remember, preparation is key. Practice these techniques and adapt them to your own personality and style.
 
-Start planning your career journey today with [our comprehensive Career Planner](/career-planner) tool.
+Start planning your career journey today with [our comprehensive Career Planner](https://careersmithery.com/solutions/career-planner) tool.
 
 ## Conclusion
 

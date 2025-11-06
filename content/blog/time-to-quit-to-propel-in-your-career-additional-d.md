@@ -44,7 +44,7 @@ Consider these steps:
 
 This self-awareness is the foundation for confidently pursuing better opportunities. It allows you to articulate your value proposition to potential employers and negotiate for the compensation and benefits you deserve.
 
-Ready to optimize your resume to highlight your true value? [Try our AI-powered Resume Builder](/resume-wizard) to create an ATS-optimized resume tailored to your target job.
+Ready to optimize your resume to highlight your true value? [Try our AI-powered Resume Builder](https://careersmithery.com/solutions/resume-builder) to create an ATS-optimized resume tailored to your target job.
 
 ## Plan Your Strategic Exit: Don't Burn Bridges
 
@@ -75,7 +75,7 @@ Here are some tips for embracing the unknown:
 
 Take control of your journey today. Start planning your next strategic move, believe in your capabilities, and confidently step into the future you're destined for.
 
-Map out your career path with [our Career Planner](/career-planner) and set yourself up for long-term success.
+Map out your career path with [our Career Planner](https://careersmithery.com/solutions/career-planner) and set yourself up for long-term success.
 
 ## Conclusion: Quit Strategically, Thrive Professionally
 
