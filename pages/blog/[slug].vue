@@ -46,7 +46,7 @@
     <!-- Article Content -->
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="bg-white rounded-lg shadow-md p-8 mb-12 prose prose-slate max-w-none">
-        <ContentRenderer v-if="article" :value="article" />
+        <div v-if="article && renderedContent" v-html="renderedContent"></div>
       </div>
 
       <!-- Tags Section -->
@@ -90,10 +90,10 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <article
             v-for="post in relatedPosts.slice(0, 2)"
-            :key="post._path"
+            :key="post.slug || post.id"
             class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden"
           >
-            <NuxtLink :to="post._path" class="block h-full">
+            <NuxtLink :to="post._path || `/blog/${post.slug}`" class="block h-full">
               <div class="p-6 flex flex-col h-full">
                 <span class="inline-block px-3 py-1 text-sm font-semibold text-blue-600 bg-blue-100 rounded-full mb-3 w-fit">
                   {{ post.category }}
@@ -115,26 +115,62 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
+import { marked } from 'marked'
+
+// Configure marked for safe rendering
+marked.setOptions({
+  breaks: true,
+  gfm: true
+})
 
 // Get the slug from route params
 const route = useRoute()
 const slug = route.params.slug as string
 
+const { getPostBySlug, getAllPosts } = useBlog()
+
 // Fetch the current article
-const { data: article } = await useAsyncData(`blog-${slug}`, () =>
-  queryContent('blog').where({ _path: `/blog/${slug}` }).findOne()
-)
+const { data: article } = await useAsyncData(`blog-${slug}`, () => getPostBySlug(slug))
 
 // Fetch all blog posts for related articles
-const { data: allPosts } = await useAsyncData('all-blog-posts', () => queryContent('blog').find())
+const { data: allPosts } = await useAsyncData('all-blog-posts', () => getAllPosts())
+
+// Render markdown content to HTML with sanitization
+const renderedContent = ref('')
+
+onMounted(async () => {
+  if (article.value?.content) {
+    const html = marked(article.value.content)
+    
+    // Sanitize HTML to prevent XSS attacks (client-side only)
+    if (process.client) {
+      try {
+        const DOMPurify = (await import('dompurify')).default
+        renderedContent.value = DOMPurify.sanitize(html)
+      } catch (error) {
+        // Fallback to unsanitized if DOMPurify fails
+        console.warn('DOMPurify failed to load, using unsanitized HTML')
+        renderedContent.value = html
+      }
+    } else {
+      // Server-side: return unsanitized (will be sanitized on client)
+      renderedContent.value = html
+    }
+  }
+})
+
+// For SSR, render without sanitization (will be sanitized on client)
+if (!renderedContent.value && article.value?.content) {
+  renderedContent.value = marked(article.value.content)
+}
 
 // Compute related posts (same category, excluding current post)
 const relatedPosts = computed(() => {
   if (!article.value || !allPosts.value) return []
 
   return (allPosts.value as any[]).filter(
-    (post) => post.category === article.value?.category && post._path !== article.value?._path
+    (post) => post.category === article.value?.category && post.slug !== article.value?.slug
   )
 })
 

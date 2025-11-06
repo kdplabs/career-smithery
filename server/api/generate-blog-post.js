@@ -1,8 +1,7 @@
 /**
  * API Endpoint: Generate Blog Post (Admin Only)
  * 
- * Creates a blog post in the content/blog directory using AI-generated content.
- * Pushes the file directly to GitHub, which triggers a Netlify rebuild.
+ * Creates a blog post in Supabase using AI-generated content.
  * This endpoint is for admin use only and does not require authentication or credits.
  * 
  * POST /api/generate-blog-post
@@ -21,20 +20,18 @@
  * {
  *   success: boolean
  *   message: string
- *   filename: string - Generated markdown filename
  *   slug: string - URL slug for the post
- *   githubUrl: string - GitHub URL to the committed file
- *   commitSha: string - Commit SHA
+ *   title: string - Generated blog post title
+ *   postUrl: string - URL to view the blog post
  * }
  * 
  * Required Environment Variables:
- * - GITHUB_TOKEN: Personal access token with repo permissions
- * - GITHUB_REPO_OWNER: Repository owner (e.g., "username")
- * - GITHUB_REPO_NAME: Repository name (e.g., "career-smithery")
- * - GITHUB_BRANCH: Branch name (default: "main")
+ * - SUPABASE_URL: Supabase project URL
+ * - SUPABASE_SERVICE_ROLE_KEY: Supabase service role key for admin operations
  */
 
 import { defineEventHandler, readBody, createError } from 'h3';
+import { createClient } from '@supabase/supabase-js';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
@@ -47,25 +44,19 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // GitHub configuration
-  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-  const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER || process.env.GITHUB_OWNER;
-  const GITHUB_REPO_NAME = process.env.GITHUB_REPO_NAME || process.env.GITHUB_REPO;
-  const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
+  // Supabase configuration
+  const SUPABASE_URL = process.env.SUPABASE_URL;
+  const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!GITHUB_TOKEN) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
     throw createError({
       statusCode: 500,
-      statusMessage: 'GITHUB_TOKEN is not configured. Please set it in environment variables.'
+      statusMessage: 'SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be configured in environment variables.'
     });
   }
 
-  if (!GITHUB_REPO_OWNER || !GITHUB_REPO_NAME) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'GITHUB_REPO_OWNER and GITHUB_REPO_NAME must be configured in environment variables.'
-    });
-  }
+  // Initialize Supabase client with service role key for admin operations
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
   const { 
     topic, 
@@ -586,7 +577,7 @@ Return ONLY a valid JSON object. Do NOT include markdown code blocks, do NOT inc
     // Ensure tags is an array
     const blogTags = Array.isArray(blogData.tags) ? blogData.tags : (blogData.tags ? [blogData.tags] : []);
     
-    // Build TLDR section
+    // Build TLDR section for content
     let tldrSection = '## TL;DR\n\n';
     if (blogData.tldr && Array.isArray(blogData.tldr.bullets)) {
       blogData.tldr.bullets.forEach(bullet => {
@@ -597,142 +588,63 @@ Return ONLY a valid JSON object. Do NOT include markdown code blocks, do NOT inc
       tldrSection += `\n${blogData.tldr.cta}\n`;
     }
 
-    // Construct the markdown file with proper frontmatter
-    // Escape YAML special characters in title and description
-    const escapeYaml = (str) => {
-      if (!str) return '';
-      // If contains special characters, wrap in quotes
-      if (str.includes(':') || str.includes('"') || str.includes("'") || str.includes('\n')) {
-        return `"${str.replace(/"/g, '\\"')}"`;
-      }
-      return str;
-    };
+    // Combine TLDR and content
+    const fullContent = tldrSection + '\n' + blogData.content;
 
-    const frontmatter = `---
-title: ${escapeYaml(blogData.title)}
-description: ${escapeYaml(blogData.description)}
-author: ${author}
-date: ${currentDate}
-image: ${blogData.image || '/blog/default-blog-image.jpg'}
-category: ${category}
-tags: ${JSON.stringify(blogTags)}
----
-
-`;
-
-    // Combine frontmatter, TLDR, and content
-    const blogContent = frontmatter + tldrSection + '\n' + blogData.content;
-
-    // 3. Generate filename from generated title (not from topic)
+    // Generate slug from title
     const slug = blogData.title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '')
       .substring(0, 50); // Limit length
-    
-    const filename = `${slug}.md`;
-    const filePath = `content/blog/${filename}`;
 
-    // 4. Push to GitHub using GitHub API
-    // First, check if file exists to get its SHA (for updates)
-    let existingFileSha = null;
-    try {
-      const getFileResponse = await fetch(
-        `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${filePath}`,
-        {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${GITHUB_TOKEN}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'User-Agent': 'Career-Smithery-Blog-Generator'
-          }
-        }
-      );
+    // Check if slug already exists, if so append timestamp
+    let finalSlug = slug;
+    const { data: existingPost } = await supabase
+      .from('blog_posts')
+      .select('slug')
+      .eq('slug', slug)
+      .single();
 
-      if (getFileResponse.ok) {
-        const fileData = await getFileResponse.json();
-        existingFileSha = fileData.sha;
-        // If file exists, add timestamp to make it unique
-        const timestamp = Date.now();
-        const uniqueFilename = `${slug}-${timestamp}.md`;
-        const uniqueFilePath = `content/blog/${uniqueFilename}`;
-        
-        // Create new file with timestamp
-        const createResponse = await fetch(
-          `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${uniqueFilePath}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Authorization': `Bearer ${GITHUB_TOKEN}`,
-              'Accept': 'application/vnd.github.v3+json',
-              'Content-Type': 'application/json',
-              'User-Agent': 'Career-Smithery-Blog-Generator'
-            },
-            body: JSON.stringify({
-              message: `Add blog post: ${topic}`,
-              content: Buffer.from(blogContent).toString('base64'),
-              branch: GITHUB_BRANCH
-            })
-          }
-        );
-
-        if (!createResponse.ok) {
-          const errorData = await createResponse.json().catch(() => ({}));
-          throw new Error(`GitHub API error: ${errorData.message || createResponse.statusText}`);
-        }
-
-        const createResult = await createResponse.json();
-        
-        return {
-          success: true,
-          message: 'Blog post generated and pushed to GitHub successfully',
-          filename: uniqueFilename,
-          slug: `${slug}-${timestamp}`,
-          githubUrl: createResult.content.html_url,
-          commitSha: createResult.commit.sha,
-          note: 'Netlify will automatically rebuild after the GitHub push.'
-        };
-      }
-    } catch (checkError) {
-      // File doesn't exist or error checking - continue to create new file
-      console.log('File check:', checkError.message);
+    if (existingPost) {
+      const timestamp = Date.now();
+      finalSlug = `${slug}-${timestamp}`;
     }
 
-    // Create new file (or update if exists)
-    const createResponse = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${filePath}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Authorization': `token ${GITHUB_TOKEN}`,
-          'Accept': 'application/vnd.github.v3+json',
-          'Content-Type': 'application/json',
-          'User-Agent': 'Career-Smithery-Blog-Generator'
-        },
-        body: JSON.stringify({
-          message: `Add blog post: ${topic}`,
-          content: Buffer.from(blogContent).toString('base64'),
-          branch: GITHUB_BRANCH,
-          ...(existingFileSha && { sha: existingFileSha }) // Include SHA if updating
-        })
-      }
-    );
+    // Prepare data for Supabase (JSONB structure)
+    const blogPostData = {
+      title: blogData.title,
+      description: blogData.description,
+      author: author,
+      date: currentDate,
+      image: blogData.image || '/blog/default-blog-image.jpg',
+      category: category,
+      tags: blogTags,
+      content: fullContent
+    };
 
-    if (!createResponse.ok) {
-      const errorData = await createResponse.json().catch(() => ({}));
-      throw new Error(`GitHub API error: ${errorData.message || createResponse.statusText}`);
+    // Insert into Supabase
+    const { data: insertedPost, error: insertError } = await supabase
+      .from('blog_posts')
+      .insert({
+        slug: finalSlug,
+        data: blogPostData,
+        published: true
+      })
+      .select()
+      .single();
+
+    if (insertError) {
+      throw new Error(`Failed to save blog post to Supabase: ${insertError.message}`);
     }
-
-    const result = await createResponse.json();
 
     return {
       success: true,
-      message: 'Blog post generated and pushed to GitHub successfully',
-      filename: filename,
-      slug: slug,
-      githubUrl: result.content.html_url,
-      commitSha: result.commit.sha,
-      note: 'Netlify will automatically rebuild after the GitHub push.'
+      message: 'Blog post generated and saved to Supabase successfully',
+      slug: finalSlug,
+      title: blogData.title,
+      postUrl: `/blog/${finalSlug}`,
+      id: insertedPost.id
     };
 
   } catch (error) {

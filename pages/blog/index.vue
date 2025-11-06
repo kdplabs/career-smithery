@@ -34,10 +34,10 @@
       <div v-if="filteredPosts.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <article
           v-for="post in filteredPosts"
-          :key="post._path"
+          :key="post.slug || post.id"
           class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden"
         >
-          <NuxtLink :to="post._path" class="block h-full">
+          <NuxtLink :to="post._path || `/blog/${post.slug}`" class="block h-full">
             <div class="p-6 flex flex-col h-full">
               <!-- Category Badge -->
               <span class="inline-block px-3 py-1 text-sm font-semibold text-blue-600 bg-blue-100 rounded-full mb-3 w-fit">
@@ -85,10 +85,10 @@ import { ref, computed } from 'vue'
 
 const searchQuery = ref('')
 const selectedCategory = ref('')
-const posts = ref([])
+const { getAllPosts } = useBlog()
 
-// Fetch all blog posts
-const { data: allPosts } = await useAsyncData('blog-posts', () => queryContent('blog').find())
+// Fetch all blog posts from Supabase
+const { data: allPosts } = await useAsyncData('blog-posts', () => getAllPosts())
 
 // Compute filtered posts
 const filteredPosts = computed(() => {
