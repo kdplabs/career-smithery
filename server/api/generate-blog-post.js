@@ -2,6 +2,7 @@
  * API Endpoint: Generate Blog Post (Admin Only)
  * 
  * Creates a blog post in the content/blog directory using AI-generated content.
+ * Pushes the file directly to GitHub, which triggers a Netlify rebuild.
  * This endpoint is for admin use only and does not require authentication or credits.
  * 
  * POST /api/generate-blog-post
@@ -22,14 +23,18 @@
  *   message: string
  *   filename: string - Generated markdown filename
  *   slug: string - URL slug for the post
- *   path: string - Full file path
+ *   githubUrl: string - GitHub URL to the committed file
+ *   commitSha: string - Commit SHA
  * }
+ * 
+ * Required Environment Variables:
+ * - GITHUB_TOKEN: Personal access token with repo permissions
+ * - GITHUB_REPO_OWNER: Repository owner (e.g., "username")
+ * - GITHUB_REPO_NAME: Repository name (e.g., "career-smithery")
+ * - GITHUB_BRANCH: Branch name (default: "main")
  */
 
 import { defineEventHandler, readBody, createError } from 'h3';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
@@ -39,6 +44,26 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 500,
       statusMessage: 'GEMINI_API_KEY is not configured'
+    });
+  }
+
+  // GitHub configuration
+  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+  const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER || process.env.GITHUB_OWNER;
+  const GITHUB_REPO_NAME = process.env.GITHUB_REPO_NAME || process.env.GITHUB_REPO;
+  const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
+
+  if (!GITHUB_TOKEN) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'GITHUB_TOKEN is not configured. Please set it in environment variables.'
+    });
+  }
+
+  if (!GITHUB_REPO_OWNER || !GITHUB_REPO_NAME) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'GITHUB_REPO_OWNER and GITHUB_REPO_NAME must be configured in environment variables.'
     });
   }
 
@@ -219,40 +244,108 @@ Return ONLY the complete markdown content including the frontmatter. Do not incl
       .substring(0, 50); // Limit length
     
     const filename = `${slug}.md`;
-    const blogDir = join(process.cwd(), 'content', 'blog');
-    const filePath = join(blogDir, filename);
+    const filePath = `content/blog/${filename}`;
 
-    // Ensure blog directory exists
-    if (!existsSync(blogDir)) {
-      await mkdir(blogDir, { recursive: true });
+    // 4. Push to GitHub using GitHub API
+    // First, check if file exists to get its SHA (for updates)
+    let existingFileSha = null;
+    try {
+      const getFileResponse = await fetch(
+        `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${filePath}`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${GITHUB_TOKEN}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'User-Agent': 'Career-Smithery-Blog-Generator'
+          }
+        }
+      );
+
+      if (getFileResponse.ok) {
+        const fileData = await getFileResponse.json();
+        existingFileSha = fileData.sha;
+        // If file exists, add timestamp to make it unique
+        const timestamp = Date.now();
+        const uniqueFilename = `${slug}-${timestamp}.md`;
+        const uniqueFilePath = `content/blog/${uniqueFilename}`;
+        
+        // Create new file with timestamp
+        const createResponse = await fetch(
+          `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${uniqueFilePath}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${GITHUB_TOKEN}`,
+              'Accept': 'application/vnd.github.v3+json',
+              'Content-Type': 'application/json',
+              'User-Agent': 'Career-Smithery-Blog-Generator'
+            },
+            body: JSON.stringify({
+              message: `Add blog post: ${topic}`,
+              content: Buffer.from(blogContent).toString('base64'),
+              branch: GITHUB_BRANCH
+            })
+          }
+        );
+
+        if (!createResponse.ok) {
+          const errorData = await createResponse.json().catch(() => ({}));
+          throw new Error(`GitHub API error: ${errorData.message || createResponse.statusText}`);
+        }
+
+        const createResult = await createResponse.json();
+        
+        return {
+          success: true,
+          message: 'Blog post generated and pushed to GitHub successfully',
+          filename: uniqueFilename,
+          slug: `${slug}-${timestamp}`,
+          githubUrl: createResult.content.html_url,
+          commitSha: createResult.commit.sha,
+          note: 'Netlify will automatically rebuild after the GitHub push.'
+        };
+      }
+    } catch (checkError) {
+      // File doesn't exist or error checking - continue to create new file
+      console.log('File check:', checkError.message);
     }
 
-    // Check if file already exists
-    if (existsSync(filePath)) {
-      // Add timestamp to make it unique
-      const timestamp = Date.now();
-      const uniqueFilename = `${slug}-${timestamp}.md`;
-      const uniqueFilePath = join(blogDir, uniqueFilename);
-      await writeFile(uniqueFilePath, blogContent, 'utf-8');
+    // Create new file (or update if exists)
+    const createResponse = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${filePath}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Authorization': `token ${GITHUB_TOKEN}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+          'User-Agent': 'Career-Smithery-Blog-Generator'
+        },
+        body: JSON.stringify({
+          message: `Add blog post: ${topic}`,
+          content: Buffer.from(blogContent).toString('base64'),
+          branch: GITHUB_BRANCH,
+          ...(existingFileSha && { sha: existingFileSha }) // Include SHA if updating
+        })
+      }
+    );
 
-      return {
-        success: true,
-        message: 'Blog post generated successfully',
-        filename: uniqueFilename,
-        slug: `${slug}-${timestamp}`,
-        path: uniqueFilePath
-      };
+    if (!createResponse.ok) {
+      const errorData = await createResponse.json().catch(() => ({}));
+      throw new Error(`GitHub API error: ${errorData.message || createResponse.statusText}`);
     }
 
-    // Write the file
-    await writeFile(filePath, blogContent, 'utf-8');
+    const result = await createResponse.json();
 
     return {
       success: true,
-      message: 'Blog post generated successfully',
+      message: 'Blog post generated and pushed to GitHub successfully',
       filename: filename,
       slug: slug,
-      path: filePath
+      githubUrl: result.content.html_url,
+      commitSha: result.commit.sha,
+      note: 'Netlify will automatically rebuild after the GitHub push.'
     };
 
   } catch (error) {
