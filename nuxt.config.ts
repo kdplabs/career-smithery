@@ -50,8 +50,12 @@ export default defineNuxtConfig({
       cacheContents: true,
       stripQueryParameters: false
     },
-    // Only process markdown files (ignore other file types if not needed)
-    ignores: ['**/.git/**', '**/node_modules/**'],
+    // Use safe globs (no leading / and no trailing /) to avoid regex errors
+    ignore: [
+      '**/.git/**',
+      '**/node_modules/**',
+      '.DS_Store'
+    ],
     // Optimize markdown processing
     markdown: {
       // Disable syntax highlighting if not needed (saves build time)
