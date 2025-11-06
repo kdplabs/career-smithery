@@ -87,18 +87,26 @@ export default defineEventHandler(async (event) => {
   // Ensure tags is an array
   const tagsArray = Array.isArray(tags) ? tags : (tags ? [tags] : []);
 
+  // Extract a clean topic title (first line or first 100 chars) for slug generation
+  const topicTitle = topic.split('\n')[0].trim().substring(0, 100);
+  const topicContext = topic; // Full topic as context/instructions
+
   try {
     // Determine if this topic requires product promotion (CTA in TLDR)
-    const isResumeRelated = topic.toLowerCase().match(/\b(resume|cv|curriculum vitae|ats|applicant tracking|job application|cover letter|interview prep|hiring)\b/);
-    const isCareerPlanningRelated = topic.toLowerCase().match(/\b(career plan|career development|career transition|career strategy|career goals|professional growth|skill development)\b/);
+    const isResumeRelated = topicContext.toLowerCase().match(/\b(resume|cv|curriculum vitae|ats|applicant tracking|job application|cover letter|interview prep|hiring)\b/);
+    const isCareerPlanningRelated = topicContext.toLowerCase().match(/\b(career plan|career development|career transition|career strategy|career goals|professional growth|skill development)\b/);
     const shouldIncludeProductCTA = isResumeRelated || isCareerPlanningRelated;
     const productLink = isResumeRelated ? '/resume-wizard' : (isCareerPlanningRelated ? '/career-planner' : null);
     const productName = isResumeRelated ? 'Resume Builder' : (isCareerPlanningRelated ? 'Career Planner' : null);
+    
+    // Get current date in YYYY-MM-DD format
+    const currentDate = new Date().toISOString().split('T')[0];
 
-    // 2. Generate blog post content using Gemini
-    const prompt = `You are an expert career and professional development blog writer with years of experience writing engaging, human-authored content. Your writing style is natural, conversational, and authentic - indistinguishable from content written by a professional human writer. Generate a comprehensive, engaging blog post about the following topic.
+    // 2. Generate blog post content using Gemini with structured JSON output
+    const prompt = `You are an expert career and professional development blog writer with years of experience writing engaging, human-authored content. Your writing style is natural, conversational, and authentic - indistinguishable from content written by a professional human writer.
 
-TOPIC: ${topic}
+TOPIC CONTEXT AND INSTRUCTIONS:
+${topicContext}
 
 ${sourceLink ? `SOURCE LINK TO LEARN MORE: ${sourceLink}` : ''}
 
@@ -106,25 +114,37 @@ ${additionalDetails ? `ADDITIONAL DETAILS/REQUIREMENTS: ${additionalDetails}` : 
 
 ${category ? `CATEGORY: ${category}` : ''}
 
-Generate a well-structured blog post in markdown format with the following requirements:
+IMPORTANT: The "topic" field above contains context and instructions for generating the blog post. Use this information to understand what to write about, but you must generate your own compelling, SEO-optimized title (one line, 50-60 characters).
 
-1. **Frontmatter**: Include YAML frontmatter with:
-   - title: A compelling, SEO-optimized title (50-60 characters) that includes primary keyword naturally
-   - description: A 1-2 sentence meta description (150-160 characters) that includes keywords and entices clicks
-   - author: ${author}
-   - date: Today's date in YYYY-MM-DD format (use ${new Date().toISOString().split('T')[0]})
-   - image: /blog/default-blog-image.jpg (or suggest a relevant image path)
-   - category: ${category}
-   - tags: ${tagsArray.length > 0 ? `Use these tags: ${tagsArray.join(', ')}. Add 1-2 more relevant tags if needed.` : 'Array of 3-5 relevant tags related to the topic'}
+You must return a valid JSON object with the following structure (NO markdown, NO code blocks, just pure JSON):
 
-2. **TLDR Section** (IMPORTANT - Place immediately after frontmatter, before introduction):
-   - Create a "## TL;DR" section (H2 heading)
-   - Include 2-4 concise bullet points summarizing the key takeaways
+{
+  "title": "A compelling, SEO-optimized one-line title (50-60 characters) that includes primary keyword naturally",
+  "description": "A 1-2 sentence meta description (150-160 characters) that includes keywords and entices clicks",
+  "image": "/blog/default-blog-image.jpg or a relevant image path suggestion",
+  "tags": ${tagsArray.length > 0 ? JSON.stringify(tagsArray) : '["tag1", "tag2", "tag3"] - Array of 3-5 relevant tags'},
+  "tldr": {
+    "bullets": ["First key takeaway", "Second key takeaway", "Third key takeaway", "Optional fourth takeaway"],
+    "cta": ${shouldIncludeProductCTA ? `"Optional natural CTA text with link to ${productName} (use format: Ready to get started? [Try our ${productName}](${productLink}) to [benefit])"` : 'null'}
+  },
+  "content": "Full markdown content starting with introduction, then sections, then conclusion. Do NOT include frontmatter or TLDR section in content - those are separate fields."
+}
+
+Requirements for the blog post:
+
+1. **Title** (in JSON):
+   - Must be ONE LINE ONLY (50-60 characters)
+   - SEO-optimized with primary keyword naturally included
+   - Compelling and click-worthy
+   - Do NOT use the topic field as the title - generate a proper title based on the content
+
+2. **TLDR** (in JSON):
+   - Include 2-4 concise bullet points summarizing key takeaways
    - Keep it scannable and under 60 words total
-   - ${shouldIncludeProductCTA ? `OPTIONALLY include a natural, non-intrusive call-to-action at the end of the TLDR section that links to ${productName} (use link: ${productLink}). Example format: "Ready to get started? [Try our ${productName}](${productLink}) to [benefit related to topic]." Make it feel like a helpful suggestion, not a hard sell.` : 'Do NOT include any call-to-action in the TLDR section - keep it purely informational.'}
+   - ${shouldIncludeProductCTA ? `OPTIONALLY include a natural, non-intrusive CTA in the "cta" field that links to ${productName} (use link: ${productLink}). Make it feel like a helpful suggestion, not a hard sell. If no CTA is appropriate, set "cta" to null.` : 'Set "cta" to null - no call-to-action in TLDR.'}
    - The TLDR should provide immediate value and help readers decide if they want to read the full article
 
-3. **Content Structure**:
+3. **Content** (in JSON - markdown format):
    - Start with an engaging introduction (2-3 paragraphs) that:
      * Naturally incorporates primary keywords in the first 100 words
      * Hooks the reader with a relatable scenario, question, or insight
@@ -255,11 +275,25 @@ ${sourceLink ? `IMPORTANT: Naturally incorporate information or insights from th
 CRITICAL FINAL INSTRUCTIONS:
 - Read through your generated content and ensure it sounds like it was written by a human expert, not an AI
 - Vary your sentence structures, paragraph lengths, and vocabulary throughout
-- Make sure the TLDR section is at the top (after frontmatter, before introduction)
 - Ensure SEO keywords are integrated naturally, not forced
 - The content should feel authentic, personal, and valuable - like advice from a trusted mentor
+- Generate a NEW title based on the content - do NOT use the topic field as the title
+- The title must be exactly one line, 50-60 characters, SEO-optimized
 
-Return ONLY the complete markdown content including the frontmatter. Do not include any additional text or explanations before or after the markdown.`;
+OUTPUT FORMAT:
+Return ONLY a valid JSON object. Do NOT include markdown code blocks, do NOT include any text before or after the JSON. The JSON must be valid and parseable. Example structure:
+
+{
+  "title": "Your generated title here",
+  "description": "Your meta description here",
+  "image": "/blog/relevant-image.jpg",
+  "tags": ["tag1", "tag2", "tag3"],
+  "tldr": {
+    "bullets": ["Point 1", "Point 2", "Point 3"],
+    "cta": "Optional CTA text or null"
+  },
+  "content": "Your full markdown content here..."
+}`;
 
     const geminiRes = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
       method: 'POST',
@@ -276,6 +310,50 @@ Return ONLY the complete markdown content including the frontmatter. Do not incl
           topP: 0.9, // Higher topP for more diverse vocabulary
           topK: 40,
           maxOutputTokens: 16384, // Increased for longer, comprehensive content (1200-2000 words)
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: 'object',
+            properties: {
+              title: {
+                type: 'string',
+                description: 'SEO-optimized one-line title (50-60 characters)'
+              },
+              description: {
+                type: 'string',
+                description: 'Meta description (150-160 characters)'
+              },
+              image: {
+                type: 'string',
+                description: 'Image path for the blog post'
+              },
+              tags: {
+                type: 'array',
+                items: { type: 'string' },
+                description: 'Array of 3-5 relevant tags'
+              },
+              tldr: {
+                type: 'object',
+                properties: {
+                  bullets: {
+                    type: 'array',
+                    items: { type: 'string' },
+                    description: '2-4 key takeaway bullet points'
+                  },
+                  cta: {
+                    type: 'string',
+                    nullable: true,
+                    description: 'Optional CTA text or null'
+                  }
+                },
+                required: ['bullets']
+              },
+              content: {
+                type: 'string',
+                description: 'Full markdown content (introduction, sections, conclusion)'
+              }
+            },
+            required: ['title', 'description', 'content', 'tldr', 'tags']
+          }
         }
       })
     });
@@ -307,24 +385,85 @@ Return ONLY the complete markdown content including the frontmatter. Do not incl
     }
 
     const geminiData = await geminiRes.json();
-    let raw = geminiData?.candidates?.[0]?.content?.parts?.[0] || geminiData;
-    let blogContent = '';
+    let blogData;
     
-    if (raw && typeof raw.text === 'string') {
-      blogContent = raw.text;
+    // With responseMimeType: 'application/json', the response structure may vary
+    // Try to extract JSON from different possible response formats
+    if (geminiData?.candidates?.[0]?.content?.parts) {
+      // Standard response format
+      const parts = geminiData.candidates[0].content.parts;
+      const textPart = parts.find(p => p.text);
+      
+      if (textPart && textPart.text) {
+        try {
+          // Response should already be JSON with responseMimeType
+          blogData = JSON.parse(textPart.text);
+        } catch (parseError) {
+          // Fallback: try to clean and parse
+          let responseText = textPart.text
+            .replace(/^```json\n?/g, '')
+            .replace(/^```\n?/g, '')
+            .replace(/\n?```$/g, '')
+            .trim();
+          blogData = JSON.parse(responseText);
+        }
+      } else {
+        throw new Error('No text content found in Gemini response');
+      }
+    } else if (typeof geminiData === 'object' && geminiData.title) {
+      // Direct JSON object (if API returns it directly)
+      blogData = geminiData;
     } else {
-      throw new Error('Invalid response format from Gemini API');
+      throw new Error(`Invalid response format from Gemini API: ${JSON.stringify(geminiData).substring(0, 500)}`);
     }
 
-    // Clean up the content (remove any markdown code block wrappers if present)
-    blogContent = blogContent
-      .replace(/^```markdown\n?/g, '')
-      .replace(/^```\n?/g, '')
-      .replace(/\n?```$/g, '')
-      .trim();
+    // Validate required fields
+    if (!blogData.title || !blogData.description || !blogData.content) {
+      throw new Error(`Invalid JSON structure from Gemini. Missing required fields. Received: ${JSON.stringify(Object.keys(blogData))}`);
+    }
 
-    // 3. Generate filename from topic
-    const slug = topic
+    // Ensure tags is an array
+    const blogTags = Array.isArray(blogData.tags) ? blogData.tags : (blogData.tags ? [blogData.tags] : []);
+    
+    // Build TLDR section
+    let tldrSection = '## TL;DR\n\n';
+    if (blogData.tldr && Array.isArray(blogData.tldr.bullets)) {
+      blogData.tldr.bullets.forEach(bullet => {
+        tldrSection += `*   ${bullet}\n`;
+      });
+    }
+    if (blogData.tldr && blogData.tldr.cta && blogData.tldr.cta !== 'null' && blogData.tldr.cta !== null) {
+      tldrSection += `\n${blogData.tldr.cta}\n`;
+    }
+
+    // Construct the markdown file with proper frontmatter
+    // Escape YAML special characters in title and description
+    const escapeYaml = (str) => {
+      if (!str) return '';
+      // If contains special characters, wrap in quotes
+      if (str.includes(':') || str.includes('"') || str.includes("'") || str.includes('\n')) {
+        return `"${str.replace(/"/g, '\\"')}"`;
+      }
+      return str;
+    };
+
+    const frontmatter = `---
+title: ${escapeYaml(blogData.title)}
+description: ${escapeYaml(blogData.description)}
+author: ${author}
+date: ${currentDate}
+image: ${blogData.image || '/blog/default-blog-image.jpg'}
+category: ${category}
+tags: ${JSON.stringify(blogTags)}
+---
+
+`;
+
+    // Combine frontmatter, TLDR, and content
+    const blogContent = frontmatter + tldrSection + '\n' + blogData.content;
+
+    // 3. Generate filename from generated title (not from topic)
+    const slug = blogData.title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '')
