@@ -669,6 +669,34 @@ Requirements for the blog post:
       }
       ::
    
+   **19. TLDRBox** - Summary box for key takeaways:
+      Syntax:
+      ::TLDRBox{
+        title="TL;DR"
+        :bullets='[
+          "Key takeaway 1",
+          "Key takeaway 2",
+          "Key takeaway 3"
+        ]'
+        cta="Optional CTA text with markdown links"
+      }
+      ::
+      Props:
+      - title (String): Box title (default: "TL;DR")
+      - bullets (Array): Array of bullet point strings
+      - cta (String, optional): Call-to-action text (can include markdown links)
+      Use for: Article summaries, key takeaways, quick overviews
+      Example:
+      ::TLDRBox{
+        :bullets='[
+          "Great leaders inspire by focusing on why",
+          "Communicate your purpose to connect deeply",
+          "Understanding your why guides career decisions"
+        ]'
+        cta="Ready to get started? [Try our Resume Builder](https://careersmithery.com/solutions/resume-builder)"
+      }
+      ::
+   
    **COMPONENT USAGE REQUIREMENTS**:
    - Use at least 3-5 different components per blog post
    - Mix components naturally throughout the content - don't cluster them all together
@@ -907,19 +935,24 @@ Return ONLY a valid JSON object. Do NOT include markdown code blocks, do NOT inc
     // Ensure tags is an array
     const blogTags = Array.isArray(blogData.tags) ? blogData.tags : (blogData.tags ? [blogData.tags] : []);
     
-    // Build TLDR section for content
-    let tldrSection = '## TL;DR\n\n';
-    if (blogData.tldr && Array.isArray(blogData.tldr.bullets)) {
-      blogData.tldr.bullets.forEach(bullet => {
-        tldrSection += `*   ${bullet}\n`;
-      });
-    }
-    if (blogData.tldr && blogData.tldr.cta && blogData.tldr.cta !== 'null' && blogData.tldr.cta !== null) {
-      tldrSection += `\n${blogData.tldr.cta}\n`;
+    // Build TLDR section using TLDRBox component
+    let tldrSection = '';
+    if (blogData.tldr && Array.isArray(blogData.tldr.bullets) && blogData.tldr.bullets.length > 0) {
+      const bulletsJson = JSON.stringify(blogData.tldr.bullets);
+      const ctaText = (blogData.tldr.cta && blogData.tldr.cta !== 'null' && blogData.tldr.cta !== null) 
+        ? blogData.tldr.cta.replace(/"/g, '&quot;').replace(/\n/g, ' ') 
+        : '';
+      
+      if (ctaText) {
+        // Use single quotes for CTA to avoid issues with markdown links
+        tldrSection = `::TLDRBox{:bullets='${bulletsJson}' cta='${ctaText.replace(/'/g, "\\'")}'}\n::\n\n`;
+      } else {
+        tldrSection = `::TLDRBox{:bullets='${bulletsJson}'}\n::\n\n`;
+      }
     }
 
     // Combine TLDR and content
-    const fullContent = tldrSection + '\n' + blogData.content;
+    const fullContent = tldrSection + blogData.content;
 
     // Generate slug from title
     const slug = blogData.title
