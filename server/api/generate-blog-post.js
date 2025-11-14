@@ -264,115 +264,412 @@ Requirements for the blog post:
 10. **Blog Components (CRITICAL - MUST USE THESE)**:
    You MUST use Vue blog components throughout your content to make it visually engaging and interactive. These components use MDC (Markdown Components) syntax with double colons.
    
-   **Component Syntax**: Use ::ComponentName{props} format. For arrays/objects, use :propName (Vue binding). For strings, use propName="value".
+   **Component Syntax Rules**:
+   - Use ::ComponentName{props} format with double colons
+   - For arrays/objects, use :propName='[...]' syntax (Vue binding with single quotes)
+   - For strings, use propName="value" syntax (double quotes)
+   - For booleans, use propName="true" or propName="false"
+   - Always close components with ::
+   - Component content goes between opening and closing tags
    
-   **Available Components and When to Use Them**:
+   **ALL AVAILABLE COMPONENTS WITH FULL DOCUMENTATION**:
    
-   a. **CalloutBox** - For important notes, warnings, tips, or information boxes:
-      Use this syntax:
+   **1. CalloutBox** - Alert-style boxes for important information:
+      Syntax:
       ::CalloutBox{type="info" title="Important Note"}
       Your important information here
       ::
-      Types: info, warning, success, error, tip
-      Use for: Important callouts, warnings, tips, success messages
+      Props:
+      - type (String): "info", "warning", "success", "error", "tip"
+      - title (String): Heading text (default: "Note")
+      Use for: Important callouts, warnings, tips, success messages, information boxes
+      Example:
+      ::CalloutBox{type="warning" title="Reality Check"}
+      Sending the same generic resume to hundreds of jobs is no longer effective.
+      ::
    
-   b. **TipBox** - For pro tips and advice:
-      Use this syntax:
+   **2. TipBox** - Highlighted tip/advice boxes:
+      Syntax:
       ::TipBox{title="Pro Tip"}
       Your tip content here
       ::
-      Use for: Actionable tips, career advice, best practices
+      Props:
+      - title (String): Tip title (default: "Pro Tip")
+      Use for: Actionable tips, career advice, best practices, helpful hints
+      Example:
+      ::TipBox{title="Pro Tip"}
+      Use action verbs like "Spearheaded" instead of "Managed projects" to show impact.
+      ::
    
-   c. **HighlightBox** - For highlighted content with CTAs:
-      Use this syntax:
+   **3. HighlightBox** - Featured content sections with CTAs:
+      Syntax:
       ::HighlightBox{title="Try Our Tool" icon="🚀" color="purple" ctaText="Get Started" ctaLink="https://careersmithery.com/solutions/resume-builder"}
       Description of the tool or feature
       ::
-      Colors: blue, green, purple, orange, pink
-      Use for: Product highlights, feature showcases, CTAs
-   
-   d. **StepList** - For step-by-step instructions:
-      Use this syntax:
-      ::StepList{:steps='[
-        { title: "Step 1", description: "Description here", tip: "Optional tip" },
-        { title: "Step 2", description: "Description here" }
-      ]'}
+      Props:
+      - title (String): Box title
+      - icon (String): Emoji or icon
+      - color (String): "blue", "green", "purple", "orange", "pink"
+      - ctaText (String): Call-to-action button text
+      - ctaLink (String): Link for CTA button
+      Use for: Product highlights, feature showcases, CTAs, promotional content
+      Example:
+      ::HighlightBox{title="AI-Powered Resume Optimization" icon="🤖" color="purple" ctaText="Try Our AI Resume Builder" ctaLink="https://careersmithery.com/solutions/resume-builder"}
+      Our AI analyzes job descriptions and optimizes your resume to match exactly what employers are looking for.
       ::
-      Use for: Tutorials, how-to guides, processes
    
-   e. **ComparisonTable** - For side-by-side comparisons:
-      Use this syntax:
+   **4. QuoteBlock** - Beautiful blockquotes with attribution:
+      Syntax:
+      ::QuoteBlock{author="Steve Jobs" source="Stanford Commencement Speech" avatar="/path"}
+      Quote text here
+      ::
+      Props:
+      - author (String): Name of person being quoted
+      - source (String): Source of the quote
+      - avatar (String, optional): URL to author's avatar image
+      Use for: Inspirational quotes, expert opinions, testimonials, memorable statements
+      Example:
+      ::QuoteBlock{author="Sarah Chen" source="Software Engineer at Google"}
+      I was applying to jobs for 6 months with no luck. After using Career Smithery's AI tools, I got 3 interviews in 2 weeks.
+      ::
+   
+   **5. StatsGrid** - Display key statistics and metrics:
+      Syntax:
+      ::StatsGrid{:stats='[
+        { value: "85%", label: "Success Rate", description: "Of our users land interviews" },
+        { value: "2.5x", label: "More Callbacks", description: "Compared to generic resumes" }
+      ]' columns="3"}
+      ::
+      Props:
+      - stats (Array): Array of stat objects with value, label, and optional description
+      - columns (Number): Number of columns - "2", "3", or "4"
+      Use for: Key metrics, statistics, impressive numbers, data visualization
+      Example:
+      ::StatsGrid{:stats='[
+        { value: "75%", label: "ATS Rejection Rate", description: "Of resumes never reach human reviewers" },
+        { value: "3-5 sec", label: "Initial Screen Time", description: "Average time recruiters spend" }
+      ]' columns="3"}
+      ::
+   
+   **6. ComparisonTable** - Side-by-side comparisons:
+      Syntax:
       ::ComparisonTable{
-        leftHeader="Before" 
-        rightHeader="After"
+        leftHeader="Traditional Approach" 
+        rightHeader="Modern Approach"
         :rows='[
-          { left: "Text", right: "Text", leftIcon: "❌", rightIcon: "✅" }
+          { left: "Mass apply to hundreds", right: "Target 10-15 ideal positions", leftIcon: "❌", rightIcon: "✅" },
+          { left: "One generic resume", right: "Customized resume for each role", leftIcon: "❌", rightIcon: "✅" }
         ]'
       }
       ::
-      Use for: Comparing approaches, methods, or options
-   
-   f. **ProConsList** - For pros and cons:
-      Use this syntax:
-      ::ProConsList{
-        :pros='["Pro 1", "Pro 2"]'
-        :cons='["Con 1", "Con 2"]'
-        prosTitle="Benefits"
-        consTitle="Drawbacks"
+      Props:
+      - leftHeader (String): Header for left column
+      - rightHeader (String): Header for right column
+      - rows (Array): Array of row objects with left, right, and optional leftIcon, rightIcon
+      Use for: Comparing approaches, methods, options, before/after scenarios
+      Example:
+      ::ComparisonTable{
+        leftHeader="Traditional Resume" 
+        rightHeader="AI-Optimized Resume"
+        :rows='[
+          { left: "Generic objective", right: "Tailored summary", leftIcon: "❌", rightIcon: "✅" },
+          { left: "One-size-fits-all", right: "Keywords matched", leftIcon: "❌", rightIcon: "✅" }
+        ]'
       }
       ::
-      Use for: Evaluating options, decision-making content
    
-   g. **StatsGrid** - For displaying statistics:
-      Use this syntax:
-      ::StatsGrid{:stats='[
-        { value: "85%", label: "Success Rate", description: "Details here" }
-      ]' columns="3"}
+   **7. ProConsList** - Pros and cons comparison:
+      Syntax:
+      ::ProConsList{
+        :pros='[
+          "Tailored to job descriptions",
+          "Passes ATS screening",
+          "Highlights relevant skills"
+        ]'
+        :cons='[
+          "Takes time to customize",
+          "Requires job description analysis"
+        ]'
+        prosTitle="Benefits"
+        consTitle="Considerations"
+      }
       ::
-      Use for: Key metrics, statistics, impressive numbers
+      Props:
+      - pros (Array): Array of pro statements
+      - cons (Array): Array of con statements
+      - prosTitle (String): Title for pros section (default: "Pros")
+      - consTitle (String): Title for cons section (default: "Cons")
+      Use for: Evaluating options, decision-making content, balanced viewpoints
+      Example:
+      ::ProConsList{
+        :pros='[
+          "AI tools reduce time spent",
+          "Data-driven approach leads to better results",
+          "Remote opportunities expand job market"
+        ]'
+        :cons='[
+          "Requires initial time investment",
+          "Learning curve for new technologies"
+        ]'
+        prosTitle="Advantages"
+        consTitle="Challenges"
+      }
+      ::
    
-   h. **ChecklistBox** - For interactive checklists:
-      Use this syntax:
+   **8. StepList** - Step-by-step instructions with visual timeline:
+      Syntax:
+      ::StepList{:steps='[
+        { title: "Step 1", description: "Do this first", tip: "Optional tip here" },
+        { title: "Step 2", description: "Then do this" }
+      ]'}
+      ::
+      Props:
+      - steps (Array): Array of step objects with title, description, and optional tip
+      Use for: Tutorials, how-to guides, processes, numbered instructions
+      Example:
+      ::StepList{:steps='[
+        { title: "Define Your Target", description: "Identify 3-5 specific job titles", tip: "Use LinkedIn to find people in these roles" },
+        { title: "Optimize Your Foundation", description: "Create a master resume", tip: "Use our AI Resume Builder" }
+      ]'}
+      ::
+   
+   **9. TimelineBlock** - Visual timeline for processes or events:
+      Syntax:
+      ::TimelineBlock{:events='[
+        { title: "Event Title", description: "Event details", date: "2025", icon: "📅", tags: ["tag1", "tag2"] }
+      ]'}
+      ::
+      Props:
+      - events (Array): Array of event objects with title, description, optional date, icon, tags
+      Use for: Processes, career paths, historical events, chronological sequences
+      Example:
+      ::TimelineBlock{:events='[
+        { title: "Resume & Cover Letter Tools", description: "Use AI-powered builders", icon: "📄", tags: ["Resume", "AI"] },
+        { title: "Job Search Platforms", description: "Explore niche job boards", icon: "🔍", tags: ["Platforms"] }
+      ]'}
+      ::
+   
+   **10. AccordionList** - Collapsible FAQ/Content sections:
+      Syntax:
+      ::AccordionList{:items='[
+        { title: "How long does it take?", content: "Our AI can analyze and optimize in under 2 minutes." },
+        { title: "Is my data secure?", content: "Yes! We use enterprise-grade encryption." }
+      ]' allowMultiple="false"}
+      ::
+      Props:
+      - items (Array): Array of objects with title and content
+      - allowMultiple (Boolean): Allow multiple items open at once - "true" or "false"
+      Use for: FAQs, expandable sections, detailed explanations, collapsible content
+      Example:
+      ::AccordionList{:items='[
+        { title: "Applying Without Strategy", content: "Casting a wide net leads to burnout. Focus on 10-15 ideal positions." },
+        { title: "Ignoring ATS Optimization", content: "75% of resumes are rejected by ATS before humans see them." }
+      ]' allowMultiple="false"}
+      ::
+   
+   **11. TableOfContents** - Automatic table of contents:
+      Syntax:
+      ::TableOfContents{
+        title="In This Article"
+        :items='[
+          { text: "Introduction", href: "#introduction", level: 2 },
+          { text: "Getting Started", href: "#getting-started", level: 2 },
+          { text: "Step 1: Setup", href: "#step-1", level: 3 }
+        ]'
+      }
+      ::
+      Props:
+      - title (String): TOC title
+      - items (Array): Array of items with text, href, level, optional active
+      Use for: Long-form content, navigation, article structure
+      Example:
+      ::TableOfContents{:items='[
+        { text: "Why Traditional Methods Don't Work", href: "#why-traditional", level: 2 },
+        { text: "The Modern Job Search Framework", href: "#framework", level: 2 }
+      ]'}
+      ::
+   
+   **12. ChecklistBox** - Interactive checklists with progress tracking:
+      Syntax:
       ::ChecklistBox{
-        title="Your Checklist"
-        :items='["Item 1", "Item 2", "Item 3"]'
+        title="Resume Optimization Checklist"
+        :items='[
+          "Remove objective statement, add professional summary",
+          "Include relevant keywords from job description",
+          "Quantify achievements with numbers"
+        ]'
         showProgress="true"
       }
       ::
-      Use for: Action items, to-do lists, verification steps
-   
-   i. **AccordionList** - For FAQs or expandable content:
-      Use this syntax:
-      ::AccordionList{:items='[
-        { title: "Question", content: "Answer here" }
-      ]' allowMultiple="false"}
+      Props:
+      - title (String): Checklist title
+      - items (Array): Array of checklist item strings
+      - showProgress (Boolean): Show progress bar - "true" or "false"
+      Use for: Action items, to-do lists, verification steps, actionable checklists
+      Example:
+      ::ChecklistBox{
+        title="Weekly Job Search Action Items"
+        :items='[
+          "Research 3-5 new target companies",
+          "Customize resume for each application",
+          "Connect with 10 new people on LinkedIn"
+        ]'
+        showProgress="true"
+      }
       ::
-      Use for: FAQs, expandable sections, detailed explanations
    
-   j. **QuoteBlock** - For quotes:
-      Use this syntax:
-      ::QuoteBlock{author="Name" source="Source"}
-      Quote text here
-      ::
-      Use for: Inspirational quotes, expert opinions, testimonials
-   
-   k. **FeatureGrid** - For showcasing features:
-      Use this syntax:
+   **13. FeatureGrid** - Grid layout for features/benefits:
+      Syntax:
       ::FeatureGrid{:features='[
-        { icon: "🎯", title: "Feature", description: "Description", link: "/link" }
+        { icon: "🎯", title: "Strategic Targeting", description: "Focus on roles that match", link: "/link" },
+        { icon: "✨", title: "Resume Optimization", description: "Use AI to tailor your resume" }
       ]' columns="3"}
       ::
-      Use for: Feature showcases, benefit lists, tool highlights
-   
-   l. **TimelineBlock** - For timelines:
-      Use this syntax:
-      ::TimelineBlock{:events='[
-        { title: "Event", description: "Details", date: "2025", icon: "📅", tags: ["tag"] }
-      ]'}
+      Props:
+      - features (Array): Array of feature objects with icon, title, description, optional link
+      - columns (Number): Number of columns - "1", "2", or "3"
+      Use for: Feature showcases, benefit lists, tool highlights, grid layouts
+      Example:
+      ::FeatureGrid{:features='[
+        { icon: "🎯", title: "Strategic Targeting", description: "Focus on roles that match", link: "https://careersmithery.com/solutions/career-planner" },
+        { icon: "✨", title: "Resume Optimization", description: "Use AI to tailor your resume", link: "https://careersmithery.com/solutions/resume-builder" }
+      ]' columns="3"}
       ::
-      Use for: Processes, career paths, historical events
    
-   **Component Usage Requirements**:
+   **14. ResourceCard** - Featured resource/article cards:
+      Syntax:
+      ::ResourceCard{
+        title="The Ultimate Resume Guide"
+        description="A comprehensive guide to creating resumes"
+        image="/images/resource.jpg"
+        category="Guide"
+        :tags='["Resume", "Career", "Job Search"]'
+        author="Career Smithery Team"
+        date="Oct 2025"
+        link="/blog/ultimate-resume-guide"
+        linkText="Read Guide"
+        external="false"
+      }
+      ::
+      Props:
+      - title (String): Resource title
+      - description (String): Resource description
+      - image (String): Resource image URL
+      - category (String): Category badge
+      - tags (Array): Array of tag strings
+      - author (String): Author name
+      - date (String): Publication date
+      - link (String): Resource link
+      - linkText (String): Link button text
+      - external (Boolean): Open in new tab - "true" or "false"
+      Use for: Featured resources, related articles, tool recommendations
+      Example:
+      ::ResourceCard{
+        title="Career Planning Masterclass"
+        description="A comprehensive guide to mapping your career trajectory"
+        category="Course"
+        :tags='["Career Planning", "Strategy"]'
+        author="Career Smithery Team"
+        date="Oct 2025"
+        link="https://careersmithery.com/solutions/career-planner"
+        linkText="Start Planning"
+      }
+      ::
+   
+   **15. CodeBlock** - Syntax highlighted code with copy button:
+      Syntax:
+      ::CodeBlock{language="javascript"}
+      const code = "Your code here";
+      console.log(code);
+      ::
+      Props:
+      - language (String): Programming language (e.g., "javascript", "python", "bash")
+      - code (String, optional): Code to copy (uses slot content if not provided)
+      Use for: Code examples, technical tutorials, code snippets
+      Example:
+      ::CodeBlock{language="javascript"}
+      const resume = {
+        title: "Software Engineer",
+        skills: ["JavaScript", "React", "Node.js"]
+      };
+      ::
+   
+   **16. VideoEmbed** - Embed videos from YouTube, Vimeo, or Loom:
+      Syntax:
+      ::VideoEmbed{
+        url="https://www.youtube.com/watch?v=..."
+        title="Video Title"
+        caption="Optional caption below video"
+      }
+      ::
+      Props:
+      - url (String): Video URL (YouTube, Vimeo, or Loom)
+      - title (String): Video title for accessibility
+      - caption (String, optional): Caption below video
+      Use for: Video tutorials, demonstrations, embedded media
+      Example:
+      ::VideoEmbed{
+        url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        title="How to Optimize Your Resume"
+        caption="Watch our step-by-step guide"
+      }
+      ::
+   
+   **17. ImageComparison** - Before/after image comparison:
+      Syntax:
+      ::ImageComparison{
+        beforeImage="/images/resume-before.png"
+        afterImage="/images/resume-after.png"
+        beforeLabel="Before"
+        afterLabel="After"
+        beforeCaption="Generic resume"
+        afterCaption="Optimized resume"
+      }
+      ::
+      Props:
+      - beforeImage (String): URL to before image
+      - afterImage (String): URL to after image
+      - beforeLabel (String): Label for before image (default: "Before")
+      - afterLabel (String): Label for after image (default: "After")
+      - beforeCaption (String, optional): Caption for before image
+      - afterCaption (String, optional): Caption for after image
+      Use for: Visual comparisons, before/after scenarios, transformation examples
+      Example:
+      ::ImageComparison{
+        beforeImage="/images/resume-before.png"
+        afterImage="/images/resume-after.png"
+        beforeLabel="Before"
+        afterLabel="After"
+        beforeCaption="Generic resume with poor formatting"
+        afterCaption="Optimized resume with ATS-friendly layout"
+      }
+      ::
+   
+   **18. NewsletterSignup** - Newsletter subscription form:
+      Syntax:
+      ::NewsletterSignup{
+        title="Join Our Career Newsletter"
+        description="Get weekly tips and insights delivered to your inbox"
+        buttonText="Subscribe Now"
+        disclaimer="No spam, ever. Unsubscribe anytime."
+      }
+      ::
+      Props:
+      - title (String): Form title
+      - description (String): Form description
+      - buttonText (String): Submit button text
+      - disclaimer (String): Privacy disclaimer text
+      Use for: Email collection, newsletter signups, lead generation
+      Example:
+      ::NewsletterSignup{
+        title="Join 10,000+ Job Seekers"
+        description="Get weekly job search tips and exclusive strategies"
+        buttonText="Subscribe Free"
+        disclaimer="We respect your privacy. Unsubscribe anytime."
+      }
+      ::
+   
+   **COMPONENT USAGE REQUIREMENTS**:
    - Use at least 3-5 different components per blog post
    - Mix components naturally throughout the content - don't cluster them all together
    - Use CalloutBox or TipBox for important information (use 2-4 times per post)
@@ -382,11 +679,22 @@ Requirements for the blog post:
    - Use HighlightBox for product/tool CTAs (in addition to regular markdown CTAs)
    - Use ChecklistBox for actionable checklists
    - Use AccordionList for FAQs if the topic warrants it
+   - Use TableOfContents for long-form content (1000+ words)
+   - Use FeatureGrid to showcase multiple features or benefits
+   - Use ResourceCard to highlight related resources or tools
    - Components should enhance the content, not distract from it
    - Place components strategically where they add value
+   - Always use correct syntax with proper prop formatting
+   
+   **CRITICAL SYNTAX NOTES**:
+   - Arrays MUST use single quotes: :propName='[...]'
+   - Strings MUST use double quotes: propName="value"
+   - Booleans MUST use strings: propName="true" or propName="false"
+   - Always close components with ::
+   - Component content goes between opening and closing tags
+   - For nested content in components, use regular markdown
    
    **Example Component Usage in Content**:
-   Example structure:
    ## Introduction
    
    Your introduction paragraph here...
@@ -406,19 +714,41 @@ Requirements for the blog post:
    ## Step-by-Step Guide
    
    ::StepList{:steps='[
-     { title: "Step 1", description: "Do this first" },
+     { title: "Step 1", description: "Do this first", tip: "Helpful tip" },
      { title: "Step 2", description: "Then do this" }
    ]'}
    ::
    
-   ## Comparison
+   ## Comparison Section
    
    ::ComparisonTable{
      leftHeader="Traditional Approach" 
      rightHeader="Better Approach"
      :rows='[
-       { left: "Old way", right: "New way", leftIcon: "❌", rightIcon: "✅" }
+       { left: "Old way", right: "New way", leftIcon: "❌", rightIcon: "✅" },
+       { left: "Another old way", right: "Another new way", leftIcon: "❌", rightIcon: "✅" }
      ]'
+   }
+   ::
+   
+   ## Statistics Section
+   
+   ::StatsGrid{:stats='[
+     { value: "85%", label: "Success Rate", description: "Of users land interviews" },
+     { value: "2.5x", label: "More Callbacks", description: "Compared to generic resumes" }
+   ]' columns="3"}
+   ::
+   
+   ## Action Items
+   
+   ::ChecklistBox{
+     title="Your Action Checklist"
+     :items='[
+       "Item 1 to complete",
+       "Item 2 to complete",
+       "Item 3 to complete"
+     ]'
+     showProgress="true"
    }
    ::
 

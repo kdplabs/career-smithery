@@ -46,7 +46,7 @@
     <!-- Article Content -->
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="bg-white rounded-lg shadow-md p-8 mb-12 prose prose-slate max-w-none">
-        <div v-if="article && renderedContent" v-html="renderedContent"></div>
+        <MarkdownContent v-if="article" :content="article.content" />
       </div>
 
       <!-- Tags Section -->
@@ -115,14 +115,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue'
-import { marked } from 'marked'
-
-// Configure marked for safe rendering
-marked.setOptions({
-  breaks: true,
-  gfm: true
-})
+import { computed } from 'vue'
 
 // Get the slug from route params
 const route = useRoute()
@@ -135,35 +128,6 @@ const { data: article } = await useAsyncData(`blog-${slug}`, () => getPostBySlug
 
 // Fetch all blog posts for related articles
 const { data: allPosts } = await useAsyncData('all-blog-posts', () => getAllPosts())
-
-// Render markdown content to HTML with sanitization
-const renderedContent = ref('')
-
-onMounted(async () => {
-  if (article.value?.content) {
-    const html = marked(article.value.content)
-    
-    // Sanitize HTML to prevent XSS attacks (client-side only)
-    if (process.client) {
-      try {
-        const DOMPurify = (await import('dompurify')).default
-        renderedContent.value = DOMPurify.sanitize(html)
-      } catch (error) {
-        // Fallback to unsanitized if DOMPurify fails
-        console.warn('DOMPurify failed to load, using unsanitized HTML')
-        renderedContent.value = html
-      }
-    } else {
-      // Server-side: return unsanitized (will be sanitized on client)
-      renderedContent.value = html
-    }
-  }
-})
-
-// For SSR, render without sanitization (will be sanitized on client)
-if (!renderedContent.value && article.value?.content) {
-  renderedContent.value = marked(article.value.content)
-}
 
 // Compute related posts (same category, excluding current post)
 const relatedPosts = computed(() => {
