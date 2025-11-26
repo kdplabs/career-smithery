@@ -15,8 +15,8 @@
               <span class="text-sm font-medium text-gray-700">
                 Credits: {{ userCredits }}
               </span>
-              <span v-if="userCredits < 10" class="text-xs text-red-600 font-medium">
-                (Need 10 credits)
+              <span v-if="userCredits < requiredCredits" class="text-xs text-red-600 font-medium">
+                (Need {{ requiredCredits }} credits)
               </span>
             </div>
             <NuxtLink 
@@ -49,13 +49,13 @@
       </div>
 
       <!-- Credit Warning -->
-      <div v-if="!loadingCredits && userCredits < 10" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+      <div v-if="!loadingCredits && userCredits < requiredCredits" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
         <div class="flex items-center gap-3">
           <Icon name="i-heroicons-exclamation-triangle" class="w-5 h-5 text-red-600" />
           <div>
             <h3 class="text-sm font-medium text-red-800">Insufficient Credits</h3>
             <p class="text-sm text-red-700 mt-1">
-              You need at least 10 credits to generate a personalized report. 
+              You need at least {{ requiredCredits }} credits to generate a personalized report. 
               <NuxtLink to="/credits" class="font-medium underline hover:no-underline">
                 Purchase credits here
               </NuxtLink>
@@ -141,7 +141,7 @@
               <div class="flex justify-end">
                 <button
                   type="submit"
-                  :disabled="!formData.linkedinText.trim() || isGenerating || userCredits < 10"
+                  :disabled="!formData.linkedinText.trim() || isGenerating || userCredits < requiredCredits"
                   class="inline-flex items-center px-6 py-3 text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all"
                 >
                   <Icon name="i-mdi-brain" class="mr-2" />
@@ -166,6 +166,7 @@ const route = useRoute()
 const router = useRouter()
 const { user } = useAuth()
 const supabase = useSupabaseClient()
+const { getFeatureCredits } = useFeatureCredits()
 
 const userCredits = ref(null)
 const loadingCredits = ref(true)
@@ -173,6 +174,7 @@ const isGenerating = ref(false)
 const progress = ref(0)
 const loadingMessage = ref('Analyzing your profile...')
 const error = ref('')
+const requiredCredits = ref(1) // Default to 1, will be fetched from database
 
 const formData = ref({
   linkedinText: ''
@@ -221,8 +223,8 @@ const submitForm = async () => {
     return
   }
 
-  if (userCredits.value < 10) {
-    error.value = 'You need at least 10 credits to generate a personalized report.'
+  if (userCredits.value < requiredCredits.value) {
+    error.value = `You need at least ${requiredCredits.value} credits to generate a personalized report.`
     return
   }
 
@@ -448,6 +450,18 @@ async function fetchUserCredits() {
   }
 }
 
+// Function to fetch required credits for personalized report
+async function fetchRequiredCredits() {
+  try {
+    const credits = await getFeatureCredits('personalized_report')
+    requiredCredits.value = credits
+  } catch (err) {
+    console.error('Error fetching required credits:', err)
+    // Default to 1 if there's an error
+    requiredCredits.value = 1
+  }
+}
+
 // Load LinkedIn text from localStorage if it exists
 const loadLinkedInText = () => {
   try {
@@ -481,6 +495,11 @@ watch(user, (newUser) => {
   }
   // Don't redirect non-authenticated users - show login prompt instead
 }, { immediate: true })
+
+// Fetch required credits on mount
+onMounted(async () => {
+  await fetchRequiredCredits()
+})
 
 // Cleanup on unmount
 onBeforeUnmount(() => {

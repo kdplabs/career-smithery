@@ -25,7 +25,17 @@ export default defineEventHandler(async (event) => {
     return
   }
 
-  // 1. Check available_credit in user_subscriptions
+  // 1. Get required credits for personalized_report feature
+  const { data: featureCredit, error: featureError } = await supabase
+    .from('feature_credits')
+    .select('credits_required')
+    .eq('feature_name', 'personalized_report')
+    .eq('is_active', true)
+    .single()
+  
+  const requiredCredits = featureCredit?.credits_required || 1 // Default to 1 if not found
+
+  // 2. Check available_credit in user_subscriptions
   const { data: sub, error: subError } = await supabase
     .from('user_subscriptions')
     .select('available_credit')
@@ -38,7 +48,7 @@ export default defineEventHandler(async (event) => {
     event.node.res.end('No active subscription or credit info found')
     return
   }
-  if ((sub.available_credit || 0) < 1) {
+  if ((sub.available_credit || 0) < requiredCredits) {
     event.node.res.writeHead(402)
     event.node.res.end('Not enough credits')
     return
@@ -159,10 +169,10 @@ export default defineEventHandler(async (event) => {
     return
   }
 
-  // 5. Deduct 1 credit from user_subscriptions
+  // 5. Deduct required credits from user_subscriptions
   const { error: creditError } = await supabase
     .from('user_subscriptions')
-    .update({ available_credit: (sub.available_credit || 1) - 1 })
+    .update({ available_credit: (sub.available_credit || requiredCredits) - requiredCredits })
     .eq('user_id', user_id)
   if (creditError) {
     event.node.res.writeHead(500)
