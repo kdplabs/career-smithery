@@ -28,10 +28,34 @@ export const useAuth = () => {
     try {
       // console.log('signInWithGoogle called with redirectTo:', redirectTo)
       
-      // Store the redirect URL in localStorage before OAuth
+      // Normalize redirectTo to be a path (not a full URL) to avoid issues with Supabase
+      let normalizedRedirectTo = redirectTo
       if (redirectTo && typeof window !== 'undefined') {
-        localStorage.setItem('authRedirectUrl', redirectTo)
-        // console.log('Stored authRedirectUrl in localStorage:', redirectTo)
+        try {
+          // If it's a full URL, extract just the pathname + search
+          if (redirectTo.startsWith('http://') || redirectTo.startsWith('https://')) {
+            const url = new URL(redirectTo)
+            normalizedRedirectTo = url.pathname + url.search
+          } else if (redirectTo.startsWith(window.location.origin)) {
+            // Handle case where origin is included but not protocol
+            normalizedRedirectTo = redirectTo.replace(window.location.origin, '')
+          }
+          // Ensure it starts with / if it's a path
+          if (normalizedRedirectTo && !normalizedRedirectTo.startsWith('/')) {
+            normalizedRedirectTo = '/' + normalizedRedirectTo
+          }
+        } catch (e) {
+          // If URL parsing fails, assume it's already a path
+          if (!normalizedRedirectTo.startsWith('/')) {
+            normalizedRedirectTo = '/' + normalizedRedirectTo
+          }
+        }
+        
+        // Store the normalized redirect URL in localStorage before OAuth
+        if (normalizedRedirectTo) {
+          localStorage.setItem('authRedirectUrl', normalizedRedirectTo)
+          // console.log('Stored authRedirectUrl in localStorage:', normalizedRedirectTo)
+        }
       }
       
       // Always redirect to auth callback first, which will handle the final redirect

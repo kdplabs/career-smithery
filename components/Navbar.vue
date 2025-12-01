@@ -269,10 +269,10 @@ const mobileMenuOpen = ref(false)
 const showRegisterPrompt = ref(false)
 const registerPromptMessage = ref('Please log in to access all features.')
 
-// Get current page URL for redirect
+// Get current page path for redirect (not full URL to avoid Supabase parsing issues)
 const currentPageUrl = computed(() => {
   if (typeof window !== 'undefined') {
-    return window.location.origin + window.location.pathname + window.location.search
+    return window.location.pathname + window.location.search
   }
   return null
 })

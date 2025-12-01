@@ -264,14 +264,35 @@ watch(
         // console.log('Auth callback - linkedinText:', linkedinText)
         
         if (storedRedirectUrl) {
-          // If we have a stored redirect URL, use it and clear it (highest priority)
-          // console.log('Redirecting to stored URL:', storedRedirectUrl)
+          // If we have a stored redirect URL, normalize it and use it (highest priority)
+          let redirectPath = storedRedirectUrl
+          
+          // Ensure it's a path, not a full URL
+          try {
+            if (storedRedirectUrl.startsWith('http://') || storedRedirectUrl.startsWith('https://')) {
+              const url = new URL(storedRedirectUrl)
+              redirectPath = url.pathname + url.search
+            } else if (storedRedirectUrl.startsWith(window.location.origin)) {
+              redirectPath = storedRedirectUrl.replace(window.location.origin, '')
+            }
+            // Ensure it starts with /
+            if (!redirectPath.startsWith('/')) {
+              redirectPath = '/' + redirectPath
+            }
+          } catch (e) {
+            // If parsing fails, ensure it starts with /
+            if (!redirectPath.startsWith('/')) {
+              redirectPath = '/' + redirectPath
+            }
+          }
+          
+          // console.log('Redirecting to stored URL:', redirectPath)
           if (typeof window !== 'undefined') {
             localStorage.removeItem('authRedirectUrl')
           }
           // Add a small delay to ensure user state is fully established
           setTimeout(() => {
-            router.push(storedRedirectUrl)
+            router.push(redirectPath)
           }, 200)
         } else if (linkedinText) {
           // If we have LinkedIn text but no stored redirect, redirect to summary with the text and focus on input section

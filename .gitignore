@@ -25,3 +25,7 @@ logs
 .env
 .env.*
 !.env.example
+
+# Git helper scripts
+git-push.sh
+git-check-sync.sh
