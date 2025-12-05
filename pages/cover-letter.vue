@@ -331,9 +331,54 @@ import CoverLetterTemplateClassic from '~/components/CoverLetterTemplateClassic.
 import CoverLetterTemplateModern from '~/components/CoverLetterTemplateModern.vue';
 import PricingModal from '~/components/PricingModal.vue';
 
-// Prevent SSR for this page since it requires authentication
-definePageMeta({
-  ssr: false
+// SSR enabled for SEO - authentication checks happen client-side in onMounted
+
+useHead({
+  title: 'Cover Letter Generator - Career Smithery',
+  meta: [
+    {
+      name: 'description',
+      content: 'Generate personalized, professional cover letters tailored to specific job applications. Our AI-powered cover letter generator creates compelling letters that highlight your relevant experience and align with job requirements.'
+    },
+    {
+      property: 'og:title',
+      content: 'Cover Letter Generator - Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'Generate personalized, professional cover letters tailored to specific job applications using our AI-powered cover letter generator.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/cover-letter`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:title',
+      content: 'Cover Letter Generator - Career Smithery'
+    },
+    {
+      name: 'twitter:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:description',
+      content: 'Generate personalized, professional cover letters tailored to specific job applications using our AI-powered cover letter generator.'
+    },
+    {
+      name: 'robots',
+      content: 'index, follow'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/cover-letter`
+    }
+  ]
 })
 
 const route = useRoute();

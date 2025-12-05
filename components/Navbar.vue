@@ -4,7 +4,7 @@
       <div class="flex justify-between h-16 items-center">
         <div class="flex items-center flex-1 min-w-0">
           <NuxtLink to="/" class="flex items-center gap-2 text-xl sm:text-2xl font-extrabold text-gray-900 min-w-0">
-            <img src="/logo.png" alt="Company Logo" class="h-8 w-8 sm:h-9 sm:w-9 object-contain rounded flex-shrink-0" />
+            <img src="/logo.png" alt="Career Smithery Logo - AI-Powered Career Development Platform" class="h-8 w-8 sm:h-9 sm:w-9 object-contain rounded flex-shrink-0" />
             <span class="truncate">Career Smithery</span>
           </NuxtLink>
           <div class="hidden lg:ml-6 lg:flex lg:space-x-6 xl:space-x-8">

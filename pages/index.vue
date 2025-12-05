@@ -277,6 +277,68 @@
   </div>
 </template>
 
+<script setup>
+useHead({
+  title: 'Career Smithery - AI-Powered Career Development & Resume Builder',
+  meta: [
+    {
+      name: 'description',
+      content: 'Forge your career path with precision. Career Smithery helps you craft your professional journey using advanced career development theories, personalized insights, AI-powered resume building, and comprehensive career assessments.'
+    },
+    {
+      property: 'og:title',
+      content: 'Career Smithery - AI-Powered Career Development & Resume Builder'
+    },
+    {
+      property: 'og:description',
+      content: 'Forge your career path with precision. Career Smithery helps you craft your professional journey using advanced career development theories, personalized insights, AI-powered resume building, and comprehensive career assessments.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:title',
+      content: 'Career Smithery - AI-Powered Career Development & Resume Builder'
+    },
+    {
+      name: 'twitter:description',
+      content: 'Forge your career path with precision. Career Smithery helps you craft your professional journey using advanced career development theories, personalized insights, AI-powered resume building, and comprehensive career assessments.'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/`
+    }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'Career Smithery',
+        url: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/`,
+        description: 'AI-powered career development and resume building platform',
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: {
+            '@type': 'EntryPoint',
+            urlTemplate: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/blog?search={search_term_string}`
+          },
+          'query-input': 'required name=search_term_string'
+        }
+      })
+    }
+  ]
+})
+</script>
+
 <style scoped>
 .hero-overlay {
   /* No longer used, replaced by glassy overlay */

@@ -157,9 +157,42 @@
 </template>
 
 <script setup>
-// Prevent SSR for this page since it requires authentication
-definePageMeta({
-  ssr: false
+// SSR enabled for SEO - authentication checks happen client-side in onMounted
+
+useHead({
+  title: 'Personalized Report Wizard - Career Smithery',
+  meta: [
+    {
+      name: 'description',
+      content: 'Generate your personalized career action plan by providing your LinkedIn profile or resume information. Get comprehensive career insights, SWOT analysis, and actionable development recommendations.'
+    },
+    {
+      property: 'og:title',
+      content: 'Personalized Report Wizard - Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'Generate your personalized career action plan by providing your LinkedIn profile or resume information.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/report-wizard`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'robots',
+      content: 'index, follow'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/report-wizard`
+    }
+  ]
 })
 
 const route = useRoute()

@@ -19,6 +19,20 @@ definePageMeta({
   ssr: false
 })
 
+useHead({
+  title: 'Authentication - Career Smithery',
+  meta: [
+    {
+      name: 'description',
+      content: 'Completing authentication for Career Smithery. Please wait while we set up your account.'
+    },
+    {
+      name: 'robots',
+      content: 'noindex, nofollow'
+    }
+  ]
+})
+
 const router = useRouter()
 const route = useRoute()
 const user = useSupabaseUser()

@@ -226,6 +226,78 @@
   </div>
 </template>
 
+<script setup>
+useHead({
+  title: 'Resume Builder - AI-Powered Resume Creation Tool | Career Smithery',
+  meta: [
+    {
+      name: 'description',
+      content: 'AI-powered resume creation and optimization tool that creates professional, ATS-optimized resumes tailored to your career goals and target positions. Choose from multiple professional templates and generate resumes in minutes.'
+    },
+    {
+      property: 'og:title',
+      content: 'Resume Builder - AI-Powered Resume Creation Tool | Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'AI-powered resume creation and optimization tool that creates professional, ATS-optimized resumes tailored to your career goals and target positions.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/solutions/resume-builder`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:title',
+      content: 'Resume Builder - AI-Powered Resume Creation Tool | Career Smithery'
+    },
+    {
+      name: 'twitter:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:description',
+      content: 'AI-powered resume creation and optimization tool that creates professional, ATS-optimized resumes tailored to your career goals and target positions.'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/solutions/resume-builder`
+    }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name: 'Resume Builder',
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Web',
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD'
+        },
+        description: 'AI-powered resume creation and optimization tool that creates professional, ATS-optimized resumes tailored to your career goals and target positions.',
+        url: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/solutions/resume-builder`,
+        featureList: [
+          'AI-powered content generation',
+          'ATS-optimized formatting',
+          'Multiple professional templates',
+          'Job-specific customization'
+        ],
+        screenshot: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+      })
+    }
+  ]
+})
+</script>
+
 <style scoped>
 .feature-card {
   @apply bg-white/80 rounded-2xl shadow-xl border border-gray-100 p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:bg-white/90 cursor-pointer;

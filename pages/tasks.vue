@@ -289,6 +289,42 @@ import { useAuth } from '~/composables/useAuth'
 import KanbanBoard from '~/components/KanbanBoard.vue'
 import TaskTable from '~/components/TaskTable.vue'
 
+useHead({
+  title: 'Task Management - Career Smithery',
+  meta: [
+    {
+      name: 'description',
+      content: 'Organize and track your career development tasks with our kanban board and table views. Manage tasks by category, quarter, and status to stay on top of your professional growth goals.'
+    },
+    {
+      property: 'og:title',
+      content: 'Task Management - Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'Organize and track your career development tasks with our kanban board and table views.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/tasks`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'robots',
+      content: 'noindex, nofollow'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/tasks`
+    }
+  ]
+})
+
 const focusAreaTitles = {
   leadership: 'Leadership',
   domain_knowledge: 'Domain Knowledge',

@@ -153,15 +153,136 @@ useHead({
   meta: [
     {
       name: 'description',
-      content: () => article.value?.description || 'Career advice and insights'
+      content: () => article.value?.description || 'Career advice and insights from Career Smithery'
     },
     {
       property: 'og:title',
-      content: () => article.value?.title
+      content: () => article.value?.title || 'Career Smithery Blog'
     },
     {
       property: 'og:description',
-      content: () => article.value?.description
+      content: () => article.value?.description || 'Career advice and insights'
+    },
+    {
+      property: 'og:type',
+      content: 'article'
+    },
+    {
+      property: 'og:url',
+      content: () => `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}${route.path}`
+    },
+    {
+      property: 'og:image',
+      content: () => {
+        const siteUrl = useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'
+        return article.value?.image 
+          ? (article.value.image.startsWith('http') ? article.value.image : `${siteUrl}${article.value.image}`)
+          : `${siteUrl}/logo.png`
+      }
+    },
+    {
+      property: 'article:published_time',
+      content: () => article.value?.date ? new Date(article.value.date).toISOString() : ''
+    },
+    {
+      property: 'article:author',
+      content: () => article.value?.author || 'Career Smithery'
+    },
+    {
+      property: 'article:section',
+      content: () => article.value?.category || 'Career Development'
+    },
+    {
+      name: 'twitter:card',
+      content: 'summary_large_image'
+    },
+    {
+      name: 'twitter:title',
+      content: () => article.value?.title || 'Career Smithery Blog'
+    },
+    {
+      name: 'twitter:description',
+      content: () => article.value?.description || 'Career advice and insights'
+    },
+    {
+      name: 'keywords',
+      content: () => article.value?.tags?.join(', ') || 'career development, career advice'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: () => `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}${route.path}`
+    }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: () => {
+        const siteUrl = useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'
+        const articleUrl = `${siteUrl}${route.path}`
+        const articleImage = article.value?.image 
+          ? (article.value.image.startsWith('http') ? article.value.image : `${siteUrl}${article.value.image}`)
+          : `${siteUrl}/logo.png`
+        
+        return JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: article.value?.title || '',
+          description: article.value?.description || '',
+          image: articleImage,
+          datePublished: article.value?.date ? new Date(article.value.date).toISOString() : '',
+          dateModified: article.value?.date ? new Date(article.value.date).toISOString() : '',
+          author: {
+            '@type': 'Person',
+            name: article.value?.author || 'Career Smithery'
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: 'Career Smithery',
+            logo: {
+              '@type': 'ImageObject',
+              url: `${siteUrl}/logo.png`
+            }
+          },
+          mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': articleUrl
+          },
+          articleSection: article.value?.category || 'Career Development',
+          keywords: article.value?.tags?.join(', ') || 'career development'
+        })
+      }
+    },
+    {
+      type: 'application/ld+json',
+      children: () => {
+        const siteUrl = useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'
+        return JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Home',
+              item: siteUrl
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: 'Blog',
+              item: `${siteUrl}/blog`
+            },
+            {
+              '@type': 'ListItem',
+              position: 3,
+              name: article.value?.title || 'Article',
+              item: `${siteUrl}${route.path}`
+            }
+          ]
+        })
+      }
     }
   ]
 })

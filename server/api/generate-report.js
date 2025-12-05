@@ -159,14 +159,50 @@ export default defineEventHandler(async (event) => {
   }
 
   // 4. Save structured report in user_plans.personalized_report
-  const { error: updateError } = await supabase
+  // Check if plan exists first
+  const { data: existingPlan, error: checkError } = await supabase
     .from('user_plans')
-    .update({ personalized_report: geminiResponse, last_updated: new Date().toISOString() })
+    .select('id, assessment_data')
     .eq('user_id', user_id)
-  if (updateError) {
+    .maybeSingle()
+  
+  if (checkError) {
     event.node.res.writeHead(500)
-    event.node.res.end('Failed to save report')
+    event.node.res.end('Failed to check existing plan')
     return
+  }
+
+  if (existingPlan) {
+    // Update existing plan
+    const { error: updateError } = await supabase
+      .from('user_plans')
+      .update({ personalized_report: geminiResponse })
+      .eq('id', existingPlan.id)
+      .eq('user_id', user_id)
+    
+    if (updateError) {
+      event.node.res.writeHead(500)
+      event.node.res.end('Failed to save report')
+      return
+    }
+  } else {
+    // Create new plan if it doesn't exist
+    // We need assessment_data, so try to get it from the request
+    const assessmentData = assessmentSummary || {}
+    
+    const { error: insertError } = await supabase
+      .from('user_plans')
+      .insert([{
+        user_id: user_id,
+        assessment_data: assessmentData,
+        personalized_report: geminiResponse
+      }])
+    
+    if (insertError) {
+      event.node.res.writeHead(500)
+      event.node.res.end('Failed to create plan with report')
+      return
+    }
   }
 
   // 5. Deduct required credits from user_subscriptions

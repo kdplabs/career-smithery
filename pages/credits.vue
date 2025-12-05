@@ -49,6 +49,42 @@ import { useAuth } from '~/composables/useAuth'
 import { useCredits } from '~/composables/useCredits'
 import PricingModal from '~/components/PricingModal.vue'
 
+useHead({
+  title: 'Credits & Transactions - Career Smithery',
+  meta: [
+    {
+      name: 'description',
+      content: 'View your credit balance and transaction history. Purchase credits to unlock AI-powered resume building, cover letter generation, and personalized career reports.'
+    },
+    {
+      property: 'og:title',
+      content: 'Credits & Transactions - Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'View your credit balance and transaction history. Purchase credits to unlock AI-powered career tools.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/credits`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'robots',
+      content: 'noindex, nofollow'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/credits`
+    }
+  ]
+})
+
 const { user } = useAuth()
 const { userCredits, fetchUserCredits } = useCredits()
 const showPricingModal = ref(false)

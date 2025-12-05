@@ -182,6 +182,78 @@
   </div>
 </template>
 
+<script setup>
+useHead({
+  title: 'Career Planner - Strategic Career Development Tool | Career Smithery',
+  meta: [
+    {
+      name: 'description',
+      content: 'Strategic career development and planning tool that helps you understand your current position, identify growth opportunities, and create a roadmap for professional success. Based on proven career development theories including Super\'s Career Development Theory and Ram Charan\'s Leadership Pipeline.'
+    },
+    {
+      property: 'og:title',
+      content: 'Career Planner - Strategic Career Development Tool | Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'Strategic career development and planning tool that helps you understand your current position, identify growth opportunities, and create a roadmap for professional success.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/solutions/career-planner`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:title',
+      content: 'Career Planner - Strategic Career Development Tool | Career Smithery'
+    },
+    {
+      name: 'twitter:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:description',
+      content: 'Strategic career development and planning tool that helps you understand your current position, identify growth opportunities, and create a roadmap for professional success.'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/solutions/career-planner`
+    }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name: 'Career Planner',
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Web',
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD'
+        },
+        description: 'Strategic career development and planning tool that helps you understand your current position, identify growth opportunities, and create a roadmap for professional success.',
+        url: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/solutions/career-planner`,
+        featureList: [
+          'Career stage assessment using Super\'s theory',
+          'Leadership pipeline analysis',
+          'Personalized development roadmap',
+          'Skills gap analysis & recommendations'
+        ],
+        screenshot: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+      })
+    }
+  ]
+})
+</script>
+
 <style scoped>
 .feature-card {
   @apply bg-white/80 rounded-2xl shadow-xl border border-gray-100 p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:bg-white/90 cursor-pointer;

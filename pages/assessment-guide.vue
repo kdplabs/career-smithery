@@ -327,6 +327,50 @@
 import { onMounted, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+useHead({
+  title: 'Assessment Guide - Understanding Your Career Assessment Results | Career Smithery',
+  meta: [
+    {
+      name: 'description',
+      content: 'Learn how your career assessment results are calculated. Understand performance & potential scoring, engagement metrics, career stage determination, leadership potential assessment, learning & development levels, and skills profile analysis.'
+    },
+    {
+      property: 'og:title',
+      content: 'Assessment Guide - Understanding Your Career Assessment Results | Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'Learn how your career assessment results are calculated. Understand performance & potential scoring, engagement metrics, career stage determination, and leadership potential assessment.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/assessment-guide`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:title',
+      content: 'Assessment Guide - Understanding Your Career Assessment Results | Career Smithery'
+    },
+    {
+      name: 'twitter:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:description',
+      content: 'Learn how your career assessment results are calculated. Understand performance & potential scoring, engagement metrics, career stage determination, and leadership potential assessment.'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/assessment-guide`
+    }
+  ]
+})
+
 const route = useRoute()
 
 function scrollToHash() {

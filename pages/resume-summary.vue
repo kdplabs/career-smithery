@@ -242,9 +242,42 @@ import EditSectionModal from '~/components/EditSectionModal.vue'
 import { useDatabase } from '~/composables/useDatabase';
 import { useCredits } from '~/composables/useCredits';
 
-// Prevent SSR for this page since it requires authentication
-definePageMeta({
-  ssr: false
+// SSR enabled for SEO - authentication checks happen client-side in onMounted
+
+useHead({
+  title: 'Resume Summary - Career Smithery',
+  meta: [
+    {
+      name: 'description',
+      content: 'View and edit your optimized resume with match score analysis, interview questions, and study topics. Download your resume as PDF and generate a matching cover letter.'
+    },
+    {
+      property: 'og:title',
+      content: 'Resume Summary - Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'View and edit your optimized resume with match score analysis, interview questions, and study topics.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/resume-summary`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'robots',
+      content: 'index, follow'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/resume-summary`
+    }
+  ]
 })
 
 const route = useRoute()

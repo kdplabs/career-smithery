@@ -123,9 +123,54 @@ import StepCurrentResume from '~/components/wizard/StepCurrentResume.vue'
 import StepMetrics from '~/components/wizard/StepMetrics.vue'
 import StepInstructions from '~/components/wizard/StepInstructions.vue'
 
-// Prevent SSR for this page since it requires authentication
-definePageMeta({
-  ssr: false
+// SSR enabled for SEO - authentication checks happen client-side in onMounted
+
+useHead({
+  title: 'Resume Builder Wizard - Career Smithery',
+  meta: [
+    {
+      name: 'description',
+      content: 'Create professional, ATS-optimized resumes tailored to your target job using our AI-powered resume builder. Generate custom resumes that match job descriptions and highlight your relevant experience.'
+    },
+    {
+      property: 'og:title',
+      content: 'Resume Builder Wizard - Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'Create professional, ATS-optimized resumes tailored to your target job using our AI-powered resume builder.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/resume-wizard`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:title',
+      content: 'Resume Builder Wizard - Career Smithery'
+    },
+    {
+      name: 'twitter:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:description',
+      content: 'Create professional, ATS-optimized resumes tailored to your target job using our AI-powered resume builder.'
+    },
+    {
+      name: 'robots',
+      content: 'index, follow'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/resume-wizard`
+    }
+  ]
 })
 
 const route = useRoute()

@@ -122,11 +122,45 @@ const formatDate = (date: string | Date) => {
 }
 
 useHead({
-  title: 'Blog | Career Smithery',
+  title: 'Career Blog - Expert Career Advice & Insights | Career Smithery',
   meta: [
     {
       name: 'description',
+      content: 'Discover expert career advice, resume tips, interview guides, and job search strategies. Learn from industry insights and professional development best practices.'
+    },
+    {
+      property: 'og:title',
+      content: 'Career Blog - Expert Career Advice & Insights | Career Smithery'
+    },
+    {
+      property: 'og:description',
       content: 'Discover expert career advice, resume tips, interview guides, and job search strategies.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/blog`
+    },
+    {
+      property: 'og:type',
+      content: 'website'
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:title',
+      content: 'Career Blog - Expert Career Advice & Insights | Career Smithery'
+    },
+    {
+      name: 'twitter:description',
+      content: 'Discover expert career advice, resume tips, interview guides, and job search strategies.'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/blog`
     }
   ]
 })

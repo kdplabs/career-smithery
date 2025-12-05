@@ -40,14 +40,14 @@
       <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Top Action Buttons -->
         <div class="lg:col-span-2 flex justify-between mb-6">
-          <button @click="navigateTo('/summary')" class="px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:to-pink-600 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex items-center">
-            <Icon name="i-heroicons-arrow-left" class="w-4 h-4 mr-2" />
-            Back to Summary
+          <button @click="navigateTo('/summary')" class="px-3 py-3 sm:px-6 sm:py-3 text-base font-semibold text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:to-pink-600 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex items-center">
+            <Icon name="i-heroicons-arrow-left" class="w-5 h-5 sm:mr-2" />
+            <span class="hidden sm:inline">Back to Summary</span>
           </button>
-          <button @click="regenerateReport" :disabled="isRegenerating" class="px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-green-600 via-emerald-600 to-teal-500 hover:from-green-700 hover:to-teal-600 disabled:opacity-60 disabled:cursor-not-allowed rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex items-center">
-            <Icon v-if="isRegenerating" name="i-eos-icons:loading" class="w-4 h-4 mr-2 animate-spin" />
-            <Icon v-else name="i-mdi-refresh" class="w-4 h-4 mr-2" />
-            {{ isRegenerating ? 'Regenerating...' : 'Re-generate Report' }}
+          <button @click="showRegenerateModal = true" :disabled="isRegenerating" class="px-3 py-3 sm:px-6 sm:py-3 text-base font-semibold text-white bg-gradient-to-r from-green-600 via-emerald-600 to-teal-500 hover:from-green-700 hover:to-teal-600 disabled:opacity-60 disabled:cursor-not-allowed rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex items-center">
+            <Icon v-if="isRegenerating" name="i-eos-icons:loading" class="w-5 h-5 sm:mr-2 animate-spin" />
+            <Icon v-else name="i-mdi-refresh" class="w-5 h-5 sm:mr-2" />
+            <span class="hidden sm:inline">{{ isRegenerating ? 'Regenerating...' : 'Re-generate Report' }}</span>
           </button>
         </div>
 
@@ -157,13 +157,14 @@
 
         <!-- Action Buttons -->
         <div class="lg:col-span-2 flex justify-between mt-6">
-          <button @click="navigateTo('/summary')" class="px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:to-pink-600 rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all ">
-            Back to Summary
+          <button @click="navigateTo('/summary')" class="px-4 py-4 sm:px-8 sm:py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:to-pink-600 rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all flex items-center justify-center">
+            <Icon name="i-heroicons-arrow-left" class="w-6 h-6 sm:mr-2" />
+            <span class="hidden sm:inline">Back to Summary</span>
           </button>
-          <button @click="regenerateReport" :disabled="isRegenerating" class="px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-green-600 via-emerald-600 to-teal-500 hover:from-green-700 hover:to-teal-600 disabled:opacity-60 disabled:cursor-not-allowed rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all flex items-center">
-            <Icon v-if="isRegenerating" name="i-eos-icons:loading" class="w-5 h-5 mr-2 animate-spin" />
-            <Icon v-else name="i-mdi-refresh" class="w-5 h-5 mr-2" />
-            {{ isRegenerating ? 'Regenerating...' : 'Re-generate Report' }}
+          <button @click="showRegenerateModal = true" :disabled="isRegenerating" class="px-4 py-4 sm:px-8 sm:py-4 text-lg font-semibold text-white bg-gradient-to-r from-green-600 via-emerald-600 to-teal-500 hover:from-green-700 hover:to-teal-600 disabled:opacity-60 disabled:cursor-not-allowed rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all flex items-center justify-center">
+            <Icon v-if="isRegenerating" name="i-eos-icons:loading" class="w-6 h-6 sm:mr-2 animate-spin" />
+            <Icon v-else name="i-mdi-refresh" class="w-6 h-6 sm:mr-2" />
+            <span class="hidden sm:inline">{{ isRegenerating ? 'Regenerating...' : 'Re-generate Report' }}</span>
           </button>
         </div>
       </div>
@@ -255,6 +256,73 @@
     @close="showPricingModal = false"
     @purchase-complete="handlePurchaseComplete"
   />
+
+  <!-- Regenerate Report Modal -->
+  <div v-if="showRegenerateModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
+    <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 md:p-8 w-full max-w-2xl mx-4 relative border border-white/20">
+      <button 
+        @click="showRegenerateModal = false" 
+        class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
+      >
+        <Icon name="i-heroicons-x-mark" class="w-6 h-6" />
+      </button>
+      
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Icon name="i-mdi-refresh" class="w-8 h-8 text-green-600" />
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Regenerate Personalized Report</h2>
+        <p class="text-gray-600">
+          Update your LinkedIn profile information to regenerate your personalized career action plan with the latest data.
+        </p>
+      </div>
+
+      <form @submit.prevent="handleRegenerateSubmit" class="space-y-6">
+        <div>
+          <label for="regenerateLinkedInText" class="block text-sm font-medium text-gray-700 mb-2">
+            LinkedIn Profile Summary or Resume Text
+          </label>
+          <textarea
+            id="regenerateLinkedInText"
+            v-model="regenerateLinkedInText"
+            rows="10"
+            class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+            placeholder="Paste your LinkedIn profile summary or resume text here..."
+            required
+          ></textarea>
+          <p class="mt-2 text-sm text-gray-500">
+            Include your professional experience, skills, achievements, and career objectives for the best results.
+          </p>
+        </div>
+
+        <div v-if="regenerateError" class="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div class="flex items-center gap-2">
+            <Icon name="i-heroicons-exclamation-triangle" class="w-5 h-5 text-red-600" />
+            <p class="text-sm text-red-700">{{ regenerateError }}</p>
+          </div>
+        </div>
+
+        <div class="flex gap-4 justify-end">
+          <button 
+            type="button" 
+            @click="showRegenerateModal = false" 
+            class="px-6 py-3 bg-white/80 backdrop-blur-md text-slate-700 rounded-xl hover:bg-white/90 transition-all border border-slate-200 shadow-md hover:shadow-lg"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            :disabled="!regenerateLinkedInText.trim() || isRegenerating"
+            class="px-6 py-3 bg-gradient-to-r from-green-600 to-teal-600 text-white rounded-xl hover:from-green-700 hover:to-teal-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl flex items-center"
+          >
+            <Icon v-if="isRegenerating" name="i-eos-icons:loading" class="w-5 h-5 mr-2 animate-spin" />
+            <Icon v-else name="i-mdi-refresh" class="w-5 h-5 mr-2" />
+            {{ isRegenerating ? 'Regenerating...' : 'Regenerate Report' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -265,6 +333,42 @@ import FocusAreaCard from '~/components/FocusAreaCard.vue'
 import { useAuth } from '~/composables/useAuth'
 import KanbanBoard from '~/components/KanbanBoard.vue'
 import PricingModal from '~/components/PricingModal.vue'
+
+useHead({
+  title: 'Personalized Career Report - Career Smithery',
+  meta: [
+    {
+      name: 'description',
+      content: 'View your personalized career action plan with SWOT analysis, focus areas, and actionable tasks. Get comprehensive insights based on your assessment results and professional background.'
+    },
+    {
+      property: 'og:title',
+      content: 'Personalized Career Report - Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'View your personalized career action plan with SWOT analysis, focus areas, and actionable tasks.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/personalized-report`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'robots',
+      content: 'noindex, nofollow'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/personalized-report`
+    }
+  ]
+})
 
 const report = ref(null)
 const isLoadingReport = ref(true)
@@ -295,6 +399,9 @@ const taskModalError = ref('')
 const createTasksModalLoading = ref(false)
 const createTasksModalError = ref('')
 const showPricingModal = ref(false)
+const showRegenerateModal = ref(false)
+const regenerateLinkedInText = ref('')
+const regenerateError = ref('')
 const createTasksForm = ref({
   area: '',
   tasks: [],
@@ -619,6 +726,50 @@ watch(
   }
 )
 
+// Watch for regenerate modal opening and load existing LinkedIn text
+watch(showRegenerateModal, async (isOpen) => {
+  if (isOpen) {
+    regenerateError.value = ''
+    // Try to load existing LinkedIn text from database or localStorage
+    try {
+      if (user.value) {
+        const { data: userPlan } = await supabase
+          .from('user_plans')
+          .select('assessment_data')
+          .eq('user_id', user.value.id)
+          .maybeSingle()
+
+        if (userPlan?.assessment_data?.linkedinText) {
+          regenerateLinkedInText.value = userPlan.assessment_data.linkedinText
+        } else {
+          // Fallback to localStorage
+          const saved = localStorage.getItem('linkedinOrResumeText')
+          if (saved) {
+            regenerateLinkedInText.value = saved
+          }
+        }
+      } else {
+        // Fallback to localStorage if not logged in
+        const saved = localStorage.getItem('linkedinOrResumeText')
+        if (saved) {
+          regenerateLinkedInText.value = saved
+        }
+      }
+    } catch (err) {
+      console.error('Error loading LinkedIn text:', err)
+      // Try localStorage as fallback
+      try {
+        const saved = localStorage.getItem('linkedinOrResumeText')
+        if (saved) {
+          regenerateLinkedInText.value = saved
+        }
+      } catch (e) {
+        // Ignore errors
+      }
+    }
+  }
+})
+
 onMounted(async () => {
   isLoadingReport.value = true
   
@@ -689,30 +840,46 @@ onMounted(async () => {
   isLoadingReport.value = false
 })
 
+// Function to handle regenerate modal submit
+async function handleRegenerateSubmit() {
+  if (!regenerateLinkedInText.value.trim()) {
+    regenerateError.value = 'Please enter your LinkedIn profile or resume text.'
+    return
+  }
+
+  regenerateError.value = ''
+  await regenerateReport(regenerateLinkedInText.value.trim())
+}
+
 // Function to regenerate the report
-async function regenerateReport() {
+async function regenerateReport(linkedinTextOverride = null) {
   if (!user.value) {
     showMessage('Please log in to regenerate your report', 'error')
     return
   }
 
   isRegenerating.value = true
+  showRegenerateModal.value = false
   
   try {
     // Get assessment data from database
     let assessmentSummary = null
-    let linkedinText = null
+    let linkedinText = linkedinTextOverride
     
     try {
       const { data: userPlan, error: fetchError } = await supabase
         .from('user_plans')
-        .select('assessment_data, personalized_report')
+        .select('id, assessment_data, personalized_report')
         .eq('user_id', user.value.id)
-        .single()
+        .maybeSingle()
 
       if (!fetchError && userPlan?.assessment_data) {
         assessmentSummary = userPlan.assessment_data
-        linkedinText = assessmentSummary.linkedinText
+        
+        // Use override if provided, otherwise use existing linkedinText
+        if (!linkedinText) {
+          linkedinText = assessmentSummary.linkedinText
+        }
       }
     } catch (err) {
       console.error('Error fetching assessment data from database:', err)
@@ -723,7 +890,7 @@ async function regenerateReport() {
     }
 
     if (!linkedinText) {
-      throw new Error('No LinkedIn profile data found. Please generate a new report from the summary page.')
+      throw new Error('No LinkedIn profile data found. Please provide your LinkedIn profile information.')
     }
 
     // Call the report generation API
@@ -750,24 +917,83 @@ async function regenerateReport() {
 
     const result = await response.json()
     
-    // Update the report in the database
-    const { error: updateError } = await supabase
+    // The API already saves the report to the database, so we just need to refresh
+    // Fetch the updated report from database to ensure we have the latest version
+    const { data: updatedPlan, error: fetchError } = await supabase
       .from('user_plans')
-      .update({ 
-        personalized_report: result.report,
-        updated_at: new Date().toISOString()
-      })
+      .select('personalized_report')
       .eq('user_id', user.value.id)
+      .maybeSingle()
 
-    if (updateError) {
-      throw new Error('Failed to save regenerated report')
+    if (fetchError) {
+      console.error('Error fetching updated report:', fetchError)
+      // If fetch fails, use the result from API response as fallback
+      report.value = result.report
+    } else if (updatedPlan?.personalized_report) {
+      // Use the database version (most up-to-date)
+      report.value = updatedPlan.personalized_report
+    } else {
+      // Fallback to API response if database doesn't have it yet
+      report.value = result.report
+      
+      // Try to save it as a backup (in case API save failed silently)
+      try {
+        const { data: existingPlan } = await supabase
+          .from('user_plans')
+          .select('id')
+          .eq('user_id', user.value.id)
+          .maybeSingle()
+
+        if (existingPlan) {
+          await supabase
+            .from('user_plans')
+            .update({ personalized_report: result.report })
+            .eq('id', existingPlan.id)
+        } else if (assessmentSummary) {
+          await supabase
+            .from('user_plans')
+            .insert([{
+              user_id: user.value.id,
+              assessment_data: assessmentSummary,
+              personalized_report: result.report
+            }])
+        }
+      } catch (backupError) {
+        console.error('Backup save failed (non-critical):', backupError)
+        // Non-critical - API already saved it, this is just a backup
+      }
     }
-
-    // Update the local report data
-    report.value = result.report
     
     // Update localStorage
     localStorage.setItem('personalizedReport', JSON.stringify(result.report))
+    
+    // Update the linkedinText in assessment_data if it was changed
+    if (linkedinTextOverride && assessmentSummary) {
+      try {
+        const { data: existingPlan } = await supabase
+          .from('user_plans')
+          .select('id')
+          .eq('user_id', user.value.id)
+          .maybeSingle()
+
+        if (existingPlan) {
+          const updatedAssessmentData = {
+            ...assessmentSummary,
+            linkedinText: linkedinTextOverride
+          }
+          await supabase
+            .from('user_plans')
+            .update({ assessment_data: updatedAssessmentData })
+            .eq('id', existingPlan.id)
+          
+          // Also update localStorage
+          localStorage.setItem('linkedinOrResumeText', linkedinTextOverride)
+        }
+      } catch (err) {
+        console.error('Error updating LinkedIn text:', err)
+        // Non-critical error, continue
+      }
+    }
     
     showMessage('Report regenerated successfully!', 'success')
     

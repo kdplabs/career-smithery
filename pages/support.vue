@@ -247,9 +247,50 @@ import { useAuth } from '~/composables/useAuth'
 
 // Set page title
 useHead({
-  title: 'Support Center - Career Planner',
+  title: 'Support Center - Career Smithery',
   meta: [
-    { name: 'description', content: 'Get help and support for Career Planner. Submit support requests and find answers to frequently asked questions.' }
+    { 
+      name: 'description', 
+      content: 'Get help and support for Career Smithery. Submit support requests, get assistance with career assessments, resume building, and find answers to frequently asked questions.' 
+    },
+    {
+      property: 'og:title',
+      content: 'Support Center - Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'Get help and support for Career Smithery. Submit support requests and find answers to frequently asked questions.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/support`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:title',
+      content: 'Support Center - Career Smithery'
+    },
+    {
+      name: 'twitter:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:description',
+      content: 'Get help and support for Career Smithery. Submit support requests and find answers to frequently asked questions.'
+    },
+    {
+      name: 'robots',
+      content: 'index, follow'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/support`
+    }
   ]
 })
 

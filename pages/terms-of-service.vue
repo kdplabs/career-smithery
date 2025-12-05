@@ -252,9 +252,38 @@ import { navigateTo } from 'nuxt/app'
 
 // Set page title
 useHead({
-  title: 'Terms of Service - Career Planner',
+  title: 'Terms of Service - Career Smithery',
   meta: [
-    { name: 'description', content: 'Terms of Service for Career Planner - Learn about the terms and conditions for using our career assessment and planning services.' }
+    { 
+      name: 'description', 
+      content: 'Terms of Service for Career Smithery - Learn about the terms and conditions for using our AI-powered career assessment, resume building, and career planning services.' 
+    },
+    {
+      property: 'og:title',
+      content: 'Terms of Service - Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'Terms of Service for Career Smithery - Learn about the terms and conditions for using our career assessment and planning services.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/terms-of-service`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'robots',
+      content: 'index, follow'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/terms-of-service`
+    }
   ]
 })
 </script> 

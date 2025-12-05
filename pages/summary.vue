@@ -62,7 +62,7 @@
                 <img 
                   v-if="profileImageUrl" 
                   :src="profileImageUrl" 
-                  alt="Profile Picture" 
+                  alt="User Profile Picture" 
                   class="w-full h-full object-cover"
                 />
                 <!-- Show initial if no image -->
@@ -750,6 +750,54 @@ import ThreeMetricsRadarChart from '~/components/charts/ThreeMetricsRadarChart.v
 import ThreeMetricsBarChart from '~/components/charts/ThreeMetricsBarChart.vue'
 import PricingModal from '~/components/PricingModal.vue'
 import { useRouter, useRoute, navigateTo } from 'nuxt/app'
+
+useHead({
+  title: 'Assessment Summary - Career Smithery',
+  meta: [
+    {
+      name: 'description',
+      content: 'View your comprehensive career assessment summary including career stage, leadership potential, skills profile, 9-box grid position, and personalized development recommendations.'
+    },
+    {
+      property: 'og:title',
+      content: 'Assessment Summary - Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'View your comprehensive career assessment summary including career stage, leadership potential, skills profile, and personalized development recommendations.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/summary`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:title',
+      content: 'Assessment Summary - Career Smithery'
+    },
+    {
+      name: 'twitter:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:description',
+      content: 'View your comprehensive career assessment summary including career stage, leadership potential, skills profile, and personalized development recommendations.'
+    },
+    {
+      name: 'robots',
+      content: 'noindex, nofollow'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/summary`
+    }
+  ]
+})
 
 const assessmentSummary = ref(null)
 const router = useRouter()

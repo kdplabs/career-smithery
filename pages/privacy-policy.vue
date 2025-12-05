@@ -210,9 +210,38 @@ import { navigateTo } from 'nuxt/app'
 
 // Set page title
 useHead({
-  title: 'Privacy Policy - Career Planner',
+  title: 'Privacy Policy - Career Smithery',
   meta: [
-    { name: 'description', content: 'Privacy Policy for Career Planner - Learn how we protect your personal information and data.' }
+    { 
+      name: 'description', 
+      content: 'Privacy Policy for Career Smithery - Learn how we protect your personal information and data. Understand our data collection practices, AI processing, and your privacy rights.' 
+    },
+    {
+      property: 'og:title',
+      content: 'Privacy Policy - Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'Privacy Policy for Career Smithery - Learn how we protect your personal information and data.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/privacy-policy`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'robots',
+      content: 'index, follow'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/privacy-policy`
+    }
   ]
 })
 </script> 

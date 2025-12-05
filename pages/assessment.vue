@@ -1385,6 +1385,54 @@ const validateAndFixData = (data) => {
 }
 
 // Add the clearLocalData function in the script section
+useHead({
+  title: 'Career Assessment - Career Smithery',
+  meta: [
+    {
+      name: 'description',
+      content: 'Take our comprehensive career assessment to understand your career stage, leadership potential, skills profile, and development journey. Get personalized insights based on Super\'s Career Development Theory, Ram Charan\'s Leadership Pipeline, and Kirkpatrick\'s Model.'
+    },
+    {
+      property: 'og:title',
+      content: 'Career Assessment - Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'Take our comprehensive career assessment to understand your career stage, leadership potential, skills profile, and development journey.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/assessment`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:title',
+      content: 'Career Assessment - Career Smithery'
+    },
+    {
+      name: 'twitter:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'twitter:description',
+      content: 'Take our comprehensive career assessment to understand your career stage, leadership potential, skills profile, and development journey.'
+    },
+    {
+      name: 'robots',
+      content: 'noindex, nofollow'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/assessment`
+    }
+  ]
+})
+
 const clearLocalData = () => {
   if (confirm('Are you sure you want to clear all assessment data? This action cannot be undone.')) {
     // Clear localStorage items

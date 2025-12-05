@@ -615,9 +615,42 @@ import RegisterPrompt from '~/components/RegisterPrompt.vue'
 import ResumeDisplay from '~/components/ResumeDisplay.vue'
 import KanbanBoard from '~/components/KanbanBoard.vue'
 
-// Prevent SSR for this page since it requires authentication
-definePageMeta({
-  ssr: false
+// SSR enabled for SEO - authentication checks happen client-side in onMounted
+
+useHead({
+  title: 'Job Applications - Career Smithery',
+  meta: [
+    {
+      name: 'description',
+      content: 'Manage your job applications and track your progress. Create tailored resumes and cover letters for each position, organize applications by status and priority, and stay on top of your job search.'
+    },
+    {
+      property: 'og:title',
+      content: 'Job Applications - Career Smithery'
+    },
+    {
+      property: 'og:description',
+      content: 'Manage your job applications and track your progress. Create tailored resumes and cover letters for each position.'
+    },
+    {
+      property: 'og:url',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/jobs`
+    },
+    {
+      property: 'og:image',
+      content: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/logo.png`
+    },
+    {
+      name: 'robots',
+      content: 'index, follow'
+    }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${useRuntimeConfig().public.siteUrl || 'https://careersmithery.com'}/jobs`
+    }
+  ]
 })
 
 const supabase = useSupabaseClient()

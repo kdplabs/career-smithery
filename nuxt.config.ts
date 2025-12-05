@@ -8,7 +8,73 @@ export default defineNuxtConfig({
     geminiApiKey: process.env.GEMINI_API_KEY || '',
     public: {
       geminiApiKey: process.env.GEMINI_API_KEY || '',
-      gtmId: process.env.GTM_ID || ''
+      gtmId: process.env.GTM_ID || '',
+      siteUrl: process.env.SITE_URL || 'https://careersmithery.com'
+    }
+  },
+  app: {
+    head: {
+      title: 'Career Smithery - AI-Powered Career Development & Resume Builder',
+      htmlAttrs: {
+        lang: 'en'
+      },
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { 
+          name: 'description', 
+          content: 'Empower your career with AI-powered career assessments, personalized development plans, and professional resume building tools. Get data-driven insights based on proven career development theories.' 
+        },
+        { name: 'format-detection', content: 'telephone=no' },
+        { name: 'robots', content: 'index, follow' },
+        { name: 'author', content: 'Career Smithery' },
+        { name: 'keywords', content: 'career development, career assessment, resume builder, AI resume, career planning, professional development, job search, career coaching' },
+        // Open Graph
+        { property: 'og:type', content: 'website' },
+        { property: 'og:site_name', content: 'Career Smithery' },
+        { property: 'og:locale', content: 'en_US' },
+        { property: 'og:image', content: `${process.env.SITE_URL || 'https://careersmithery.com'}/logo.png` },
+        { property: 'og:image:width', content: '1200' },
+        { property: 'og:image:height', content: '630' },
+        { property: 'og:image:alt', content: 'Career Smithery - AI-Powered Career Development & Resume Builder' },
+        // Twitter Card
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:site', content: '@careersmithery' },
+        { name: 'twitter:creator', content: '@careersmithery' }
+      ],
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'canonical', href: process.env.SITE_URL || 'https://careersmithery.com' },
+        // DNS prefetch for external domains
+        { rel: 'dns-prefetch', href: 'https://fonts.googleapis.com' },
+        { rel: 'dns-prefetch', href: 'https://fonts.gstatic.com' },
+        { rel: 'dns-prefetch', href: 'https://www.google-analytics.com' },
+        // Preconnect for critical resources
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com', crossorigin: 'anonymous' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' }
+      ],
+      script: [
+        {
+          type: 'application/ld+json',
+          children: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'Career Smithery',
+            url: process.env.SITE_URL || 'https://careersmithery.com',
+            logo: `${process.env.SITE_URL || 'https://careersmithery.com'}/logo.png`,
+            description: 'AI-powered career development and resume building platform that helps professionals forge their career path with precision.',
+            sameAs: [
+              'https://twitter.com/careersmithery',
+              'https://www.linkedin.com/company/career-smithery'
+            ],
+            contactPoint: {
+              '@type': 'ContactPoint',
+              contactType: 'Customer Service',
+              email: 'support@careersmithery.com'
+            }
+          })
+        }
+      ]
     }
   },
   googleFonts: {
