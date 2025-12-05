@@ -2,12 +2,12 @@
   <nav class="bg-white/80 backdrop-blur-xl border-b border-blue-100 shadow-xl rounded-b-2xl relative z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16 items-center">
-        <div class="flex items-center">
-          <NuxtLink to="/" class="flex items-center gap-2 text-2xl font-extrabold text-gray-900">
-            <img src="/logo.png" alt="Company Logo" class="h-9 w-9 object-contain rounded" />
-            <span>Career Smithery</span>
+        <div class="flex items-center flex-1 min-w-0">
+          <NuxtLink to="/" class="flex items-center gap-2 text-xl sm:text-2xl font-extrabold text-gray-900 min-w-0">
+            <img src="/logo.png" alt="Company Logo" class="h-8 w-8 sm:h-9 sm:w-9 object-contain rounded flex-shrink-0" />
+            <span class="truncate">Career Smithery</span>
           </NuxtLink>
-          <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+          <div class="hidden lg:ml-6 lg:flex lg:space-x-6 xl:space-x-8">
             <NuxtLink
               to="/"
               class="border-transparent text-gray-500 hover:border-blue-300 hover:text-blue-700 inline-flex items-center px-1 pt-1 border-b-2 text-base font-semibold transition-all duration-200"
@@ -107,15 +107,10 @@
             </NuxtLink>
           </div>
         </div>
-        <!-- Mobile menu button -->
-        <div class="flex sm:hidden">
-          <button @click="mobileMenuOpen = !mobileMenuOpen" aria-label="Open main menu" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-blue-700 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-all">
-            <svg v-if="!mobileMenuOpen" class="block h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-            <svg v-else class="block h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-          </button>
-        </div>
-        <!-- Right side: Auth/User -->
-        <div class="hidden sm:flex sm:items-center">
+        <!-- Right side: Auth/User (always visible) -->
+        <div class="flex items-center gap-2 lg:gap-4">
+          <!-- Desktop Auth/User -->
+          <div class="hidden lg:flex lg:items-center">
           <template v-if="user">
             <div class="relative">
               <button @click="handleDropdownClick" aria-label="User menu" class="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full transition-all" type="button">
@@ -148,10 +143,57 @@
               Login / Register
             </button>
           </template>
+          </div>
+          
+          <!-- Mobile Auth/User (simplified) -->
+          <div class="flex lg:hidden items-center">
+            <template v-if="user">
+              <button @click="handleDropdownClick" aria-label="User menu" class="flex items-center focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full transition-all" type="button">
+                <img v-if="user.user_metadata?.avatar_url" :src="user.user_metadata.avatar_url" alt="Profile" class="h-8 w-8 rounded-full object-cover border-2 border-blue-200 shadow" />
+                <svg v-else class="h-8 w-8 rounded-full bg-slate-200 text-slate-500 p-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+              </button>
+              <div v-if="showDropdown" class="origin-top-right absolute right-4 mt-2 w-48 rounded-xl shadow-2xl bg-white/90 ring-1 ring-blue-200 ring-opacity-60 z-[60] backdrop-blur-md border border-blue-100" @click.stop>
+                <div class="py-1">
+                  <NuxtLink 
+                    to="/credits" 
+                    class="flex items-center justify-between rounded-lg px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
+                  >
+                    <span>Credits</span>
+                    <span class="font-semibold text-blue-600">{{ userCredits }}</span>
+                  </NuxtLink>
+                  <div class="px-4 py-2 text-xs text-slate-500 border-t border-slate-100">
+                    <div class="flex items-center gap-2">
+                      <Icon name="i-heroicons-shield-check" class="w-3 h-3" />
+                      <span>Consent: {{ hasConsent() ? 'Given' : 'Pending' }}</span>
+                    </div>
+                  </div>
+                  <button @click="signOut" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-lg">Logout</button>
+                </div>
+              </div>
+            </template>
+            <template v-else>
+              <button @click="showLoginPrompt" class="inline-flex items-center justify-center p-2 sm:px-3 sm:py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-pink-600 shadow-lg transition-all" aria-label="Login or Register">
+                <!-- Login Icon (Mobile) -->
+                <svg class="w-5 h-5 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <!-- Text (Tablet and up) -->
+                <span class="hidden sm:inline text-sm md:text-base font-semibold">Login</span>
+              </button>
+            </template>
+          </div>
+          
+          <!-- Mobile menu button -->
+          <div class="flex lg:hidden">
+            <button @click="mobileMenuOpen = !mobileMenuOpen" aria-label="Open main menu" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-blue-700 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-all">
+              <svg v-if="!mobileMenuOpen" class="block h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+              <svg v-else class="block h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+          </div>
         </div>
       </div>
       <!-- Mobile menu -->
-      <div v-if="mobileMenuOpen" class="sm:hidden mt-2">
+      <div v-if="mobileMenuOpen" class="lg:hidden mt-2">
         <div class="space-y-1 pb-3 bg-white/90 rounded-xl shadow-xl border border-blue-100 backdrop-blur-md">
           <NuxtLink
             to="/"

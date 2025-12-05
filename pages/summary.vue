@@ -30,10 +30,10 @@
           <div class="flex gap-3">
             <NuxtLink 
               to="/assessment" 
-              class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg flex items-center gap-2"
+              class="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg flex items-center justify-center"
+              title="Take Assessment"
             >
-              <Icon name="i-heroicons-clipboard-document-list" class="w-5 h-5" />
-              Take Assessment
+              <Icon name="i-heroicons-clipboard-document-list" class="w-6 h-6" />
             </NuxtLink>
           </div>
         </div>
@@ -136,7 +136,13 @@
             </div>
             <!-- Career Stage D3 Chevron Progression -->
             <client-only>
-              <div ref="chevronContainer" class="w-full h-40"></div>
+              <div 
+                class="w-full h-40 overflow-x-auto overflow-y-hidden scroll-smooth" 
+                ref="chevronScrollContainer"
+                style="scrollbar-width: thin; scrollbar-color: #cbd5e1 #f1f5f9;"
+              >
+                <div ref="chevronContainer" class="h-40" style="min-width: max-content;"></div>
+              </div>
             </client-only>
             <!-- Identified Stage Card -->
             <div class="text-center mt-4">
@@ -150,76 +156,79 @@
           <!-- Role History & Future Paths -->
           <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-100">
             <div class="flex items-center justify-between mb-6">
-                             <h2 class="text-2xl font-bold text-slate-800 ">Role History & Future Paths</h2>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Role History & Future Paths</h2>
               <NuxtLink to="/assessment-guide#role-history" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
-                <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
+                <Icon name="i-heroicons-information-circle" class="w-5 h-5 sm:w-6 sm:h-6" />
               </NuxtLink>
             </div>
-            <div class="flex">
-              <!-- Left Side: Previous Roles (30%) -->
-              <div class="flex-shrink-0 w-4/12 pr-6 border-r border-slate-200 relative">
-                <h3 class="text-xl font-semibold text-slate-700 mb-4 ">Your Journey So Far</h3>
+            
+            <!-- Mobile: Stack vertically, Desktop: Side by side -->
+            <div class="flex flex-col lg:flex-row gap-6 lg:gap-0">
+              <!-- Left Side: Previous Roles -->
+              <div class="flex-shrink-0 w-full lg:w-4/12 lg:pr-6 lg:border-r lg:border-slate-200 relative">
+                <h3 class="text-lg sm:text-xl font-semibold text-slate-700 mb-4">Your Journey So Far</h3>
                 
-                <!-- Vertical Line for progression -->
-                <div class="absolute left-0 top-16 bottom-4 w-0.5 bg-slate-300 ml-1.5"></div>
+                <!-- Vertical Line for progression - hidden on mobile, shown on desktop -->
+                <div class="hidden lg:block absolute left-0 top-16 bottom-4 w-0.5 bg-slate-300 ml-1.5"></div>
 
                 <div class="space-y-4 relative">
                   <!-- Current Role -->
                   <div class="flex items-start">
                     <div class="absolute left-0 mt-1.5 w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow z-10 ml-0.5"></div>
                     <div class="ml-6 w-full">
-                      <p class="text-sm text-slate-500 ">Current Role</p>
+                      <p class="text-xs sm:text-sm text-slate-500">Current Role</p>
                       <div class="mt-1 p-3 rounded-lg bg-blue-100 border border-blue-300 shadow-sm">
-                        <p class="text-md font-semibold text-blue-800 ">{{ assessmentSummary.profile.currentRole }}</p>
-                        <p class="text-xs text-blue-600 ">Present</p>
+                        <p class="text-sm sm:text-md font-semibold text-blue-800">{{ assessmentSummary.profile.currentRole }}</p>
+                        <p class="text-xs text-blue-600">Present</p>
                       </div>
                     </div>
                   </div>
 
                   <!-- Previous Roles -->
                   <div v-if="assessmentSummary.profile.previousRoles.length > 0">
-                    <p class="text-sm text-slate-500  mt-5 ml-6">Previous Roles</p>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-5 ml-6">Previous Roles</p>
                     <div v-for="(role, index) in assessmentSummary.profile.previousRoles" :key="index" class="mt-3 flex items-start">
                       <div class="absolute left-0 mt-1.5 w-3 h-3 bg-slate-400 rounded-full border-2 border-white shadow z-10 ml-0.5"></div>
                       <div class="ml-6 w-full p-3 rounded-lg bg-slate-50 border border-slate-200">
-                        <p class="text-md font-semibold text-slate-800 ">{{ role.title }}</p>
-                        <p class="text-xs text-slate-500 ">{{ role.year }}</p>
+                        <p class="text-sm sm:text-md font-semibold text-slate-800">{{ role.title }}</p>
+                        <p class="text-xs text-slate-500">{{ role.year }}</p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <!-- Right Side: Potential Career Paths (70%) -->
-              <div class="flex-grow pl-8">
-                <h3 class="text-xl font-semibold text-slate-700 mb-6 ">Potential Career Paths</h3>
-                <div class="space-y-6">
-                  <div v-if="assessmentSummary.profile.potentialPaths.length === 0" class="text-slate-500  pl-8">
+              <!-- Right Side: Potential Career Paths -->
+              <div class="flex-grow w-full lg:w-auto lg:pl-8">
+                <h3 class="text-lg sm:text-xl font-semibold text-slate-700 mb-4 lg:mb-6">Potential Career Paths</h3>
+                <div class="space-y-4 lg:space-y-6">
+                  <div v-if="assessmentSummary.profile.potentialPaths.length === 0" class="text-slate-500 text-sm sm:text-base">
                     No potential career paths defined yet.
                   </div>
                   <!-- Path Item -->
                   <div v-for="(path, index) in assessmentSummary.profile.potentialPaths" :key="index" class="flex items-start">
-                    <!-- Connector Line (simplified branch) -->
-                    <div class="w-8 pt-2">
+                    <!-- Connector Line (simplified branch) - hidden on mobile -->
+                    <div class="hidden lg:block w-8 pt-2">
                       <div class="w-full h-0.5 bg-slate-300"></div>
                     </div>
                     <!-- Path Content -->
-                    <div class="flex-1 p-4 rounded-xl shadow-lg bg-white border border-slate-200 hover:shadow-md transition-shadow">
-                      <p class="text-md font-semibold text-blue-700 mb-3 ">Potential Path {{ index + 1 }}</p>
-                      <div class="flex space-x-3 items-stretch">
+                    <div class="flex-1 w-full p-4 rounded-xl shadow-lg bg-white border border-slate-200 hover:shadow-md transition-shadow">
+                      <p class="text-sm sm:text-md font-semibold text-blue-700 mb-3">Potential Path {{ index + 1 }}</p>
+                      <!-- Mobile: Stack vertically, Desktop: Side by side -->
+                      <div class="flex flex-col sm:flex-row gap-3 items-stretch">
                         <!-- Future Role Card -->
-                        <div class="flex-1 p-3 rounded-lg border border-slate-200 bg-slate-50 min-w-[150px]">
-                          <p class="text-xs text-slate-500  uppercase tracking-wider">Future Role</p>
-                          <p class="text-md font-medium text-slate-800 ">{{ path.futureRole }}</p>
+                        <div class="flex-1 p-3 rounded-lg border border-slate-200 bg-slate-50 min-w-0">
+                          <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Future Role</p>
+                          <p class="text-sm sm:text-md font-medium text-slate-800 break-words">{{ path.futureRole }}</p>
                         </div>
-                        <!-- Arrow Connector -->
-                        <div class="flex items-center justify-center px-1">
-                          <Icon name="i-ic-round-arrow-right-alt" class="text-slate-400 text-2xl" />
+                        <!-- Arrow Connector - vertical on mobile, horizontal on desktop -->
+                        <div class="flex items-center justify-center py-1 sm:py-0 sm:px-1">
+                          <Icon name="i-ic-round-arrow-right-alt" class="text-slate-400 text-xl sm:text-2xl transform rotate-90 sm:rotate-0" />
                         </div>
                         <!-- Long Term Role Card -->
-                        <div class="flex-1 p-3 rounded-lg border border-slate-200 bg-slate-50 min-w-[150px]">
-                          <p class="text-xs text-slate-500  uppercase tracking-wider">Long Term Role</p>
-                          <p class="text-md font-medium text-slate-800 ">{{ path.longTermRole }}</p>
+                        <div class="flex-1 p-3 rounded-lg border border-slate-200 bg-slate-50 min-w-0">
+                          <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Long Term Role</p>
+                          <p class="text-sm sm:text-md font-medium text-slate-800 break-words">{{ path.longTermRole }}</p>
                         </div>
                       </div>
                     </div>
@@ -235,38 +244,38 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
       <!-- Nine Box Chart -->
-      <div class="bg-white rounded-2xl shadow-xl p-6 mb-4 border border-slate-100">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-slate-800 ">Nine Box Position</h2>
+      <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 mb-4 border border-slate-100">
+        <div class="flex items-center justify-between mb-4 sm:mb-6">
+          <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Nine Box Position</h2>
           <NuxtLink to="/assessment-guide#nine-box" class="ml-2 text-blue-500 hover:text-blue-700" title="Learn more about this section">
-            <Icon name="i-heroicons-information-circle" class="w-6 h-6" />
+            <Icon name="i-heroicons-information-circle" class="w-5 h-5 sm:w-6 sm:h-6" />
           </NuxtLink>
         </div>
         <div class="w-full overflow-x-auto">
-          <div class="grid grid-cols-3 grid-rows-3 gap-3 max-w-2xl mx-auto">
+          <div class="grid grid-cols-3 grid-rows-3 gap-1.5 sm:gap-3 max-w-2xl mx-auto">
             <template v-for="(row, rowIdx) in nineBoxRows" :key="rowIdx">
               <template v-for="(cell, colIdx) in row" :key="colIdx">
                 <div :class="[
-                  'flex flex-col items-center justify-center rounded-xl p-5 min-h-[90px] min-w-[120px] border-2 transition ',
+                  'flex flex-col items-center justify-center rounded-lg sm:rounded-xl p-2 sm:p-5 min-h-[60px] sm:min-h-[90px] min-w-[70px] sm:min-w-[120px] border-2 transition ',
                   isNineBoxSelected(rowIdx, colIdx) 
-                    ? 'bg-blue-200 text-blue-800 ring-4 ring-inset ring-blue-400 border-blue-600 scale-100 z-10'
+                    ? 'bg-blue-200 text-blue-800 ring-2 sm:ring-4 ring-inset ring-blue-400 border-blue-600 scale-100 z-10'
                     : 'bg-slate-100 text-slate-700 border-slate-200'
                 ]">
-                  <span class="text-2xl mb-2" v-if="cell.icon"><i :class="cell.icon"></i></span>
-                  <span class="font-bold text-base">{{ cell.label }}</span>
+                  <span class="text-base sm:text-2xl mb-1 sm:mb-2" v-if="cell.icon"><i :class="cell.icon"></i></span>
+                  <span class="font-bold text-xs sm:text-base leading-tight text-center px-1">{{ cell.label }}</span>
                 </div>
               </template>
             </template>
           </div>
         </div>
-        <div class="text-center mt-6 space-x-4 space-y-4">
-          <span class="inline-block px-6 py-2 rounded-full bg-blue-200 text-blue-800 font-semibold text-lg">
+        <div class="text-center mt-4 sm:mt-6 flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center items-center">
+          <span class="inline-block px-3 sm:px-6 py-1.5 sm:py-2 rounded-full bg-blue-200 text-blue-800 font-semibold text-xs sm:text-lg">
             Performance: {{ assessmentSummary?.threeByThreePosition?.performance || 'Not Set' }}
           </span>
-          <span class="inline-block px-6 py-2 rounded-full bg-blue-200 text-blue-800 font-semibold text-lg">
+          <span class="inline-block px-3 sm:px-6 py-1.5 sm:py-2 rounded-full bg-blue-200 text-blue-800 font-semibold text-xs sm:text-lg">
             Potential: {{ assessmentSummary?.threeByThreePosition?.potential || 'Not Set' }}
           </span>
-          <span class="inline-block px-6 py-2 rounded-full bg-blue-200 text-blue-800 font-semibold text-lg">
+          <span class="inline-block px-3 sm:px-6 py-1.5 sm:py-2 rounded-full bg-blue-200 text-blue-800 font-semibold text-xs sm:text-lg">
             Engagement: {{ assessmentSummary?.threeByThreePosition?.engagement || 'Not Set' }}
           </span>
         </div>
@@ -746,6 +755,7 @@ const assessmentSummary = ref(null)
 const router = useRouter()
 const route = useRoute()
 const chevronContainer = ref(null)
+const chevronScrollContainer = ref(null)
 const careerStages = ['Exploration', 'Establishment', 'Mid-Career', 'Late Career']
 const chartType = ref('radar')
 
@@ -1551,18 +1561,16 @@ const drawChevrons = () => {
   // Clear any existing SVG
   d3.select(chevronContainer.value).selectAll('*').remove()
 
-  const width = chevronContainer.value.clientWidth
-  const height = chevronContainer.value.clientHeight
+  const height = chevronContainer.value.clientHeight || 160
   const chevronGap = 2
-  const safetyMargin = 2
-  const safeDrawingWidth = width - safetyMargin
-  const totalGapWidth = (careerStages.length > 1) ? (careerStages.length - 1) * chevronGap : 0
-  const chevronWidth = (safeDrawingWidth - totalGapWidth) / careerStages.length
+  const minChevronWidth = 180 // Minimum width per chevron to prevent cramping
+  const chevronWidth = minChevronWidth
   const chevronHeight = height * 0.45
+  const totalWidth = (chevronWidth * careerStages.length) + (chevronGap * (careerStages.length - 1))
 
   const svg = d3.select(chevronContainer.value)
     .append('svg')
-    .attr('width', width)
+    .attr('width', totalWidth)
     .attr('height', height)
 
   // Drop shadow filter
@@ -1595,9 +1603,14 @@ const drawChevrons = () => {
   feMerge.append('feMergeNode').attr('in', 'shadow')
   feMerge.append('feMergeNode').attr('in', 'SourceGraphic')
 
+  let activeChevronIndex = -1
+  
   careerStages.forEach((stage, i) => {
     const x = i * chevronWidth + chevronGap * i
     const isCurrent = assessmentSummary.value && stage === (assessmentSummary.value.careerStageResult || assessmentSummary.value.careerStage)
+    if (isCurrent) {
+      activeChevronIndex = i
+    }
     const fill = isCurrent ? '#DBEAFE' : '#F8FAFC'
     const borderColor = isCurrent ? '#3B82F6' : '#E2E8F0'
     const borderWidth = isCurrent ? 3 : 1
@@ -1627,6 +1640,26 @@ const drawChevrons = () => {
       .attr('font-weight', fontWeight)
       .text(stage)
   })
+  
+  // Center the active chevron after drawing
+  if (activeChevronIndex >= 0 && chevronScrollContainer.value) {
+    nextTick(() => {
+      setTimeout(() => {
+        const scrollContainer = chevronScrollContainer.value
+        if (!scrollContainer) return
+        
+        const chevronCenter = (activeChevronIndex * chevronWidth) + (activeChevronIndex * chevronGap) + (chevronWidth / 2)
+        const containerWidth = scrollContainer.clientWidth
+        const scrollPosition = chevronCenter - (containerWidth / 2)
+        const maxScroll = scrollContainer.scrollWidth - containerWidth
+        
+        scrollContainer.scrollTo({
+          left: Math.max(0, Math.min(scrollPosition, maxScroll)),
+          behavior: 'smooth'
+        })
+      }, 100) // Small delay to ensure SVG is fully rendered
+    })
+  }
 }
 
 // Watch for window resize
