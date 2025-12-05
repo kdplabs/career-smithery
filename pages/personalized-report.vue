@@ -59,6 +59,13 @@
               <h2 class="text-4xl font-extrabold  tracking-tight">
                 <span class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 bg-clip-text text-transparent">Summary</span>
               </h2>
+              <button 
+                @click="openEditModal('summary')" 
+                class="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                title="Edit Summary"
+              >
+                <Icon name="i-heroicons-pencil-square" class="w-5 h-5" />
+              </button>
             </div>
             <div class="prose max-w-none text-slate-700 " v-html="report.summary"></div>
           </div>
@@ -77,34 +84,70 @@
 
         <!-- SWOT Analysis Cards -->
         <div class="modern-card mb-4">
-          <h3 class="text-2xl font-bold text-green-700 mb-4  flex items-center tracking-tight">
-            <Icon name="i-heroicons-arrow-trending-up" class="w-7 h-7 mr-3" />
-            Strengths
-          </h3>
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-2xl font-bold text-green-700  flex items-center tracking-tight">
+              <Icon name="i-heroicons-arrow-trending-up" class="w-7 h-7 mr-3" />
+              Strengths
+            </h3>
+            <button 
+              @click="openEditModal('strengths')" 
+              class="p-2 text-slate-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all"
+              title="Edit Strengths"
+            >
+              <Icon name="i-heroicons-pencil-square" class="w-5 h-5" />
+            </button>
+          </div>
           <div class="prose text-slate-700 " v-html="report.swot_analysis?.strengths"></div>
         </div>
 
         <div class="modern-card mb-4">
-          <h3 class="text-2xl font-bold text-red-700 mb-4  flex items-center tracking-tight">
-            <Icon name="i-heroicons-exclamation-triangle" class="w-7 h-7 mr-3" />
-            Weaknesses
-          </h3>
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-2xl font-bold text-red-700  flex items-center tracking-tight">
+              <Icon name="i-heroicons-exclamation-triangle" class="w-7 h-7 mr-3" />
+              Weaknesses
+            </h3>
+            <button 
+              @click="openEditModal('weaknesses')" 
+              class="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+              title="Edit Weaknesses"
+            >
+              <Icon name="i-heroicons-pencil-square" class="w-5 h-5" />
+            </button>
+          </div>
           <div class="prose text-slate-700 " v-html="report.swot_analysis?.weaknesses"></div>
         </div>
 
         <div class="modern-card mb-4">
-          <h3 class="text-2xl font-bold text-blue-700 mb-4  flex items-center tracking-tight">
-            <Icon name="i-heroicons-light-bulb" class="w-7 h-7 mr-3" />
-            Opportunities
-          </h3>
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-2xl font-bold text-blue-700  flex items-center tracking-tight">
+              <Icon name="i-heroicons-light-bulb" class="w-7 h-7 mr-3" />
+              Opportunities
+            </h3>
+            <button 
+              @click="openEditModal('opportunities')" 
+              class="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+              title="Edit Opportunities"
+            >
+              <Icon name="i-heroicons-pencil-square" class="w-5 h-5" />
+            </button>
+          </div>
           <div class="prose text-slate-700 " v-html="report.swot_analysis?.opportunities"></div>
         </div>
 
         <div class="modern-card mb-4">
-          <h3 class="text-2xl font-bold text-yellow-700 mb-4  flex items-center tracking-tight">
-            <Icon name="i-heroicons-shield-exclamation" class="w-7 h-7 mr-3" />
-            Threats
-          </h3>
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-2xl font-bold text-yellow-700  flex items-center tracking-tight">
+              <Icon name="i-heroicons-shield-exclamation" class="w-7 h-7 mr-3" />
+              Threats
+            </h3>
+            <button 
+              @click="openEditModal('threats')" 
+              class="p-2 text-slate-600 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-all"
+              title="Edit Threats"
+            >
+              <Icon name="i-heroicons-pencil-square" class="w-5 h-5" />
+            </button>
+          </div>
           <div class="prose text-slate-700 " v-html="report.swot_analysis?.threats"></div>
         </div>
 
@@ -323,6 +366,73 @@
       </form>
     </div>
   </div>
+
+  <!-- Edit Section Modal -->
+  <div v-if="showEditModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
+    <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 md:p-8 w-full max-w-3xl mx-4 relative border border-white/20 max-h-[90vh] overflow-y-auto">
+      <button 
+        @click="closeEditModal" 
+        class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
+      >
+        <Icon name="i-heroicons-x-mark" class="w-6 h-6" />
+      </button>
+      
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Icon name="i-heroicons-pencil-square" class="w-8 h-8 text-blue-600" />
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Edit {{ editSectionTitle }}</h2>
+        <p class="text-gray-600">
+          Update the content below. You can use HTML formatting or plain text.
+        </p>
+      </div>
+
+      <form @submit.prevent="saveEditedSection" class="space-y-6">
+        <div>
+          <label :for="`edit-${editingSection}`" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ editSectionTitle }} Content
+          </label>
+          <textarea
+            :id="`edit-${editingSection}`"
+            v-model="editSectionContent"
+            rows="12"
+            class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-mono"
+            placeholder="Enter content here..."
+            required
+          ></textarea>
+          <p class="mt-2 text-sm text-gray-500">
+            HTML tags are supported. Changes will be saved to your report.
+          </p>
+        </div>
+
+        <div v-if="editSectionError" class="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div class="flex items-center gap-2">
+            <Icon name="i-heroicons-exclamation-triangle" class="w-5 h-5 text-red-600" />
+            <p class="text-sm text-red-700">{{ editSectionError }}</p>
+          </div>
+        </div>
+
+        <div class="flex gap-4 justify-end">
+          <button 
+            type="button" 
+            @click="closeEditModal" 
+            class="px-6 py-3 bg-white/80 backdrop-blur-md text-slate-700 rounded-xl hover:bg-white/90 transition-all border border-slate-200 shadow-md hover:shadow-lg"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            :disabled="!editSectionContent.trim() || editSectionLoading"
+            class="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl flex items-center"
+          >
+            <Icon v-if="editSectionLoading" name="i-eos-icons:loading" class="w-5 h-5 mr-2 animate-spin" />
+            <Icon v-else name="i-heroicons-check" class="w-5 h-5 mr-2" />
+            {{ editSectionLoading ? 'Saving...' : 'Save Changes' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -402,6 +512,11 @@ const showPricingModal = ref(false)
 const showRegenerateModal = ref(false)
 const regenerateLinkedInText = ref('')
 const regenerateError = ref('')
+const showEditModal = ref(false)
+const editingSection = ref('') // 'summary', 'strengths', 'weaknesses', 'opportunities', 'threats'
+const editSectionContent = ref('')
+const editSectionLoading = ref(false)
+const editSectionError = ref('')
 const createTasksForm = ref({
   area: '',
   tasks: [],
@@ -1002,6 +1117,170 @@ async function regenerateReport(linkedinTextOverride = null) {
     showMessage(error.message || 'Failed to regenerate report. Please try again.', 'error')
   } finally {
     isRegenerating.value = false
+  }
+}
+
+// Computed property for edit section title
+const editSectionTitle = computed(() => {
+  const titles = {
+    summary: 'Summary',
+    strengths: 'Strengths',
+    weaknesses: 'Weaknesses',
+    opportunities: 'Opportunities',
+    threats: 'Threats'
+  }
+  return titles[editingSection.value] || 'Section'
+})
+
+// Function to convert HTML to plain text (strip HTML tags)
+function htmlToText(html) {
+  if (!html) return ''
+  // Check if we're in browser environment
+  if (typeof document === 'undefined') return html
+  
+  // Create a temporary div element
+  const tmp = document.createElement('div')
+  tmp.innerHTML = html
+  // Get text content
+  let text = tmp.textContent || tmp.innerText || ''
+  // Clean up: replace multiple spaces/newlines with single space, then trim
+  text = text.replace(/\s+/g, ' ').trim()
+  return text
+}
+
+// Function to convert plain text to HTML (preserve line breaks)
+function textToHtml(text) {
+  if (!text) return ''
+  // Escape HTML special characters
+  const escaped = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+  // Convert line breaks to <br> tags and wrap paragraphs
+  const paragraphs = escaped.split(/\n\s*\n/).filter(p => p.trim())
+  if (paragraphs.length > 1) {
+    return paragraphs.map(p => `<p>${p.trim().replace(/\n/g, '<br>')}</p>`).join('')
+  } else {
+    // Single paragraph, preserve line breaks
+    return `<p>${escaped.trim().replace(/\n/g, '<br>')}</p>`
+  }
+}
+
+// Function to open edit modal
+function openEditModal(section) {
+  editingSection.value = section
+  editSectionError.value = ''
+  
+  // Load current content based on section and convert HTML to plain text
+  let htmlContent = ''
+  if (section === 'summary') {
+    htmlContent = report.value?.summary || ''
+  } else if (report.value?.swot_analysis) {
+    htmlContent = report.value.swot_analysis[section] || ''
+  }
+  
+  // Convert HTML to plain text for editing
+  editSectionContent.value = htmlToText(htmlContent)
+  
+  showEditModal.value = true
+}
+
+// Function to close edit modal
+function closeEditModal() {
+  showEditModal.value = false
+  editingSection.value = ''
+  editSectionContent.value = ''
+  editSectionError.value = ''
+}
+
+// Function to save edited section
+async function saveEditedSection() {
+  if (!user.value || !report.value) {
+    editSectionError.value = 'User not authenticated or report not loaded'
+    return
+  }
+
+  if (!editSectionContent.value.trim()) {
+    editSectionError.value = 'Content cannot be empty'
+    return
+  }
+
+  editSectionLoading.value = true
+  editSectionError.value = ''
+
+  try {
+    // Convert plain text to HTML before saving
+    const htmlContent = textToHtml(editSectionContent.value.trim())
+    
+    // Create updated report object
+    const updatedReport = { ...report.value }
+    
+    if (editingSection.value === 'summary') {
+      updatedReport.summary = htmlContent
+    } else if (updatedReport.swot_analysis) {
+      updatedReport.swot_analysis = {
+        ...updatedReport.swot_analysis,
+        [editingSection.value]: htmlContent
+      }
+    } else {
+      updatedReport.swot_analysis = {
+        [editingSection.value]: htmlContent
+      }
+    }
+
+    // Update in database
+    const { data: existingPlan, error: fetchError } = await supabase
+      .from('user_plans')
+      .select('id')
+      .eq('user_id', user.value.id)
+      .maybeSingle()
+
+    if (fetchError) {
+      throw new Error('Failed to check existing plan')
+    }
+
+    if (existingPlan) {
+      const { error: updateError } = await supabase
+        .from('user_plans')
+        .update({ personalized_report: updatedReport })
+        .eq('id', existingPlan.id)
+        .eq('user_id', user.value.id)
+
+      if (updateError) {
+        throw new Error(`Failed to save changes: ${updateError.message}`)
+      }
+    } else {
+      // Create new plan if it doesn't exist
+      const { error: insertError } = await supabase
+        .from('user_plans')
+        .insert([{
+          user_id: user.value.id,
+          personalized_report: updatedReport
+        }])
+
+      if (insertError) {
+        throw new Error(`Failed to save changes: ${insertError.message}`)
+      }
+    }
+
+    // Update local state
+    report.value = updatedReport
+    
+    // Update localStorage
+    localStorage.setItem('personalizedReport', JSON.stringify(updatedReport))
+    
+    // Close modal
+    closeEditModal()
+    
+    showMessage(`${editSectionTitle.value} updated successfully!`, 'success')
+    
+  } catch (error) {
+    console.error('Error saving edited section:', error)
+    editSectionError.value = error.message || 'Failed to save changes. Please try again.'
+  } finally {
+    editSectionLoading.value = false
   }
 }
 </script>
